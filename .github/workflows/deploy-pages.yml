@@ -41,6 +41,11 @@ jobs:
         run: npm run typecheck
 
       - name: Build (GitHub Pages target)
+        env:
+          # 私密联系方式：由仓库 Secrets 注入，源码不保存真实值（未配置则回落为占位符）
+          VITE_CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          VITE_CONTACT_PHONE: ${{ secrets.CONTACT_PHONE }}
+          VITE_CONTACT_WECHAT: ${{ secrets.CONTACT_WECHAT }}
         run: npm run build:github
 
       - name: Configure Pages

@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Personal portfolio for Jazim Lau (刘俊熙) — Game Motion Designer",
+  "description": "Game Motion & Video Design portfolio — React + Vite + GSAP",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

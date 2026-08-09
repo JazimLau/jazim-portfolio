@@ -2,6 +2,19 @@ import { lt } from './i18n'
 import type { LT } from './i18n'
 import type { AbilityBlock } from './types'
 
+/**
+ * 私密联系方式（邮箱 / 手机 / 微信）通过构建环境变量注入，源码只保留占位符：
+ *   VITE_CONTACT_EMAIL / VITE_CONTACT_PHONE / VITE_CONTACT_WECHAT
+ * - 本地真实值放 .env.local 与 .env.github.local（均被 .gitignore 忽略，不入库）；
+ * - GitHub Actions 从仓库 Secrets（CONTACT_EMAIL / CONTACT_PHONE / CONTACT_WECHAT）注入；
+ * - 未注入时回落为占位，保证页面结构正常且不泄露真实信息。
+ */
+const CONTACT = {
+  email: import.meta.env.VITE_CONTACT_EMAIL || 'your-email@example.com',
+  phone: import.meta.env.VITE_CONTACT_PHONE || '+86 138 **** ****',
+  wechat: import.meta.env.VITE_CONTACT_WECHAT || 'AVAILABLE ON REQUEST',
+}
+
 /** 个人基础信息。修改姓名、职位、文案、联系方式都在这里。 */
 export const profile = {
   name: '刘俊熙',
@@ -58,15 +71,15 @@ export const profile = {
     'SCROLL TO EXPLORE',
   ],
 
-  email: 'jazimlau@yeah.net',
+  email: CONTACT.email,
 
   /**
    * 手机号。默认在页面上以掩码显示，点击才展开完整号码。
    */
-  phone: '+86 180 2451 6913',
+  phone: CONTACT.phone,
 
   /** 微信 ID。默认隐藏，点击后才显露完整 ID。 */
-  wechat: 'wxid_a8c05c196d3b22',
+  wechat: CONTACT.wechat,
   location: lt('大湾区 / 澳门', 'Greater Bay Area / Macau'),
   school: lt('澳门城市大学 · 设计学硕士在读', 'City University of Macau · MA Design'),
 
@@ -273,7 +286,7 @@ export function maskPhone(phone: string): string {
   return parts.map((p, i) => (i < 2 ? p : p.replace(/\d/g, '*'))).join(' ')
 }
 
-/** 把微信 ID 做成掩码：wxid_a8c05c196d3b22 → wxid_************ */
+/** 把微信 ID 做成掩码：wxid_abc… → wxid_************ */
 export function maskWechat(id: string): string {
   const i = id.indexOf('_')
   if (i < 0) return id.replace(/[\w\d]/g, '*')

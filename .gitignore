@@ -34,6 +34,10 @@ Thumbs.db
 # 本地视觉自检截图，不入库
 shots/
 
+# ── 简历生成素材与成品（含个人信息，不入库；本地保留用于生成/交付）──
+pdf/
+portfolio-output/*.pdf
+
 # ── 临时 QA / 诊断产物（不入库）────────────────
 optimized-test/
 
