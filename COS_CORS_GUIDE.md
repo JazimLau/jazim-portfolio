@@ -2,6 +2,11 @@
 
 > PHASE 36 · 生产媒体域名 CORS 配置（腾讯云 COS 控制台）。
 
+> ✅ **状态：已于 2026-08-09 通过 `scripts/set-cos-cors.py`（cos-python-sdk-v5）配置并验证生效。**
+> 背景：GitHub Pages 站点用 hls.js 以 XHR 拉取 COS 的 .m3u8/.ts，未配置 CORS 时线上视频无法播放/切换
+> （控制台报 "No 'Access-Control-Allow-Origin' header"，本地 dev 走本地文件所以正常）。
+> 重新应用或校验：`python scripts/set-cos-cors.py`；仅查看：`python scripts/set-cos-cors.py --check`。
+
 ## 允许的 Origin
 
 | Origin | 用途 |
