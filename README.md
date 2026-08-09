@@ -1,4 +1,4 @@
-# 刘俊熙 JAZIM LAU — 游戏动效设计师作品集
+# JAZIM LAU — 游戏动效设计师作品集
 
 暗色系游戏风格化个人作品集。单页滚动 + 项目详情独立路由，React + Vite + TypeScript + GSAP ScrollTrigger。
 
@@ -116,15 +116,17 @@ public/assets/
 
 `src/data/profile.ts` — 姓名、职位、定位文案、状态标签、邮箱、手机号、微信、简历路径全在 `profile` 对象里。
 
+> 以下示例为通用占位，请替换为你自己的真实信息。
+
 ```ts
 export const profile = {
-  name: '刘俊熙',
-  nameEn: 'JAZIM LAU',
+  name: '你的姓名',
+  nameEn: 'YOUR BRAND',                                              // 你的品牌名 / 英文代号
   roleEn: 'GAME MOTION DESIGNER',                                    // 英文代号，两版一致
   roleZh: lt('游戏动效设计 / 视频设计', 'Game Motion Design / Video Design'),  // 双语
-  email: 'jazimlau@yeah.net',
+  email: 'your-email@example.com',                                   // ⚠️ 示例占位，替换为你的联系邮箱
   phone: '+86 138 0000 0000',       // ⚠️ 占位号码，见下方提醒
-  cvPath: '/assets/files/Jazim-Lau-CV.pdf',
+  cvPath: '/assets/files/resume.pdf',
   // ...
 }
 ```
@@ -182,7 +184,7 @@ tools:  ['After Effects', 'Figma'],   // 纯英文（工具名、代号）不用
 - `data-lang` 供 CSS 使用 —— 等宽字体 JetBrains Mono 没有汉字，英文版里那些仍显示中文的位置（比如姓名副行）用 `:global(html[data-lang='EN'])` 换回正文字体
 - 点击不是硬切：`requestLang` 只登记意图，七条竖向面板自下而上盖满屏幕后才在 `commitLang` 里换文案，再反向抽走，最后 `ScrollTrigger.refresh()` 重算布局（中英文长度不同会改变高度）
 
-姓名是专有名词，两版都保留：英文版主行是 `JAZIM LAU`、副行 `刘俊熙`，中文版主副行对调。
+姓名是专有名词，两版都保留：英文版主行是英文名 / 品牌名、副行中文名，中文版主副行对调。
 
 ### 替换首页背景视频
 
@@ -253,7 +255,7 @@ gallery: [                                       // 详情页动效拆解图集
 
 ### 替换简历
 
-把 PDF 放到 `public/assets/files/Jazim-Lau-CV.pdf`。要换文件名就改 `src/data/profile.ts` 的 `cvPath`。
+把 PDF 放到 `public/assets/files/resume.pdf`（文件名按你的实际文件调整）。要换文件名就改 `src/data/profile.ts` 的 `cvPath`。
 
 Hero、Profile、Contact 三处的 DOWNLOAD CV 按钮都指向这个路径。
 
