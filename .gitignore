@@ -33,3 +33,12 @@ Thumbs.db
 
 # 本地视觉自检截图，不入库
 shots/
+
+# ── 临时 QA / 诊断产物（不入库）────────────────
+optimized-test/
+
+# 本轮临时排查报告（Audio / Performance / Root Cause Audit，问题解决后可删除）
+# 注意：不要用 *.md 全局 ignore（README.md 等正式文档仍需 Git 管理）
+ACTUAL_MEDIA_HOST_AUDIT.md
+SOURCE_AUDIO_AUDIT.md
+VERCEL_VIDEO_AUDIO_PERFORMANCE_ROOT_CAUSE.md
