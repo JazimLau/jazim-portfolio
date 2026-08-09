@@ -28,12 +28,15 @@ const MEDIA_BASE_URL: string | undefined = import.meta.env.VITE_MEDIA_BASE_URL a
   | string
   | undefined
 
-/** 站点静态资源解析：根绝对路径 -> 当前 Vite base 下的可访问路径。 */
+/** 站点静态资源解析：根绝对路径 -> 生产走 COS（国内 CDN 秒开）；本地/无媒体域 -> Vite base。 */
 export function siteAsset(path: string | undefined): string | undefined {
   if (!path) return path
   // 已是绝对 URL 或 data/blob 协议：原样返回
   if (/^(https?:)?\/\//i.test(path) || /^(data|blob):/i.test(path)) return path
   if (path.startsWith('/')) {
+    // 生产构建（注入了媒体域名）：静态资源（封面/案例图/PDF 等）统一走 COS 默认域名，
+    // 国内手机/桌面访问秒开（COS 对 script/link/img/XHR 的资源加载不受强制下载头影响）。
+    if (MEDIA_BASE_URL) return `${MEDIA_BASE_URL}${path}`
     const base = import.meta.env.BASE_URL || './'
     return `${base}${path.slice(1)}`
   }

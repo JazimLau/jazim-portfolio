@@ -1,0 +1,14 @@
+/* 本地化字体（OFL 开源：Barlow Condensed / Inter / IBM Plex Mono，latin 子集）
+   替代 Google Fonts（国内被墙会阻塞渲染）。中文正文自动 fallback 系统字体。 */
+@font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:500; font-display:swap; src:url('./barlow-500.woff2') format('woff2'); }
+@font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:600; font-display:swap; src:url('./barlow-600.woff2') format('woff2'); }
+@font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:700; font-display:swap; src:url('./barlow-700.woff2') format('woff2'); }
+@font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:800; font-display:swap; src:url('./barlow-800.woff2') format('woff2'); }
+@font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:900; font-display:swap; src:url('./barlow-900.woff2') format('woff2'); }
+@font-face { font-family:'Inter'; font-style:normal; font-weight:400; font-display:swap; src:url('./inter-400.woff2') format('woff2'); }
+@font-face { font-family:'Inter'; font-style:normal; font-weight:500; font-display:swap; src:url('./inter-500.woff2') format('woff2'); }
+@font-face { font-family:'Inter'; font-style:normal; font-weight:600; font-display:swap; src:url('./inter-600.woff2') format('woff2'); }
+@font-face { font-family:'Inter'; font-style:normal; font-weight:700; font-display:swap; src:url('./inter-700.woff2') format('woff2'); }
+@font-face { font-family:'IBM Plex Mono'; font-style:normal; font-weight:400; font-display:swap; src:url('./ibmplex-400.woff2') format('woff2'); }
+@font-face { font-family:'IBM Plex Mono'; font-style:normal; font-weight:500; font-display:swap; src:url('./ibmplex-500.woff2') format('woff2'); }
+@font-face { font-family:'IBM Plex Mono'; font-style:normal; font-weight:600; font-display:swap; src:url('./ibmplex-600.woff2') format('woff2'); }

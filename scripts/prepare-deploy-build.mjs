@@ -57,6 +57,28 @@ for (const f of jsFiles) {
   }
 }
 
+// ── 2.5 index.html 静态资源改写为 COS（国内 CDN 秒开） ──────
+// 页面入口仍在部署主机（GitHub Pages / EdgeOne），但 script/link/favicon 等
+// 静态资源统一改写为 COS 默认域名，国内手机/桌面访问秒开。
+// （COS 默认域名对 script/link/img/XHR 资源加载不受强制下载头影响。）
+const siteOrigin = `https://${MEDIA_DOMAIN}`
+const indexPath = join(targetDir, 'index.html')
+{
+  let html = readFileSync(indexPath, 'utf8')
+  const before = html
+  html = html
+    .replace(/src="\.\/assets\//g, `src="${siteOrigin}/assets/`)
+    .replace(/href="\.\/assets\//g, `href="${siteOrigin}/assets/`)
+    .replace(/src="\/assets\//g, `src="${siteOrigin}/assets/`)
+    .replace(/href="\/assets\//g, `href="${siteOrigin}/assets/`)
+    .replace(/href="\.\/favicon\.svg"/g, `href="${siteOrigin}/favicon.svg"`)
+    .replace(/href="\/favicon\.svg"/g, `href="${siteOrigin}/favicon.svg"`)
+  if (html !== before) {
+    writeFileSync(indexPath, html)
+    console.log(`[prepare-deploy-build] index.html 静态资源 -> ${siteOrigin}`)
+  }
+}
+
 // ── 3. 移除 HLS 副本（只删产物内） ─────────────────────────
 const videoDir = join(targetDir, 'assets', 'videos')
 let removedFiles = 0
