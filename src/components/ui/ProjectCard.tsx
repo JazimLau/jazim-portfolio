@@ -274,7 +274,7 @@ export function ProjectCard({
             loopVideo={isActive ? false : true}
             lazy
             aspect="16 / 9"
-            className={styles.videoBox}
+            className={`${styles.videoBox} hidePickerOnMobile`}
           >
             {/* 视频预览旁的左右箭头：仅活动卡且当前卡片有多条视频时显示。
                 只切换 activeVideoIndex（当前产品内部的视频），绝不切换 PRODUCT。 */}
@@ -301,6 +301,64 @@ export function ProjectCard({
                 </div>
               )}
           </VideoPreview>
+
+          {/* 移动端视频导航行（仅手机显示；桌面保持画面内箭头 + 底部 VIDEO 选择条）：
+              第一层：‹ 上一个 | VIDEO 01 / 07 | 下一个 ›
+              第二层：横向滚动 [01] [02] [03] ...
+              与 Playback（播放/进度/音量）完全独立，位于 Video Frame 下方。 */}
+          {isActive &&
+            project.videos &&
+            project.videos.length > 1 &&
+            onPrevVideo &&
+            onNextVideo && (
+              <div
+                className={styles.mobileVideoNav}
+                aria-label={t('视频导航', 'Video navigation')}
+              >
+                <div className={styles.mobileNavRow}>
+                  <button
+                    type="button"
+                    className={styles.mobileNavBtn}
+                    onClick={onPrevVideo}
+                    aria-label={t('上一个视频', 'Previous video')}
+                    data-cursor="link"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <span className={styles.mobileVideoCounter}>
+                    {t('视频', 'VIDEO')}{' '}
+                    {String(activeVideoIndex + 1).padStart(2, '0')} /{' '}
+                    {String(project.videos.length).padStart(2, '0')}
+                  </span>
+                  <button
+                    type="button"
+                    className={styles.mobileNavBtn}
+                    onClick={onNextVideo}
+                    aria-label={t('下一个视频', 'Next video')}
+                    data-cursor="link"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+                <div className={styles.mobilePickerRail} role="group" aria-label={t('视频列表', 'Video list')}>
+                  {project.videos.map((_v, vi) => (
+                    <button
+                      key={vi}
+                      type="button"
+                      className={`${styles.mobilePickBtn} ${
+                        vi === activeVideoIndex ? styles.mobilePickBtnOn : ''
+                      }`}
+                      onClick={() => onVideoChange?.(vi)}
+                      aria-current={vi === activeVideoIndex ? 'true' : undefined}
+                      aria-label={`${t('视频', 'Video')} ${vi + 1}`}
+                      data-cursor="link"
+                    >
+                      {String(vi + 1).padStart(2, '0')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {/* 侧边信息面板：项目数据（各产品独立，数量动态计算） */}
           <aside className={styles.sidePanel}>

@@ -1,9 +1,10 @@
 name: Deploy GitHub Pages
 
-# 备用 / Mirror 站：push 到 main 后自动构建并发布到 GitHub Pages。
+# 主站（免备案）：push 到 main 后自动构建并发布到 GitHub Pages。
 # 全程不调用 *.bat / *.ps1 / npm run dev —— 与本地开发脚本完全无关。
 # 大型 HLS 媒体不在仓库内（.gitignore 排除），由 Tencent COS 提供，
-# 构建时通过 .env.github 的 VITE_MEDIA_BASE_URL 注入 media.jazimportfolio.com。
+# 构建时通过 .env.github 的 VITE_MEDIA_BASE_URL 注入 COS 默认域名（免备案）。
+# 备案通过后可在 .env.github 切回自定义域名 media.jazimportfolio.com。
 
 on:
   push:

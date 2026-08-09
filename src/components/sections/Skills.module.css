@@ -535,6 +535,80 @@
   }
 }
 
+/* =========================================================================
+   手机端（≤767px）：紧凑信息栈（非桌面大画布缩放）
+   - 模块不保留任何大 min-height
+   - 可视化 / 状态 / 计数统一左上对齐
+   - 字号按信息栈可读性（中文标题 28~32 / 内容 15~17 / 辅助 11~13）
+   ========================================================================= */
+@media (max-width: 767px) {
+  .module {
+    min-height: 0;
+  }
+  .modHead {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    row-gap: 10px;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .modIndex {
+    font-size: 1.3rem;
+  }
+  .modCode {
+    font-size: 1.15rem;
+  }
+  .modZh {
+    font-size: var(--fs-small);
+  }
+  .modStateWrap {
+    width: auto;
+    min-width: 0;
+    align-items: flex-start;
+  }
+  .modCount {
+    font-size: 1.1rem;
+    align-items: flex-start;
+  }
+  .modToggle {
+    width: 44px;
+    height: 44px;
+  }
+  .modBody {
+    padding: 16px;
+    padding-top: 16px;
+  }
+  .modSummary {
+    font-size: var(--fs-small);
+    margin-bottom: 16px;
+    max-width: none;
+  }
+  .nodes {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .node {
+    padding: 10px 12px;
+    min-height: 44px;
+    text-align: left;
+  }
+  .nodeName {
+    font-size: var(--fs-small);
+  }
+  .nodeState {
+    font-size: 10px;
+  }
+  .modFoot {
+    padding-top: 14px;
+    gap: 10px;
+  }
+  .legend {
+    gap: 8px 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .node,
   .modBody {

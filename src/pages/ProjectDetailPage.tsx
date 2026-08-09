@@ -509,7 +509,7 @@ export function ProjectDetailPage() {
               data-cursor-label="PREV"
             >
               <span className={styles.nextLabel}>
-                {t('PREVIOUS PROJECT / 上一个项目', 'PREVIOUS PROJECT')}
+                {t('PREVIOUS PROJECT', 'PREVIOUS PROJECT')}
               </span>
               <div className={styles.nextRow}>
                 <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
@@ -528,7 +528,7 @@ export function ProjectDetailPage() {
               data-cursor-label="NEXT"
             >
               <span className={styles.nextLabel}>
-                {t('NEXT PROJECT / 下一个项目', 'NEXT PROJECT')}
+                {t('NEXT PROJECT', 'NEXT PROJECT')}
               </span>
               <div className={styles.nextRow}>
                 <span className={styles.nextIndex}>{next.index}</span>

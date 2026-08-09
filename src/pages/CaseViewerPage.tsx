@@ -769,7 +769,7 @@ export function CaseViewerPage() {
                     data-cursor-label="PREV"
                   >
                     <span className={styles.nextLabel}>
-                      {t('上一个案例 / PREVIOUS CASE', 'PREVIOUS CASE')}
+                      {t('PREVIOUS CASE', 'PREVIOUS CASE')}
                     </span>
                     <div className={styles.nextRow}>
                       <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
@@ -789,7 +789,7 @@ export function CaseViewerPage() {
                     data-cursor-label="PREV"
                   >
                     <span className={styles.nextLabel}>
-                      {t('上一个案例 / PREVIOUS CASE', 'PREVIOUS CASE')}
+                      {t('PREVIOUS CASE', 'PREVIOUS CASE')}
                     </span>
                     <div className={styles.nextRow}>
                       <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
@@ -804,13 +804,13 @@ export function CaseViewerPage() {
               ) : (
                 <span className={`${styles.nextInner} ${styles.nextInnerPrev} ${styles.nextInnerDisabled}`} aria-disabled="true">
                   <span className={styles.nextLabel}>
-                    {t('已是第一个案例 / FIRST CASE', 'FIRST CASE')}
+                    {t('FIRST CASE', 'FIRST CASE')}
                   </span>
                   <div className={styles.nextRow}>
                     <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
                     <span className={styles.nextIndex}>—</span>
                     <span className={styles.nextText}>
-                      <span className={styles.nextTitle}>{t('没有上一个', 'NO PREVIOUS')}</span>
+                      <span className={styles.nextTitle}>{t('NO PREVIOUS', 'NO PREVIOUS')}</span>
                       <span className={styles.nextZh}>{t('当前产品内的第一个案例', 'FIRST CASE IN THIS PRODUCT')}</span>
                     </span>
                   </div>
@@ -830,7 +830,7 @@ export function CaseViewerPage() {
                     data-cursor-label="NEXT"
                   >
                     <span className={styles.nextLabel}>
-                      {t('下一个案例 / NEXT CASE', 'NEXT CASE')}
+                      {t('NEXT CASE', 'NEXT CASE')}
                     </span>
                     <div className={styles.nextRow}>
                       <span className={styles.nextIndex}>{String(navIndex + 2).padStart(2, '0')}</span>
@@ -850,7 +850,7 @@ export function CaseViewerPage() {
                     data-cursor-label="NEXT"
                   >
                     <span className={styles.nextLabel}>
-                      {t('下一个案例 / NEXT CASE', 'NEXT CASE')}
+                      {t('NEXT CASE', 'NEXT CASE')}
                     </span>
                     <div className={styles.nextRow}>
                       <span className={styles.nextIndex}>{String(navIndex + 2).padStart(2, '0')}</span>
@@ -865,12 +865,12 @@ export function CaseViewerPage() {
               ) : (
                 <span className={`${styles.nextInner} ${styles.nextInnerDisabled}`} aria-disabled="true">
                   <span className={styles.nextLabel}>
-                    {t('已是最后一个案例 / LAST CASE', 'LAST CASE')}
+                    {t('LAST CASE', 'LAST CASE')}
                   </span>
                   <div className={styles.nextRow}>
                     <span className={styles.nextIndex}>—</span>
                     <span className={styles.nextText}>
-                      <span className={styles.nextTitle}>{t('没有下一个', 'NO NEXT')}</span>
+                      <span className={styles.nextTitle}>{t('NO NEXT', 'NO NEXT')}</span>
                       <span className={styles.nextZh}>{t('当前产品内的最后一个案例', 'LAST CASE IN THIS PRODUCT')}</span>
                     </span>
                     <ArrowRight className={styles.nextArrow} size={30} strokeWidth={1.6} />

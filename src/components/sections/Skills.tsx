@@ -50,6 +50,26 @@ export function Skills({ onFilterProjects }: SkillsProps) {
     () => {
       if (reduced) return
 
+      /* 移动端（≤768px）：跳过模块 scaleY/opacity 入场。
+         原因：ScrollTrigger from 动画在手机滚动节奏下可能不触发/未完成，
+         实测模块会永久卡在 opacity:0 + scaleY:0 —— 这就是「标题之后巨大空白」的根因。
+         手机端改为内容直接可见（信息栈），只保留图例的轻量入场。 */
+      if (isCompact) {
+        try {
+          gsap.from(`.${styles.legendItem}`, {
+            y: 12,
+            opacity: 0,
+            duration: 0.35,
+            stagger: 0.05,
+            ease: EASE.element,
+            scrollTrigger: { trigger: rootRef.current, start: 'top 85%', once: true },
+          })
+        } catch (err) {
+          gsap.set(`.${styles.legendItem}`, { y: 0, opacity: 1 })
+        }
+        return
+      }
+
       /* 第一批内容（状态图例）：区块顶部进入视口即开始入场，
          到达 Skills 时图例已在 100~250ms 内进入，不再出现长时间空内容。 */
       gsap.from(`.${styles.legendItem}`, {
@@ -96,7 +116,7 @@ export function Skills({ onFilterProjects }: SkillsProps) {
           )
       })
     },
-    [reduced],
+    [reduced, isCompact],
     rootRef
   )
 

@@ -13,7 +13,7 @@ import {
 import type { ProjectFilterId } from '../../data/types'
 import { gsap } from '../../lib/gsap'
 import { useGsapContext } from '../../hooks/useGsapContext'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { useReducedMotion, useIsCompact } from '../../hooks/useReducedMotion'
 import { useUI } from '../../context/UIContext'
 import { EASE, TRIGGER } from '../../lib/motion'
 import { SectionHeader } from '../layout/SectionHeader'
@@ -45,8 +45,10 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
   const stageRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const ghostRef = useRef<HTMLSpanElement>(null)
+  const subGridRef = useRef<HTMLDivElement>(null)
 
   const reduced = useReducedMotion()
+  const isCompact = useIsCompact()
   const { t, tx, lang, projectsState, setProjectsState } = useUI()
 
   const [stageWidth, setStageWidth] = useState(0)
@@ -88,6 +90,20 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
 
   /* 当前一级分类的下一层元数据：雷火/广告=PRODUCT，UI=MODULE，宣发/社媒=CASE */
   const subMeta = level2Meta(filter as ProjectFilterId)
+
+  /* 手机端 Product Rail：活动产品按钮自动横向滚动到可见（只滚 Rail，不滚页面）。
+     用 getBoundingClientRect 相对滚动容器计算，避免 offsetLeft 相对 offsetParent 的偏差。 */
+  useEffect(() => {
+    const grid = subGridRef.current
+    if (!grid) return
+    const on = grid.querySelector<HTMLElement>(`.${styles.subChipOn}`)
+    if (!on) return
+    const gridRect = grid.getBoundingClientRect()
+    const onRect = on.getBoundingClientRect()
+    const relLeft = onRect.left - gridRect.left + grid.scrollLeft
+    const target = relLeft - (grid.clientWidth - onRect.width) / 2
+    grid.scrollTo({ left: Math.max(0, target), behavior: reduced ? 'auto' : 'smooth' })
+  }, [activeSub, reduced])
 
   /* 首次浏览引导：会话内只提示一次，1.5～2s 后弱化（prefers-reduced-motion 时保持静态） */
   const [guideOn, setGuideOn] = useState(false)
@@ -160,8 +176,11 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
     prevActive.current = idx
   }
 
-  const cardWidth = stageWidth * CARD_RATIO
-  const step = cardWidth + GAP
+  /* 移动端：卡片占满安全区（与 CSS @media(max-width:767px) 的 100% slot / 0 gap 一致），
+     轮播数学改用全宽 + 无间距，避免 JS 定位与 CSS 宽度不一致导致卡片偏移。 */
+  const ratio = isCompact ? 1 : CARD_RATIO
+  const cardWidth = stageWidth * ratio
+  const step = cardWidth + (isCompact ? 0 : GAP)
   /** 让 active 卡片居中的位移 */
   const baseOffset = (stageWidth - cardWidth) / 2
 
@@ -181,10 +200,14 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
     const dir = active >= prevActive.current ? 1 : -1
     const cards = track.querySelectorAll<HTMLElement>(`.${styles.slot}`)
 
-    if (reduced) {
+    /* 移动端：跳过 scaleX/位移入场动画（effect 重跑会 kill 进行中的 tween，
+       卡片可能卡在 scaleX<1 的中间态，实测 matrix(0.9495,..) 残留），
+       直接用 gsap.set 定位 + 全显 —— 内容立即可见、位置准确。 */
+    if (reduced || isCompact) {
       gsap.set(track, { x: targetX })
       cards.forEach((el, i) => {
-        gsap.set(el, { scaleX: 1, opacity: i === active ? 1 : 0.35, filter: 'none' })
+        /* x:0 必须显式复位：旧动画若被 kill 可能残留 translateX */
+        gsap.set(el, { scaleX: 1, x: 0, opacity: i === active ? 1 : 0.35, filter: 'none' })
       })
       prevActive.current = active
       return
@@ -241,7 +264,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
       tl.kill()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, stageWidth, total, reduced, filter])
+  }, [active, stageWidth, total, reduced, isCompact, filter])
 
   /* ---------- 滚轮切换（安全区限定 + 边界放行） ----------
      只有鼠标位于"当前活动项目卡显示区域"内时，滚轮才拦截用于切换项目；
@@ -507,7 +530,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
                   )}
                 </span>
               )}
-              <div className={styles.subGrid}>
+              <div ref={subGridRef} className={styles.subGrid}>
                 {subFilters.map((sf, i) => {
                   /* 数字 = 该项目视频总数（新增/上传视频后自动同步） */
                   const count = subFilterVideoCount(filter as ProjectFilterId, sf.id)
@@ -612,13 +635,13 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
           <div
             ref={trackRef}
             className={styles.track}
-            style={{ gap: `${GAP}px` }}
+            style={{ gap: `${isCompact ? 0 : GAP}px` }}
           >
             {list.map((p, i) => (
               <div
                 key={p.id}
                 className={styles.slot}
-                style={{ flex: `0 0 ${CARD_RATIO * 100}%` }}
+                style={{ flex: `0 0 ${ratio * 100}%` }}
               >
                 <ProjectCard
                   project={p}

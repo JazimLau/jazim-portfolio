@@ -453,6 +453,11 @@
   pointer-events: none;
 }
 
+/* 移动端视频导航行（Video Frame 下方，独立层级）：桌面默认隐藏，≤767px 显示 */
+.mobileVideoNav {
+  display: none;
+}
+
 /* ---------- 渚ц竟淇℃伅闈㈡澘 ---------- */
 .sidePanel {
   padding: 14px 16px;
@@ -622,6 +627,174 @@
   /* 触控区 ≥ 44px */
   .subModuleChip {
     min-height: 44px;
+  }
+}
+
+/* =========================================================================
+   手机端（≤767px）：卡片占满安全区 + 二级产品条横向 Rail
+   + 视频左右切换移出画面（改用下方独立导航行）
+   ========================================================================= */
+@media (max-width: 767px) {
+  /* 卡片占满安全区（覆盖 Projects.tsx 内联的 78% slot flex） */
+  .card {
+    padding: 14px 14px 18px;
+    box-shadow: none;
+  }
+  .grid {
+    gap: 16px;
+  }
+  /* 作品方向信息区（TRACK 标题 + 查看项目）回到卡片顶部：置于「项目数据」之上 */
+  .media {
+    width: 100%;
+    order: 0;
+  }
+  /* 视频浏览窗口调大：16:9 → 4:3（更高，便于手机浏览） */
+  .videoBox {
+    aspect-ratio: 4 / 3 !important;
+  }
+
+  /* 二级产品条：横向 Rail（可触摸横滑，隐藏滚动条） */
+  .subModuleBar {
+    padding: 9px 10px;
+    gap: 6px;
+  }
+  .subModuleList {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 6px;
+    padding: 2px 1px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .subModuleList::-webkit-scrollbar {
+    display: none;
+  }
+  .subModuleChip {
+    flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  /* 视频画面内的左右箭头：移动端移出画面（由下方导航行接管） */
+  .videoNav {
+    display: none;
+  }
+
+  /* 侧边信息面板：2 列指标，左对齐 */
+  .sidePanel {
+    padding: 12px 14px;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+  .metric {
+    min-width: 0;
+  }
+
+  /* ---- 移动端视频导航行（Video Frame 下方，独立层级） ----
+     第一层：‹ 上一个 | VIDEO 01 / 07 | 下一个 ›
+     第二层：横向滚动 [01] [02] [03] ... */
+  .mobileVideoNav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mobileNavRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mobileNavBtn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    padding: 0;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    clip-path: polygon(
+      0 0,
+      calc(100% - 8px) 0,
+      100% 8px,
+      100% 100%,
+      8px 100%,
+      0 calc(100% - 8px)
+    );
+    transition: color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
+  }
+  .mobileNavBtn:hover:not(:disabled),
+  .mobileNavBtn:focus-visible:not(:disabled) {
+    color: var(--accent-lime);
+    border-color: var(--accent-lime);
+    background: var(--lime-soft);
+  }
+  .mobileNavBtn:disabled {
+    opacity: 0.26;
+    cursor: not-allowed;
+  }
+  .mobileVideoCounter {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--track-label);
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .mobilePickerRail {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 6px;
+    padding: 2px 1px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .mobilePickerRail::-webkit-scrollbar {
+    display: none;
+  }
+  .mobilePickBtn {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    background: rgba(7, 11, 9, 0.55);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
+  }
+  .mobilePickBtn:hover,
+  .mobilePickBtn:focus-visible {
+    color: var(--accent-purple);
+    border-color: var(--accent-purple);
+  }
+  .mobilePickBtnOn,
+  .mobilePickBtnOn:hover {
+    color: #0a0a0d;
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
   }
 }
 

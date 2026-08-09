@@ -956,6 +956,38 @@
   }
 }
 
+/* =========================================================================
+   手机端（≤767px）：FOCUS / LEVELING / STATUS 卡片内字体缩小
+   ========================================================================= */
+@media (max-width: 767px) {
+  /* 移动端首页：隐藏 FOCUS / LEVELING / STATUS 三卡 */
+  .systemInfo {
+    display: none;
+  }
+  .sysCard {
+    padding: 3px 6px;
+  }
+  .sysHead {
+    gap: 4px;
+    font-size: 8px;
+  }
+  .sysList {
+    margin-top: 2px;
+  }
+  .sysList li {
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1.1;
+  }
+  .sysList li::before {
+    font-size: 5px;
+  }
+  /* 左上角坐标日期文本与顶部栏（MOTION MONITOR / REC 时间）重叠遮挡，移动端隐藏 */
+  .coords {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scrollIcon,
   .recDot,

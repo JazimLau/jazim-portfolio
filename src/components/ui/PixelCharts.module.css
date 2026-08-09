@@ -674,3 +674,28 @@
     gap: 6px 16px;
   }
 }
+
+/* =========================================================================
+   手机端（≤767px）：技能总类 / 作品分类数量 条形图左顶格 ——
+   标签在上、进度条整行贴左（不再被 150px 右对齐标签列挤到右侧）。
+   ========================================================================= */
+@media (max-width: 767px) {
+  .barRow {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'label value'
+      'track track';
+    gap: 5px 10px;
+  }
+  .barLabel {
+    grid-area: label;
+    text-align: left;
+  }
+  .barTrack {
+    grid-area: track;
+  }
+  .barValue {
+    grid-area: value;
+    text-align: right;
+  }
+}

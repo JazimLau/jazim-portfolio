@@ -836,6 +836,81 @@ a.contactValue:focus-visible {
   }
 }
 
+/* =========================================================================
+   手机端（≤767px）：LEVELING / STATUS / TOPICS 与 MODULES / FOCUS / GUIDE
+   由三列改为单列；详情左对齐；联系方式可读字号 + 44px 触控区
+   ========================================================================= */
+@media (max-width: 767px) {
+  .moduleExtra {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+  .extraCard {
+    padding: 14px 16px;
+    text-align: left;
+  }
+  .extraList li {
+    font-size: var(--fs-small);
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  /* 详情面板：内容顶部对齐，压缩内边距 */
+  .detailInner {
+    padding: 20px 16px;
+    min-height: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+  .detailCentered {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .detailCentered .detailTop,
+  .detailCentered .detailFoot {
+    justify-content: space-between;
+  }
+  .detailTitle {
+    font-size: clamp(1.6rem, 6vw, 2.1rem);
+  }
+  .detailBrief {
+    font-size: var(--fs-small);
+  }
+
+  /* 联系方式：一列 + 可读字号 + 44px 触控 */
+  .contactList {
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .contactLabel {
+    font-size: 12px;
+  }
+  .contactValue {
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+  .eyeBtn {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* 目录与数据面板：压缩 */
+  .menuCol {
+    padding: 10px 12px;
+  }
+  .menuItem {
+    padding: 12px 14px;
+  }
+  .stats {
+    gap: 8px;
+  }
+  .statCard {
+    padding: 14px 14px 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .statState i,
   .statCard:hover .statBar i {

@@ -1,4 +1,4 @@
-# COS CORS GUIDE — media.jazimportfolio.com
+# COS CORS GUIDE — 媒体域名（免备案 COS 默认域名）
 
 > PHASE 36 · 生产媒体域名 CORS 配置（腾讯云 COS 控制台）。
 
@@ -6,9 +6,9 @@
 
 | Origin | 用途 |
 |---|---|
-| `https://jazimportfolio.com` | Tencent EdgeOne 正式主站 |
-| `https://www.jazimportfolio.com` | 正式主站 www |
-| `https://jazimlau.github.io` | GitHub Pages 备用站（**已确认实际 Origin**；CORS Origin 不带 Path，不加 `/jazim-portfolio/`） |
+| `https://jazimportfolio.com` | 主站（当前 GitHub Pages 自定义域名；备案后可改 EdgeOne） |
+| `https://www.jazimportfolio.com` | 主站 www |
+| `https://jazimlau.github.io` | GitHub Pages 主站（**已确认实际 Origin**；CORS Origin 不带 Path，不加 `/jazim-portfolio/`） |
 
 > GitHub Pages 的 Origin 是 `https://jazimlau.github.io`（已确认），不是 `https://jazimlau.github.io/jazim-portfolio/`（CORS Origin 不带 Path）。
 

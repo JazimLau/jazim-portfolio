@@ -505,6 +505,67 @@
   border-color: var(--accent-purple);
 }
 
+/* =========================================================================
+   手机端（≤767px）：播放控制紧凑单行；VIDEO 选择条移出画面（由外部移动导航接管）
+   ========================================================================= */
+@media (max-width: 767px) {
+  .hud {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+  .hudTop {
+    gap: 6px;
+  }
+  .hudTag,
+  .hudStatus {
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+  .fsBtn {
+    width: 44px;
+    height: 44px;
+  }
+  .hudBottomArea {
+    gap: 6px;
+  }
+  .hudControls {
+    gap: 6px;
+  }
+  .hudBottom {
+    column-gap: 8px;
+  }
+  .playIcon {
+    width: 44px;
+    height: 44px;
+  }
+  .timecode {
+    font-size: 10px;
+  }
+  /* 音量：只保留开关图标，不显示调节条（避免挤压 Progress） */
+  .volumeGroup {
+    gap: 0;
+  }
+  .volumeBtn {
+    width: 44px;
+    height: 44px;
+  }
+  .volumeTrack {
+    display: none;
+  }
+  .progressTrack {
+    min-width: 0;
+  }
+  /* VIDEO 选择条：移动端在 Projects 卡片内隐藏（由视频下方移动导航行接管）；
+     其它使用方（Case/Detail 详情）未加标记类则保持原样。
+     hidePickerOnMobile 为全局标记类，必须用 :global() 包裹，否则会被 CSS Modules 哈希。 */
+  :global(.hidePickerOnMobile) .pickerRow {
+    display: none;
+  }
+  .frame {
+    inset: 5px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fallbackDot {
     animation: none;

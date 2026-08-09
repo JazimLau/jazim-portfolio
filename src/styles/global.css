@@ -510,3 +510,24 @@ a:focus-visible,
     cursor: text !important;
   }
 }
+
+/* =========================================================================
+   手机端（≤767px）：正文安全区
+   - 375～430px：16px；320px：12px
+   - 主要内容宽度 = calc(100% - 32px)，max-width:none，margin-inline:auto
+   仅覆盖移动端；≥768px 保持桌面 shell-gutter。
+   ========================================================================= */
+@media (max-width: 767px) {
+  :root {
+    --mobile-safe-x: 16px;
+    --shell-gutter: 16px;
+    --section-gap: clamp(40px, 8vh, 56px);
+  }
+}
+
+@media (max-width: 359px) {
+  :root {
+    --mobile-safe-x: 12px;
+    --shell-gutter: 12px;
+  }
+}

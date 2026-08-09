@@ -3,9 +3,12 @@
  *
  * 架构：
  *   - GitHub Repository  = 源码（不含大型 HLS）
- *   - Tencent COS        = 大型 HLS 媒体，生产媒体域名 https://media.jazimportfolio.com
- *   - Tencent EdgeOne    = 正式主站 https://jazimportfolio.com
- *   - GitHub Pages       = 备用 / Mirror（github.io）
+ *   - Tencent COS        = 大型 HLS 媒体
+ *     媒体域名：https://jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com
+ *     （免备案 COS 默认域名；备案通过后可切回自定义域名 media.jazimportfolio.com）
+ *   - GitHub Pages       = 主站（免备案）：jazimlau.github.io/jazim-portfolio/
+ *                          及自定义域名 jazimportfolio.com（相对 base，同一构建双 URL）
+ *   - Tencent EdgeOne    = 备案通过后的正式主站候选（大陆加速需备案）
  *
  * 约定：
  *   - siteAsset()：站点自身静态资源（封面图 / 案例图 / PDF 等）。

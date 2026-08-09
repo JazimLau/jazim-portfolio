@@ -3,7 +3,7 @@
  * prepare-deploy-build.mjs
  * 部署产物后处理（PHASE 21/22）：
  *   1. 确认目标目录存在且 index.html 就位
- *   2. 确认构建产物中已使用生产媒体域名 media.jazimportfolio.com（COS）
+ *   2. 确认构建产物中已使用生产媒体域名（免备案 COS 默认域名；备案后可换 media.jazimportfolio.com）
  *   3. 移除 dist 产物中的 HLS 副本（只删产物，绝不删 public/assets/videos/ 源文件）
  *   4. 扫描残留的 *.m3u8 / *.ts / *.mov / 大型 mp4/webm
  *   5. 生成 DEPLOY_BUILD_MEDIA_AUDIT.md
@@ -15,7 +15,7 @@ import { existsSync, readdirSync, readFileSync, statSync, rmSync, writeFileSync,
 import { join, relative, resolve } from 'node:path'
 
 const targetDir = resolve(process.argv[2] || 'deploy-output/tencent-site')
-const MEDIA_DOMAIN = 'media.jazimportfolio.com'
+const MEDIA_DOMAIN = 'jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com'
 const reportsDir = resolve('deploy-output/reports')
 
 function walk(dir, out = []) {

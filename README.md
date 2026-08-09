@@ -415,20 +415,22 @@ GitHub Repository（Source of Truth）
         │
         ├──────────────────────────┐
         ▼                          ▼
-Tencent EdgeOne（正式主站）      GitHub Pages（备用 / Mirror）
-jazimportfolio.com                https://USERNAME.github.io/jazim-portfolio/
+GitHub Pages（主站 · 免备案）    Tencent EdgeOne（备案后候选）
+jazimportfolio.com                （大陆加速需 ICP 备案）
+jazimlau.github.io/jazim-portfolio/
         │
         └──────────────┬───────────┘
                        ▼
-        Tencent COS：media.jazimportfolio.com（HLS / .m3u8 / .ts 大型媒体）
+Tencent COS（免备案默认域名）：jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com
+        （HLS / .m3u8 / .ts 大型媒体）
 ```
 
 | 角色 | 地址 | 说明 |
 |---|---|---|
-| PRIMARY | https://jazimportfolio.com | Tencent EdgeOne 正式主站（canonical） |
+| PRIMARY | https://jazimportfolio.com | GitHub Pages 自定义域名（免备案，canonical） |
 | SECONDARY | https://www.jazimportfolio.com | www（可访问或 301 到裸域，按平台能力） |
-| MEDIA | https://media.jazimportfolio.com | Tencent COS 大型 HLS 媒体 |
-| MIRROR | https://USERNAME.github.io/jazim-portfolio/ | GitHub Pages 备用 / 源码验证站 |
+| MEDIA | https://jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com | Tencent COS 大型 HLS 媒体（免备案默认域名；备案后可换 media.jazimportfolio.com） |
+| MIRROR | https://USERNAME.github.io/jazim-portfolio/ | GitHub Pages 子路径（同一构建，相对 base） |
 
 ### LOCAL DEVELOPMENT（本地开发）
 
@@ -450,10 +452,10 @@ jazimportfolio.com                https://USERNAME.github.io/jazim-portfolio/
 
 ### PRODUCTION（正式站）
 
-- Primary：Tencent EdgeOne，域名 `jazimportfolio.com`
-- Media：Tencent COS，媒体域名 `media.jazimportfolio.com`
+- Primary：GitHub Pages 自定义域名 `jazimportfolio.com`（免备案；备案后可改 EdgeOne）
+- Media：Tencent COS，媒体域名 `https://jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`（免备案默认域名）
 - 媒体统一由 `src/lib/media.ts` 解析：生产构建（注入 `VITE_MEDIA_BASE_URL`）
-  自动把 `/assets/videos/...` 改写为 `https://media.jazimportfolio.com/assets/videos/...`；
+  自动把 `/assets/videos/...` 改写为 COS 默认域名 `/assets/videos/...`；
   本地开发保持相对路径，不依赖 COS
 - 腾讯云人工步骤见 `TENCENT_CLOUD_MANUAL_STEPS.md`、`COS_CORS_GUIDE.md`、`COSCLI_SETUP_GUIDE.md`
 

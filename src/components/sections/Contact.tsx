@@ -12,7 +12,7 @@ import {
 import { maskPhone, maskWechat, profile } from '../../data/profile'
 import { gsap } from '../../lib/gsap'
 import { useGsapContext } from '../../hooks/useGsapContext'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { useReducedMotion, useIsCompact } from '../../hooks/useReducedMotion'
 import { useUI } from '../../context/UIContext'
 import { scrollToTop } from '../../lib/smoothScroll'
 import { EASE, TRIGGER } from '../../lib/motion'
@@ -50,6 +50,8 @@ export function Contact({ onReturnHome }: ContactProps) {
   const [phoneShown, setPhoneShown] = useState(false)
   const [wechatShown, setWechatShown] = useState(false)
   const reduced = useReducedMotion()
+  /* 移动端：返回顶部按钮已含 ArrowUp 图标，去掉 MagneticButton 的右侧箭头 */
+  const isCompact = useIsCompact()
   const { t } = useUI()
 
   /* ---------- 入场动画 ----------
@@ -383,7 +385,7 @@ export function Contact({ onReturnHome }: ContactProps) {
           <MagneticButton
             variant="ghost"
             size="lg"
-            arrow
+            arrow={!isCompact}
             onClick={handleBackToTop}
             ariaLabel={t('回到页面顶部', 'Back to top of page')}
           >

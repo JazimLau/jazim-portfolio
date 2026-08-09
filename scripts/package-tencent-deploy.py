@@ -76,7 +76,8 @@ def main() -> int:
         "",
         "- ZIP 根目录直接包含 index.html：YES",
         "- HLS（m3u8/ts）进入 EdgeOne 部署包：**0**（应已由 prepare-deploy-build 剥离）",
-        "- media.jazimportfolio.com（COS）承载大型视频：独立于本部署包",
+        "- COS 默认域名（jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com）承载大型视频：独立于本部署包",
+        "  （备案通过后可切回自定义域名 media.jazimportfolio.com）", 
     ]
     if len(m3u8) + len(ts) > 0:
         lines.append("")

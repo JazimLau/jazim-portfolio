@@ -58,7 +58,7 @@ portfolio:pdf   python scripts/build-pdf.py
 ## 7. 是否已有 VITE_MEDIA_BASE_URL
 
 ❌ 不存在。已建立：
-- `.env.production` → `VITE_MEDIA_BASE_URL=https://media.jazimportfolio.com`
+- `.env.production` → `VITE_MEDIA_BASE_URL=https://jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`（免备案 COS 默认域名；备案后可切回 media.jazimportfolio.com）
 - `.env.tencent` / `.env.github` → 同值（公开前端 URL，非 Secret）
 - 解析器：`src/lib/media.ts`（`mediaUrl()` / `siteAsset()`）
 
@@ -67,7 +67,7 @@ portfolio:pdf   python scripts/build-pdf.py
 `public/assets/videos/` 含大型 HLS（95 个 .m3u8 + 635 个 .ts ≈ 1.56GB）。Vite 默认把整个
 `public/` 复制进 `dist/`，导致产物 ≈1.57GB。解决方案（PHASE 21/22）：
 - 部署构建后由 `scripts/prepare-deploy-build.mjs` 剥离产物内 HLS 副本；
-- 生产媒体统一走 COS（`media.jazimportfolio.com`），部署包不含大型视频。
+- 生产媒体统一走 COS（免备案默认域名 `jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`），部署包不含大型视频。
 
 ## 9. 是否已有 GitHub Actions
 

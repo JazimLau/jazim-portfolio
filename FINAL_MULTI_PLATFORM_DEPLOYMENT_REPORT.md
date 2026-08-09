@@ -9,7 +9,7 @@
 
 | 项 | 值 |
 |---|---|
-| Git status | ✅ 已通过 GitKraken 完成 Init / Commit / Push |
+| Git status | ✅ 已通过 GitHub Desktop 完成 Init / Commit / Push |
 | Branch | main ✅ |
 | Repository | https://github.com/JazimLau/jazim-portfolio ✅（Public） |
 | Visibility | Public |
@@ -32,11 +32,13 @@
 | 权限（最小） | contents: read · pages: write · id-token: write |
 | Environment | github-pages |
 | Node | 24（与本地 v24.18.0 一致） |
-| Actions 状态 | ✅ **全绿**（Checkout / npm ci / Typecheck / Build / Configure / Upload / Deploy） |
+| Actions 状态 | ✅ **全绿**（rebrand run #2 曾因 Pages 部署队列冲突被取消，重跑后成功） |
 | Pages URL | ✅ **https://jazimlau.github.io/jazim-portfolio/**（已上线） |
+| Pages 当前构建 | ✅ **index-C6atAT-c.js** 已上线（rebrand）；本地已备好新一轮 **index-86vDI1dM.js**（相对 base `./` + COS 默认域名，待推送） |
 | Pages QA | ✅ 全部模块渲染 / 深链接 / 封面 / 视频指向 COS（详见 GITHUB_PAGES_ARTIFACT_REPORT.md） |
-| Media domain | ✅ 构建注入 media.jazimportfolio.com |
-| COS CORS | 需加入 `https://jazimlau.github.io`（已确认实际 Origin） |
+| Media domain | ✅ COS 默认域名 `jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`（免备案；备案后可换 media.jazimportfolio.com） |
+| 相对 base | ✅ `.env.github VITE_BASE=./`：同一构建兼容 `/jazim-portfolio/` 与自定义域名根路径（本地双 URL 实测通过） |
+| COS CORS | ⏳ 控制台待配置（Origin 含 `https://jazimlau.github.io`，已确认实际 Origin） |
 
 ## TENCENT
 
@@ -46,23 +48,28 @@
 | EdgeOne artifact | `deploy-output/tencent-site/`：58 文件 / 7.78 MB |
 | EdgeOne ZIP | `deploy-output/Jazim-Portfolio-EdgeOne.zip`：6.62 MB / 58 文件 / 根目录含 index.html ✅ |
 | HLS in EdgeOne | **0**（prepare-deploy-build 已剥离 731 文件 / 1563.91 MB） |
-| Domain | jazimportfolio.com / www（待用户配置） |
-| HTTPS | 待用户配置 |
-| 生产媒体指向 | ✅ 已注入 COS（PRODUCTION_NETWORK_QA.md 实测请求 URL） |
+| Domain | jazimportfolio.com / www（当前方案：GitHub Pages 自定义域名，免备案） |
+| EdgeOne | ⏳ 留待备案后（大陆加速需 ICP 备案） |
+| HTTPS | GitHub Pages 自定义域名自动签发；EdgeOne 备案后配置 |
+| 生产媒体指向 | ✅ 已注入 COS 默认域名（verify:media 实测 95/95） |
 
 ## COS
 
 | 项 | 值 |
 |---|---|
-| Bucket | 待用户提供（建议 `jazimprofile-media`） |
-| Region | 待用户提供（建议 `ap-guangzhou`） |
+| Bucket | ✅ `jazimprofile-media-1465643833`（单 AZ，用户已创建） |
+| Region | ✅ `ap-guangzhou` |
+| coscli | ✅ 已配置（D:\coscli-windows-386.exe，.cos.yaml alias=jazim-media） |
+| Upload | ✅ 731 文件 / 1563.91 MB 已上传至 `cos://jazimprofile-media-1465643833/assets/` |
 | m3u8 count | 95 |
 | ts count | 635 |
 | other | 1（README.md） |
 | Total media | 731 文件 / 1563.91 MB |
-| Upload validation | 待 COS 生效（`npm run verify:media`，当前输出 PENDING，不误报） |
-| media.jazimportfolio.com | 待用户配置（COS + 自定义域名 + DNS + HTTPS） |
-| CORS | 指南已生成（COS_CORS_GUIDE.md），需配置具体 Origin |
+| Bucket 策略 | ✅ `assets/*` 匿名只读已生效（2026-08-09，coscli bucket-policy） |
+| Upload validation | ✅ **95/95（100%）playlist 可达，0 broken segment**（`npm run verify:media`，2026-08-09） |
+| 媒体域名 | ✅ COS 默认域名 `jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`（免备案，自带 HTTPS） |
+| media.jazimportfolio.com | ⏳ 自定义域名需 ICP 备案，备案后切换 |
+| CORS | ⏳ 指南已生成（COS_CORS_GUIDE.md）；控制台待配置 3 个 Origin |
 | Manifest | ✅ `COS_MEDIA_UPLOAD_MANIFEST.csv`（含 sha256 / expected_cos_path / expected_public_url） |
 | HLS 完整性 | ✅ BROKEN LOCAL HLS REFERENCES = **0** |
 
@@ -77,7 +84,7 @@
 | Broken Routes | ✅ 0（深链接 #/projects/.../case/... 正常） |
 | Desktop QA | ✅（本地生产预览 8090 全模块渲染正常） |
 | Mobile QA | 待线上（样式与桌面同源，此前轮次已覆盖） |
-| Video QA | 本地开发 ✅（HLS 播放正常）；生产待 COS 生效后全量验证 |
+| Video QA | 生产媒体在线验证 ✅ 95/95（COS 默认域名）；线上页面播放待 CORS + 重新部署后实测 |
 | PDF | ✅ 不变（QR 指向 jazimportfolio.com） |
 | QR | ✅ 不变（指向 https://jazimportfolio.com/#/...） |
 | Canonical | 正式站 = https://jazimportfolio.com/（github.io 不作 Canonical） |
@@ -95,13 +102,14 @@
 
 按顺序，一次一步：
 
-1. ✅ ~~安装 Git / 创建 Repo / Push~~（已通过 GitKraken 完成，仓库 Public）
-2. ✅ ~~GitHub Pages~~（已上线 https://jazimlau.github.io/jazim-portfolio/）
-3. **腾讯云**：创建 COS Bucket → 配置 coscli → `npm run cos:media` 上传媒体
-4. 配置 `media.jazimportfolio.com`（COS 自定义域名 + DNS + HTTPS + CORS）→ `npm run verify:media`
-5. `npm run build:deploy` → 上传 `Jazim-Portfolio-EdgeOne.zip` 到 EdgeOne
-6. 绑定 `jazimportfolio.com` / `www` + HTTPS
-7. 线上 QA（桌面多分辨率 + 移动 + 视频专项 + PDF + QR）
+1. ✅ ~~安装 Git / 创建 Repo / Push~~（已通过 GitHub Desktop 完成，仓库 Public）
+2. ✅ ~~GitHub Pages~~（已上线 https://jazimlau.github.io/jazim-portfolio/，rebrand 新域名构建已验证上线）
+3. ✅ ~~腾讯云 COS~~（Bucket 已建 + coscli 已配 + 731 文件已上传）
+4. ✅ ~~媒体免备案方案~~（Bucket 策略 + COS 默认域名 + `verify:media` 95/95 通过）
+5. **控制台配置 CORS**（3 个 Origin：jazimportfolio.com / www / jazimlau.github.io；GET/HEAD；`*`；600）→ 提交并推送新构建（GitHub Desktop）→ Pages 自动重新部署
+6. **绑定主站域名**：Pages Settings → Custom domain `jazimportfolio.com` + DNS CNAME（`jazimportfolio.com`→`jazimlau.github.io`，`www` 同）
+7. 备案后（可选）：`npm run build:deploy` → 上传 `Jazim-Portfolio-EdgeOne.zip` 到 EdgeOne → 绑定 + HTTPS
+8. 线上 QA（桌面多分辨率 + 移动 + 视频专项 + PDF + QR）
 
 ---
 
@@ -110,13 +118,15 @@
 | 阶段 | 状态 |
 |---|---|
 | LOCAL PREPARATION | **PASS** |
-| GIT | **PASS**（GitKraken：Init / Commit / main / Push） |
+| GIT | **PASS**（GitHub Desktop：Init / Commit / main / Push） |
 | GITHUB REPOSITORY | **PASS**（https://github.com/JazimLau/jazim-portfolio，Public） |
-| GITHUB WORKFLOW | **PASS**（Actions 全绿） |
-| GITHUB PAGES | **PASS**（https://jazimlau.github.io/jazim-portfolio/ 已上线） |
-| TENCENT ARTIFACT | **READY** |
+| GITHUB WORKFLOW | **PASS**（Actions 全绿，含 rebrand 重跑） |
+| GITHUB PAGES | **PASS**（已上线；rebrand 构建 index-C6atAT-c.js 在线） |
+| TENCENT ARTIFACT | **READY**（ZIP 已重打：6.62MB / 58 文件 / HLS 0） |
 | COS MANIFEST | **READY** |
-| CLOUD CONFIGURATION | **WAITING FOR USER**（COS / EdgeOne / 域名 / HTTPS） |
+| COS UPLOAD | **PASS**（731 文件已上传） |
+| MEDIA ONLINE | **PASS**（95/95 playlist 可达，0 broken） |
+| CLOUD CONFIGURATION | **WAITING FOR USER**（CORS 控制台 → 推送新构建 → Pages 自定义域名 + DNS） |
 
 > 不写「DEPLOYMENT COMPLETE」。只有 GitHub Repo Push / GitHub Pages / COS /
 > media.jazimportfolio.com / EdgeOne / jazimportfolio.com / HTTPS / CORS / Video 全部 PASS，

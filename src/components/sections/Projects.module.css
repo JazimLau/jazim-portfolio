@@ -734,6 +734,144 @@
   }
 }
 
+/* =========================================================================
+   手机端（≤767px）：PRODUCT 筛选改为横向 Scrollable Rail
+   仅覆盖移动端；≥768px 保持桌面 Grid 布局不变。
+   ========================================================================= */
+@media (max-width: 767px) {
+  /* 项目卡占满安全区：覆盖 Projects.tsx 内联的 78% slot 宽度 */
+  .slot {
+    flex: 0 0 100% !important;
+  }
+  /* 全宽卡片时消除轮播左右露出间距（gap 由 Projects.tsx 内联设置，需 !important） */
+  .track {
+    gap: 0 !important;
+  }
+  .stage {
+    padding-block: 0;
+  }
+
+  /* 筛选面板 / 选择面板：压缩内边距，正文尽量占满安全区 */
+  .filterPanel {
+    padding: 12px 12px 14px;
+    margin-bottom: 18px;
+  }
+  .selectPanel {
+    padding: 14px 12px 10px;
+  }
+  .panelTop {
+    margin-bottom: 8px;
+  }
+  .levelTags {
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+  .subLevel {
+    margin-bottom: 12px;
+  }
+  .subHint {
+    margin-bottom: 8px;
+    font-size: 10px;
+  }
+
+  /* 产品选择器：横向 Rail（一行，可触摸横滑，隐藏滚动条） */
+  .subGrid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding: 2px 1px 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .subGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .subChip {
+    position: relative;
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 10px 14px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border: 1px solid var(--border-soft);
+    background: rgba(7, 11, 9, 0.55);
+  }
+  /* Active：紫色描边 + 底部 2px Active Line（不改变尺寸 / 不缩放 / 不跳动） */
+  .subChipOn {
+    border-color: var(--accent-purple);
+    background: var(--purple-soft);
+    color: var(--text-primary);
+  }
+  .subChipOn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent-purple);
+    pointer-events: none;
+  }
+  .subChipOn .subIndex {
+    color: var(--accent-lime);
+  }
+
+  /* 一级轨道 chips 与计数：压缩间距 */
+  .filterBar {
+    gap: 10px;
+  }
+  .chip {
+    padding: 8px 10px;
+  }
+
+  /* 滚动提示紧凑 */
+  .scrollHint {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+
+  /* ── 移动端顺序：一级筛选在上，「点击产品查看对应项目」产品 Rail 移到其下方 ── */
+  .filterPanel {
+    display: flex;
+    flex-direction: column;
+  }
+  .panelTop {
+    order: 1;
+  }
+  .levelTags {
+    order: 2;
+  }
+  .filterBar {
+    order: 3;
+  }
+  .subLevel {
+    order: 4;
+  }
+  .scrollHint {
+    order: 5;
+  }
+
+  /* ── 中文模式（CN）：一级筛选 chips 以中文为主文案，隐藏英文主标签 ── */
+  :global(html[data-lang='CN']) .chipLabel {
+    display: none;
+  }
+  :global(html[data-lang='CN']) .chipZh {
+    display: inline;
+  }
+
+  /* ── 左右切换键同一水平：隐藏会换行的拖拽提示，箭头与进度条同行 ── */
+  .controls {
+    flex-wrap: nowrap;
+  }
+  .dragHint {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .chip,
   .navBtn,
