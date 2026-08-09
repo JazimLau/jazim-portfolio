@@ -481,6 +481,12 @@ export function VideoPreview({
     const v = videoRef.current
     if (!v || videoFailed || !currentSrc) return
     if (v.paused) {
+      /* 用户显式点击播放：默认开启声音（用户手势内带声播放不受浏览器限制）。
+         自动播放（auto / 悬停）仍保持静音，兼容浏览器自动播放策略并避免叠声。 */
+      if (muted) {
+        setSoundOn(true)
+        setLocalMuted(false)
+      }
       play()
     } else {
       v.pause()
