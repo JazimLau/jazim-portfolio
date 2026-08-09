@@ -7,6 +7,11 @@
   isolation: isolate;
 }
 
+/* 视频加载中（auto 模式换源 / 首载）：纯黑底，隐藏封面避免停在旧画面 */
+.wrapLoading {
+  background: #000;
+}
+
 .video,
 .cover {
   position: absolute;

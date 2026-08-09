@@ -221,6 +221,8 @@ export function VideoPreview({
 
   const [inView, setInView] = useState(!lazy)
   const [videoFailed, setVideoFailed] = useState(() => sources.length === 0)
+  /* 视频加载中（HLS 拉流/解码未就绪）：auto 模式加载时隐藏封面露出黑底 */
+  const [videoLoading, setVideoLoading] = useState(() => sources.length > 0)
   const [coverFailed, setCoverFailed] = useState(!cover)
   const [playing, setPlaying] = useState(false)
   /* 播放意图：等待数据就绪（canplay）后自动开始播放。
@@ -309,7 +311,10 @@ export function VideoPreview({
   /* m3u8 走 hls.js，其余走原生 src；加载失败时回落到封面/占位。
      懒加载时 video 元素在 inView 后才挂载，因此把 src 依赖绑定到 showVideo，
      元素挂载后 effect 才会真正挂载视频源。 */
-  useHlsVideo(videoRef, inView && !videoFailed ? currentSrc : undefined, () => setVideoFailed(true))
+  useHlsVideo(videoRef, inView && !videoFailed ? currentSrc : undefined, () => {
+    setVideoFailed(true)
+    setVideoLoading(false)
+  })
 
   /* 切换视频时重置播放态（进度 / 时长由 PlaybackStatus 随 video 事件自同步）。
      若切换前正在播放（或 auto 模式始终期望播放），保留播放意图，
@@ -318,6 +323,7 @@ export function VideoPreview({
     const wasPlaying = playingRef.current
     setPlaying(false)
     setVideoFailed(false)
+    setVideoLoading(true)
     pendingPlayRef.current = pendingPlayRef.current || wasPlaying || modeRef.current === 'auto'
   }, [currentSrc])
 
@@ -351,10 +357,12 @@ export function VideoPreview({
   /* 数据就绪（canplay）后自动续播：
      - auto 模式换源后 hls 加载完成再拉起播放（此前直接 play 因无数据无效）；
      - 手动模式在加载中点过播放（pendingPlayRef）时，就绪后自动开始。
+     - loadeddata 同时结束「加载中」黑底状态。
      video 元素随 inView / videoFailed 挂载/卸载，监听需随之重挂。 */
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
+    const onReady = () => setVideoLoading(false)
     const onCanPlay = () => {
       if (!pendingPlayRef.current && modeRef.current !== 'auto') return
       pendingPlayRef.current = false
@@ -365,8 +373,12 @@ export function VideoPreview({
         })
       }
     }
+    v.addEventListener('loadeddata', onReady)
     v.addEventListener('canplay', onCanPlay)
-    return () => v.removeEventListener('canplay', onCanPlay)
+    return () => {
+      v.removeEventListener('loadeddata', onReady)
+      v.removeEventListener('canplay', onCanPlay)
+    }
   }, [inView, videoFailed])
 
   /* ---------- 懒加载：进入视口才请求资源 ---------- */
@@ -628,14 +640,18 @@ export function VideoPreview({
   }, [])
 
   const showVideo = inView && !videoFailed && !!currentSrc
-  const showCover = !coverFailed && (!playing || mode === 'hover')
+  /* auto 模式加载中：隐藏封面露出黑底；hover 模式封面常显 */
+  const showCover =
+    !coverFailed && !(mode === 'auto' && videoLoading) && (!playing || mode === 'hover')
   const showFallback = videoFailed && coverFailed
 
   return (
     <>
       <div
         ref={wrapRef}
-        className={`${styles.wrap} ${className}`}
+        className={`${styles.wrap} ${className} ${
+          mode === 'auto' && videoLoading ? styles.wrapLoading : ''
+        }`}
         style={{ aspectRatio: aspect }}
         onPointerEnter={handlePointerEnter}
         onPointerMove={() => showControlsTemporarily()}
@@ -669,7 +685,10 @@ export function VideoPreview({
             preload="metadata"
             autoPlay={mode === 'auto'}
             aria-label={alt}
-            onError={() => setVideoFailed(true)}
+            onError={() => {
+              setVideoFailed(true)
+              setVideoLoading(false)
+            }}
             onPlaying={handlePlaying}
           />
         )}
