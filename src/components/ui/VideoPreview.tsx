@@ -127,7 +127,12 @@ function PlaybackStatus({
   return (
     <>
       <span className={styles.timecode}>
-        {formatTime(time)} / {duration ? formatTime(duration) : '--:--'}
+        {formatTime(time)} /{' '}
+        {ready && !duration
+          ? t('加载中', 'LOADING')
+          : duration
+            ? formatTime(duration)
+            : '--:--'}
       </span>
       <div
         ref={trackRef}
@@ -218,6 +223,14 @@ export function VideoPreview({
   const [videoFailed, setVideoFailed] = useState(() => sources.length === 0)
   const [coverFailed, setCoverFailed] = useState(!cover)
   const [playing, setPlaying] = useState(false)
+  /* 播放意图：等待数据就绪（canplay）后自动开始播放。
+     覆盖两种场景：①播放中切换视频 → 切换后自动续播；②加载中点播放 → 就绪后自动开始。
+     否则线上 COS 加载需数秒，切换/点播后还得再手动按一次播放。 */
+  const pendingPlayRef = useRef(false)
+  const playingRef = useRef(false)
+  playingRef.current = playing
+  const modeRef = useRef(mode)
+  modeRef.current = mode
   /* 全屏状态：跟随浏览器 fullscreenchange 同步（ESC 退出也由该事件驱动） */
   const [isFullscreen, setIsFullscreen] = useState(false)
 
@@ -298,10 +311,14 @@ export function VideoPreview({
      元素挂载后 effect 才会真正挂载视频源。 */
   useHlsVideo(videoRef, inView && !videoFailed ? currentSrc : undefined, () => setVideoFailed(true))
 
-  /* 切换视频时重置播放态（进度 / 时长由 PlaybackStatus 随 video 事件自同步） */
+  /* 切换视频时重置播放态（进度 / 时长由 PlaybackStatus 随 video 事件自同步）。
+     若切换前正在播放（或 auto 模式始终期望播放），保留播放意图，
+     数据就绪后由 canplay 监听自动续播，避免切换后停住要再按一次。 */
   useEffect(() => {
+    const wasPlaying = playingRef.current
     setPlaying(false)
     setVideoFailed(false)
+    pendingPlayRef.current = pendingPlayRef.current || wasPlaying || modeRef.current === 'auto'
   }, [currentSrc])
 
   /* 全局声音开关 / 局部音量 / 局部静音变化时同步到当前 video 元素 */
@@ -330,6 +347,27 @@ export function VideoPreview({
       /* 播放被拦截时静默处理：由 playing 状态回落封面 */
     })
   }, [mode, currentSrc, inView, videoFailed])
+
+  /* 数据就绪（canplay）后自动续播：
+     - auto 模式换源后 hls 加载完成再拉起播放（此前直接 play 因无数据无效）；
+     - 手动模式在加载中点过播放（pendingPlayRef）时，就绪后自动开始。
+     video 元素随 inView / videoFailed 挂载/卸载，监听需随之重挂。 */
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    const onCanPlay = () => {
+      if (!pendingPlayRef.current && modeRef.current !== 'auto') return
+      pendingPlayRef.current = false
+      if (v.paused) {
+        claimPlayback(v)
+        v.play().catch(() => {
+          /* 被拦截：静默回落封面 */
+        })
+      }
+    }
+    v.addEventListener('canplay', onCanPlay)
+    return () => v.removeEventListener('canplay', onCanPlay)
+  }, [inView, videoFailed])
 
   /* ---------- 懒加载：进入视口才请求资源 ---------- */
   useEffect(() => {
@@ -403,6 +441,12 @@ export function VideoPreview({
     const v = videoRef.current
     if (!v || videoFailed) return
     claimPlayback(v)
+    /* 数据未就绪（HLS 拉流中）：记录播放意图，canplay 后自动开始，
+       避免「按了播放没反应、加载完还要再按一次」。 */
+    if (v.readyState < 2) {
+      pendingPlayRef.current = true
+      return
+    }
     v.play()
       .then(() => setPlaying(true))
       .catch(() => {
@@ -429,6 +473,7 @@ export function VideoPreview({
     } else {
       v.pause()
       releasePlayback(v)
+      pendingPlayRef.current = false
       setPlaying(false)
     }
     showControlsTemporarily()

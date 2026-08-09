@@ -31,6 +31,8 @@ ALLOWED_ORIGINS = [
     'https://jazimlau.github.io',
     'https://jazimportfolio.com',
     'https://www.jazimportfolio.com',
+    # Vercel 镜像站（Git 集成部署，域名形如 xxx.vercel.app；通配覆盖全部 Vercel 项目）
+    'https://*.vercel.app',
     # 本地调试端口（vite dev 5173 / vite preview 4173）
     'http://localhost:5173',
     'http://127.0.0.1:5173',
