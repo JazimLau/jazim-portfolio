@@ -1,0 +1,764 @@
+﻿.root {
+  position: relative;
+}
+
+.grid,
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+}
+
+.entries {
+  position: relative;
+}
+
+/* =========================================================================
+   涓垪璺緞锛氶殢婊氬姩閫愭鐐逛寒
+   ========================================================================= */
+
+.path {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(150px, 15vw, 232px);
+  width: 2px;
+  pointer-events: none;
+}
+
+/* 像素虚线轨道：一格一格的点，不像普通模板那根细线 */
+.pathTrack {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--border-strong) 0 3px,
+    transparent 3px 9px
+  );
+  opacity: 0.5;
+}
+
+/* 填充段：逐段点亮的像素分段轨道（不再是直线渐变彩虹条） */
+.pathFill {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--accent-lime) 0 3px,
+    transparent 3px 7px
+  );
+  box-shadow: 0 0 8px rgba(184, 255, 61, 0.25);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+/* =========================================================================
+   鍗曚釜浠诲姟鏉＄洰
+   ========================================================================= */
+
+.entry {
+  display: grid;
+  grid-template-columns: clamp(150px, 15vw, 232px) 0 minmax(0, 1fr);
+  gap: 0;
+  /* 整体密度压缩：单段经历尽量一屏内看全 */
+  padding-block: clamp(20px, 2.6vw, 34px);
+}
+
+/* ---------- 宸︼細骞翠唤鍧愭爣 ---------- */
+.yearCol {
+  padding-right: clamp(20px, 2.4vw, 40px);
+}
+
+.year {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: sticky;
+  top: 130px;
+  will-change: transform;
+}
+
+.yearIndex {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.6vw, 3.6rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.1);
+  transition: color 0.5s var(--ease-out);
+}
+
+.entryActive .yearIndex {
+  color: var(--accent-purple);
+}
+
+.yearPeriod {
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.05vw, 0.95rem);
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  transition: color 0.5s var(--ease-out);
+}
+
+.entryActive .yearPeriod {
+  color: var(--text-primary);
+}
+
+.yearKind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* 涓枃鍏ㄧО锛堥」鐩煿璁粡鍘嗭級姣斿師鏉ョ殑 TRAINING 闀匡紝鍏佽鎹㈣骞剁暀鍑鸿璺?*/
+  flex-wrap: wrap;
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.yearKind svg {
+  flex: none;
+}
+
+/* 鍩硅缁忓巻鐢ㄩ潚鏌犺壊 + 宸︿晶绔栫嚎锛屽拰瀹炰範缁忓巻鍦ㄥ舰鐘朵笂涔熻兘鍖哄垎寮€ */
+.entryTraining .yearKind {
+  padding-left: 7px;
+  border-left: 2px solid var(--accent-lime);
+  color: var(--accent-lime);
+}
+
+/* ---------- 涓細鑺傜偣鏍囪锛堝儚绱犳柟鍨嬶級 ---------- */
+.markerCol {
+  position: relative;
+  width: 0;
+}
+
+.marker {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  background: var(--background-main);
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  color: var(--text-dim);
+  z-index: 2;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45);
+  transition: color 0.5s var(--ease-out), border-color 0.5s var(--ease-out),
+    background 0.5s var(--ease-out);
+}
+
+/* 像素菱形核心 */
+.markerCore {
+  width: 9px;
+  height: 9px;
+  background: currentColor;
+  transform: rotate(45deg);
+  transition: background 0.5s var(--ease-out);
+}
+
+.entryActive .marker {
+  color: var(--accent-lime);
+  border-color: var(--accent-lime);
+  background: #0d1408;
+}
+
+/* 像素方形脉冲环（虚线 + 跳变） */
+.markerRing {
+  position: absolute;
+  inset: -7px;
+  border: 1px dashed transparent;
+  border-radius: 2px;
+  transition: border-color 0.5s var(--ease-out);
+}
+
+.entryActive .markerRing {
+  border-color: rgba(184, 255, 61, 0.4);
+  animation: marker-pulse 2.6s steps(5) infinite;
+}
+
+@keyframes marker-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.22);
+    opacity: 0.3;
+  }
+}
+
+/* =========================================================================
+   鍙筹細浠诲姟璇︽儏
+   ========================================================================= */
+
+.detail {
+  position: relative;
+  margin-left: clamp(24px, 3vw, 52px);
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.5s var(--ease-out), background 0.5s var(--ease-out);
+
+  clip-path: polygon(
+    0 0,
+    calc(100% - 26px) 0,
+    100% 26px,
+    100% 100%,
+    16px 100%,
+    0 calc(100% - 16px)
+  );
+}
+
+.entryActive .detail {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--background-elevated);
+}
+
+/* 激活卡片的扫描线纹理 */
+.entryActive .detail::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 6px,
+    rgba(255, 255, 255, 0.014) 6px 7px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 鎻ず鍔ㄧ敾鐨勭湡姝ｈ浇浣擄細.detail 澶栧眰鏄垏瑙?polygon()锛堝浐瀹氬舰鐘讹紝涓嶅弬涓庤ˉ闂达級锛?   inset() 鏃犳硶骞虫粦琛ラ棿鍒?polygon()锛孏SAP 浼氭寜浣嶇疆纭彃鍊煎嚭涓嶆垚绔嬬殑涓棿鎬侊紝
+   鎾埌鏈€鍚庡啀纭烦鎴愭纭舰鐘垛€斺€斿嵆"鎾畬鍙堝脊鍥炲垵濮?鐨勭湡姝ｆ垚鍥犮€?   鎷嗕竴灞傛病鏈夐潤鎬?clip-path 鐨勫唴灞傛潵璺?inset() 鎻ず锛岀函鏁板瓧琛ラ棿锛屼笉浼氬啀鎻掗敊銆?*/
+.detailInner {
+  padding: clamp(18px, 2vw, 26px);
+  will-change: clip-path;
+}
+
+.detailHead {
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.headInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.org {
+  font-family: var(--font-display);
+  /* 公司名主体：相比原版放大约 12%，成为整张经历卡最明显的主体 */
+  font-size: clamp(1.45rem, 2.35vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.role {
+  font-family: var(--font-display);
+  /* 岗位名保持紫色 Accent，放大约 10% */
+  font-size: clamp(1.1rem, 1.55vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-purple);
+  margin: 0;
+}
+
+.deptLine {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  margin: 2px 0 0;
+}
+
+.deptTag {
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-soft);
+}
+
+.metaLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-soft);
+}
+
+.metaPeriod {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-secondary);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.entryActive .status {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.3);
+}
+
+.statusDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  background: currentColor;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* 进行中的经历（2026 网易雷火）：状态点橙色 + 呼吸光环，
+   需同时覆盖激活态（激活态默认会把状态变 lime），因此补 .entryActive .statusLive */
+.statusLive {
+  color: var(--accent-orange);
+  border-color: rgba(255, 107, 61, 0.32);
+}
+
+.entryActive .statusLive {
+  color: var(--accent-orange);
+  border-color: rgba(255, 107, 61, 0.32);
+}
+
+.statusLive .statusDot {
+  animation: status-breathe 2.2s ease-in-out infinite;
+}
+
+/* 已完成的经历（COMPLETE）：状态文字与圆点改为绿色，表示已经收尾。
+   需覆盖激活态（激活态默认会把状态变 lime），因此补 .entryActive .statusDone */
+.statusDone {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.32);
+}
+
+.entryActive .statusDone {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.32);
+}
+
+.statusDone .statusDot {
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+@keyframes status-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 61, 0.5), 1px 1px 0 rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 107, 61, 0), 1px 1px 0 rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ---------- 鍐呭鍧?---------- */
+.block {
+  margin-bottom: 16px;
+}
+
+.block:last-child {
+  margin-bottom: 0;
+}
+
+.blockLabel {
+  /* DUTIES / KEYWORDS / RESULTS 共用同一个 class：像素方块标记 + 放大字号 */
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.blockLabel::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--accent-purple);
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* 宸ヤ綔鍐呭 */
+.duties {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 7px 22px;
+}
+
+/* 职责分组：两组并排，组内单列。高度由内容多的一张自然决定（height:auto），
+   不再给人为固定高度；内边距收紧约 20%，避免大卡片里只有少量内容。 */
+.dutyGroups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dutyGroup {
+  height: auto;
+  padding: 11px 12px 10px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--border-primary);
+}
+
+.dutyGroupLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.dutyGroupTick {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  background: var(--accent-purple);
+  transform: rotate(45deg);
+}
+
+.dutyGroup:first-child .dutyGroupTick {
+  background: var(--accent-lime);
+}
+
+.dutyGroup .duties {
+  grid-template-columns: 1fr;
+}
+
+.dutyItem {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.dutyTick {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin-top: 7px;
+  background: var(--border-strong);
+  transform: rotate(45deg);
+  transition: background 0.5s var(--ease-out);
+}
+
+.entryActive .dutyTick {
+  background: var(--accent-purple);
+}
+
+/* 鍏抽敭璇?*/
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+.keyword {
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.022);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.keyword:hover {
+  color: var(--text-primary);
+  border-color: var(--purple-line);
+}
+
+/* 鎴愭灉 */
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.resultItem {
+  padding: 7px 12px;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  background: var(--purple-soft);
+  border-left: 2px solid var(--accent-purple);
+}
+
+.entryTraining .resultItem {
+  background: var(--lime-soft);
+  border-left-color: var(--accent-lime);
+}
+
+/* 鏁版嵁缁撴灉鍗★細鏁板瓧鍦ㄤ笂鏂广€佽繙澶т簬鑱岃矗鏂囧瓧锛屾牳蹇冩暟鎹吀鎬х豢 */
+/* 数据结果卡：HUD Statistic Chips —— 整体缩小（宽 -20~30% / 高 -20~25% / 数字 -20~25%），
+   横向排列可换行，最大宽度约占内容区 70%，不再像企业 KPI 大屏抢过工作内容。 */
+.resultStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+  max-width: clamp(320px, 70%, 640px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resultStatCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 7px;
+  min-height: 66px;
+  padding: 10px 10px 9px;
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent-lime);
+  overflow: hidden;
+  cursor: default;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+/* 顶部酸绿色扫描线 */
+.resultStatCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-lime), transparent);
+  opacity: 0.3;
+}
+
+.resultStatCard:hover {
+  border-color: rgba(184, 255, 61, 0.5);
+  transform: translateY(-2px);
+}
+
+.resultStatValue {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: var(--accent-lime);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.resultStatLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* 鎴愭灉 / 宸ヤ綔鍐呭閲岀殑寮鸿皟鍏抽敭璇嶏細濉厖鑹蹭粛淇濈暀鍙鎬э紝
+   鍙犱竴灞?lime 鍛煎惛鍏夋檿鍋氬姩鏁堟彁绀猴紝涓嶉潬绾壊鍧椾紶閫掍俊鎭?*/
+.highlight {
+  color: var(--accent-gold);
+  font-weight: 700;
+  background: none;
+  animation: gold-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes gold-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(184, 255, 61, 0);
+  }
+  50% {
+    text-shadow: 0 0 9px var(--gold-glow);
+  }
+}
+
+/* =========================================================================
+   椤圭洰鍩硅缁忓巻锛氱嫭绔嬫澘鍧?   涓嶆寕鍦ㄥ疄涔犵粡鍘嗙殑涓垪璺緞涓婏紝鐢ㄩ棿闅?+ 鏍囧ご + 铏氱嚎妗嗘妸瀹冭窡瀹炰範缁忓巻鍒嗗紑锛?   閬垮厤鐪嬭捣鏉ュ儚鏄悓涓€鏉″疄涔犲饱鍘嗙殑寤朵几銆?   ========================================================================= */
+
+.trainingSection {
+  margin-top: clamp(36px, 4.4vw, 64px);
+  padding-top: clamp(28px, 3.2vw, 44px);
+  border-top: 1px dashed var(--border-soft);
+}
+
+.trainingHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-bottom: clamp(14px, 2vw, 22px);
+  color: var(--accent-lime);
+}
+
+.trainingLabel {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.trainingHint {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.trainingEntries .entry {
+  padding-block: clamp(16px, 2vw, 26px);
+}
+
+
+/* =========================================================================
+   鍝嶅簲寮?   ========================================================================= */
+
+@media (max-width: 900px) {
+  /* 绐勫睆锛氬勾浠界Щ鍒拌鎯呬笂鏂瑰苟妯悜鎺掑垪锛屽唴瀹逛笉涓㈠け */
+  .path {
+    left: 13px;
+  }
+
+  .entry {
+    grid-template-columns: 26px minmax(0, 1fr);
+    grid-template-areas:
+      'marker year'
+      'marker detail';
+  }
+
+  .markerCol {
+    grid-area: marker;
+    width: auto;
+  }
+
+  .marker {
+    left: 13px;
+  }
+
+  .yearCol {
+    grid-area: year;
+    padding-right: 0;
+    margin-left: 22px;
+    margin-bottom: 12px;
+  }
+
+  .year {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .yearIndex {
+    font-size: 1.7rem;
+  }
+
+  .detail {
+    grid-area: detail;
+    margin-left: 22px;
+  }
+
+  .detailHead {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .duties {
+    grid-template-columns: 1fr;
+  }
+  .dutyGroups {
+    grid-template-columns: 1fr;
+  }
+  .detailInner {
+    padding: 18px;
+  }
+  .resultStats {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entryActive .markerRing {
+    animation: none;
+  }
+  .highlight {
+    animation: none;
+  }
+  .marker,
+  .detail,
+  .yearIndex,
+  .yearPeriod,
+  .dutyTick,
+  .status {
+    transition: none;
+  }
+}

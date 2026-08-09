@@ -1,0 +1,93 @@
+/* =========================================================================
+   视频预览左右切换箭头 —— Projects 卡片 / Case 详情 / Detail 详情三处共用
+   同一套几何与动效（单一来源），杜绝各页面临时补丁导致的跳位与不一致。
+   外层按钮只负责「定位 + 命中区」，任何状态都不改变 transform；
+   hover/press 反馈由内部 .arrowIcon 承担。
+   ========================================================================= */
+
+.videoNavBtn {
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  /* 唯一允许的 transform：垂直居中。hover/active/focus 全部重新断言此值，
+     以覆盖全局 button:active 的 translateY(1px)（data-video-nav 已隔离，双保险）。 */
+  transform: translateY(-50%);
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 44px;
+  max-height: 44px;
+  padding: 0;
+  background: rgba(7, 11, 9, 0.72);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.videoNavBtnPrev {
+  left: 12px;
+}
+
+.videoNavBtnNext {
+  right: 12px;
+}
+
+/* 任何状态都保持垂直居中定位：杜绝点击/悬停/聚焦瞬间按钮跳位 */
+.videoNavBtn:hover,
+.videoNavBtn:focus-visible,
+.videoNavBtn:active:not(:disabled) {
+  transform: translateY(-50%);
+}
+
+.videoNavBtn:hover:not(:disabled),
+.videoNavBtn:focus-visible:not(:disabled) {
+  border-color: var(--card-accent, var(--accent, var(--accent-purple)));
+  color: var(--card-accent, var(--accent, var(--accent-purple)));
+}
+
+.videoNavBtn:active:not(:disabled) {
+  border-color: var(--card-accent, var(--accent, var(--accent-purple)));
+  background: rgba(117, 87, 255, 0.22);
+}
+
+/* 键盘聚焦：outline 高亮，绝不改变 border-width / 几何 */
+.videoNavBtn:focus-visible {
+  outline: 2px solid var(--card-accent, var(--accent, var(--accent-purple)));
+  outline-offset: 2px;
+}
+
+/* 内部箭头图标：hover / press 只移动图标（沿点击方向 2px），按钮框恒定不动 */
+.arrowIcon {
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.videoNavBtnPrev:hover .arrowIcon,
+.videoNavBtnPrev:active .arrowIcon {
+  transform: translateX(-2px);
+}
+
+.videoNavBtnNext:hover .arrowIcon,
+.videoNavBtnNext:active .arrowIcon {
+  transform: translateX(2px);
+}
+
+.videoNavBtn:active .arrowIcon {
+  opacity: 0.75;
+}
+
+.videoNavBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}

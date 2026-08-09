@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Jazim Lau · 游戏动效设计 — Portfolio Deck 1920×1080</title>
+<style>
+@page { size: 1920px 1080px; margin: 0; }
+:root {
+  --bg:#070b09; --panel:#0b100d; --elev:#101612; --panel-active:#151d18;
+  --tx:#f2f3eb; --tx2:#b1b8b1; --tx3:#8f9891; --txdim:#6f7972;
+  --lime:#b8ff3d; --purple:#7557ff; --orange:#ff6b3d; --blue:#5bc8ff; --pink:#e04b9a;
+  --line:#2c352f; --line-soft:rgba(255,255,255,.07);
+  --safe-x:80px; --safe-top:72px; --safe-bottom:80px;
+  /* ---- typography tokens (single source of truth) ---- */
+  --fs-page-title:68px; --fs-case-title:50px; --fs-card-title:30px; --fs-section-title:27px;
+  --fs-body-lg:18px; --fs-body:17px; --fs-meta:14px; --fs-chip:13px; --fs-label:12px;
+  /* ---- image tokens ---- */
+  --overview-featured-img-w:320px; --overview-featured-img-h:180px;
+  --case-hero-h:500px; --case-frame-h:150px; --more-thumb-h:182px;
+  --font-title-cn:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC","Noto Sans SC","Segoe UI",sans-serif;
+  --font-display-en:"Barlow Condensed","Bahnschrift","Roboto Condensed","Arial Narrow","Impact","Segoe UI",sans-serif;
+  --font-body:"Inter","Segoe UI","PingFang SC","Microsoft YaHei UI","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-mono:"IBM Plex Mono","JetBrains Mono","Cascadia Mono","Consolas","Courier New",monospace;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html,body { background:#04060a; }
+.page {
+  width:1920px; height:1080px; position:relative; overflow:hidden;
+  background:var(--bg); color:var(--tx);
+  font-family:var(--font-body);
+  page-break-after:always; break-after:page;
+}
+.page:last-child { page-break-after:auto; break-after:auto; }
+
+/* ---------- page chrome ---------- */
+.bg-grid { position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:44px 44px; }
+.bg-noise { position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.04;
+  background-image:url("assets-optimized/noise.png");
+  background-repeat:repeat; background-size:128px 128px; }
+/* ---------- per page-type background motif (website Neo-Pixel system sync, very weak) ---------- */
+.ptype { position:absolute; z-index:0; pointer-events:none; }
+.ptype.lv1 { left:88px; bottom:64px; width:200px; height:104px; opacity:.05;
+  background-image:linear-gradient(var(--lime),var(--lime)),linear-gradient(var(--lime),var(--lime)),linear-gradient(var(--lime),var(--lime)),linear-gradient(var(--lime),var(--lime)),linear-gradient(var(--lime),var(--lime));
+  background-repeat:no-repeat;
+  background-size:28px 8px,56px 8px,84px 8px,112px 8px,140px 8px;
+  background-position:0 0,0 24px,0 48px,0 72px,0 96px; }
+.ptype.case { left:96px; bottom:60px; width:360px; height:52px; opacity:.03;
+  background-image:linear-gradient(90deg, var(--blue) 0 5px, transparent 5px 22px),linear-gradient(90deg, var(--blue) 0 4px, transparent 4px 18px),linear-gradient(90deg, var(--blue) 0 5px, transparent 5px 26px);
+  background-size:22px 1px,18px 1px,26px 1px; background-repeat:repeat-x;
+  background-position:0 0,4px 20px,2px 40px; }
+.ptype.idx { left:88px; top:250px; right:88px; height:36px; opacity:.04;
+  background-image:linear-gradient(90deg, var(--purple) 0 4px, transparent 4px 20px),linear-gradient(90deg, var(--orange) 0 3px, transparent 3px 16px),linear-gradient(90deg, var(--blue) 0 4px, transparent 4px 22px);
+  background-size:20px 1px,16px 1px,22px 1px; background-repeat:repeat-x;
+  background-position:0 0,5px 16px,2px 32px; }
+.ptype.skills { left:88px; bottom:56px; width:190px; height:92px; opacity:.05;
+  background-image:linear-gradient(var(--purple),var(--purple)),linear-gradient(var(--purple),var(--purple)),linear-gradient(var(--purple),var(--purple)),linear-gradient(90deg,var(--purple) 0 34px,transparent 34px 90px),linear-gradient(90deg,var(--purple) 0 30px,transparent 30px 90px);
+  background-repeat:no-repeat; background-size:6px 6px,6px 6px,6px 6px,90px 1px,90px 1px;
+  background-position:0 0,62px 44px,126px 82px,8px 22px,66px 64px; }
+.ptype.contact { right:96px; top:170px; width:240px; height:150px; opacity:.05;
+  border:1px solid rgba(184,255,61,.07); }
+.ptype.contact::before { content:''; position:absolute; inset:12px; border:1px solid rgba(255,255,255,.05); }
+.ptype.contact::after { content:'CONTACT CHANNEL / SYSTEM READY'; position:absolute; left:0; top:-15px;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.22em; color:rgba(255,255,255,.28); }
+.ghost { position:absolute; z-index:0; right:40px; bottom:-60px; pointer-events:none;
+  font-family:var(--font-display-en); font-weight:800; font-size:620px; line-height:1;
+  letter-spacing:-.04em; color:rgba(255,255,255,.026); user-select:none;
+  -webkit-text-stroke:1px rgba(255,255,255,.05); }
+.ghost.tiny { font-size:280px; right:70px; bottom:-20px; color:rgba(255,255,255,.035); }
+.track-line { position:absolute; z-index:0; height:2px; left:80px; right:80px;
+  background-image:linear-gradient(to right, rgba(255,255,255,.14) 0 8px, transparent 8px 18px);
+  background-size:18px 100%; background-repeat:repeat-x; opacity:.45; pointer-events:none; }
+.track-line.t1 { top:150px; }
+.track-pulse { position:absolute; top:-1px; width:8px; height:4px; background:var(--lime); opacity:.7; }
+
+/* ---------- top-right brand (single HUD line; left [ TAG ] removed) ---------- */
+.sysbar { position:absolute; top:36px; left:var(--safe-x); right:var(--safe-x); z-index:5;
+  display:flex; justify-content:flex-end; align-items:center; }
+.sysbar .r { font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.28em; color:var(--txdim); text-transform:uppercase; }
+.sysbar .r .dot { display:inline-block; width:7px; height:7px; background:var(--lime); margin-right:10px; }
+
+/* ---------- page head: blue EN auxiliary + CN main (single set, unified Y) ---------- */
+.phead { position:relative; z-index:3; padding:44px var(--safe-x) 0 var(--safe-x); }
+.phead .en-sub { font-family:var(--font-display-en); font-weight:600; font-size:17px; letter-spacing:.34em;
+  color:var(--blue); text-transform:uppercase; }
+.phead .en-sub .sq { color:var(--lime); margin-right:12px; }
+.phead h1 { font-family:var(--font-title-cn); font-weight:800; font-size:var(--fs-page-title); line-height:1.08;
+  letter-spacing:.02em; margin-top:6px; color:var(--tx); }
+.phead h1 .hl { color:var(--lime); }
+.phead h1 .hl.p { color:var(--purple); }
+.phead h1 .hl.o { color:var(--orange); }
+.phead .rule { height:1px; background:linear-gradient(90deg, var(--lime) 0 110px, var(--line) 110px 100%); margin-top:10px; }
+.phead .rule.p { background:linear-gradient(90deg, var(--purple) 0 110px, var(--line) 110px 100%); }
+.phead .rule.o { background:linear-gradient(90deg, var(--orange) 0 110px, var(--line) 110px 100%); }
+.phead .rule.b { background:linear-gradient(90deg, var(--blue) 0 110px, var(--line) 110px 100%); }
+
+/* ---------- footer ---------- */
+.pfoot { position:absolute; left:var(--safe-x); right:var(--safe-x); bottom:24px; z-index:5;
+  display:flex; justify-content:space-between; align-items:flex-end; }
+.pfoot .pgidx { font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.3em; color:var(--txdim); }
+.pfoot .pgidx b { color:var(--lime); font-weight:600; }
+.pfoot .pgname { font-family:var(--font-mono); font-size:11px; letter-spacing:.26em; color:var(--tx3); text-transform:uppercase; }
+
+/* ---------- chips ---------- */
+.chip { display:inline-block; font-family:var(--font-mono); font-size:var(--fs-chip); letter-spacing:.1em;
+  color:var(--tx2); border:1px solid var(--line); padding:5px 11px; margin:2px 6px 2px 0; }
+.chip.on { color:#06100a; background:var(--lime); border-color:var(--lime); font-weight:700; }
+.chip.p { color:var(--purple); border-color:rgba(117,87,255,.55); }
+.chip.o { color:var(--orange); border-color:rgba(255,107,61,.55); }
+.chip.b { color:var(--blue); border-color:rgba(91,200,255,.55); }
+
+/* ---------- corner marks ---------- */
+.corner { position:absolute; width:30px; height:30px; z-index:6; pointer-events:none; }
+.corner.c-tl { top:18px; left:18px; border-top:2px solid var(--line); border-left:2px solid var(--line); }
+.corner.c-tr { top:18px; right:18px; border-top:2px solid var(--line); border-right:2px solid var(--line); }
+.corner.c-bl { bottom:18px; left:18px; border-bottom:2px solid var(--line); border-left:2px solid var(--line); }
+.corner.c-br { bottom:18px; right:18px; border-bottom:2px solid var(--line); border-right:2px solid var(--line); }
+
+/* ---------- panels ---------- */
+.panel { position:relative; background:var(--panel); border:1px solid var(--line-soft);
+  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 0); }
+.panel .panel-tag { position:absolute; top:12px; left:18px; z-index:2;
+  font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.24em; color:var(--lime); text-transform:uppercase; }
+.panel .panel-tag.p { color:var(--purple); }
+.panel .panel-tag.o { color:var(--orange); }
+.panel .panel-tag.b { color:var(--blue); }
+.en { color:var(--tx2); font-size:.82em; letter-spacing:.02em; font-family:var(--font-body); }
+.mono { font-family:var(--font-mono); }
+ul.list { list-style:none; }
+ul.list li { position:relative; padding-left:18px; margin:7px 0; font-size:var(--fs-body); line-height:1.5; color:var(--tx); }
+ul.list li::before { content:'\25B8'; position:absolute; left:0; color:var(--lime); }
+
+/* ================= COVER (unchanged system, single HUD) ================= */
+.cover-hud { position:absolute; left:var(--safe-x); right:var(--safe-x); top:40px; z-index:5; display:flex; justify-content:space-between; align-items:center; }
+.cover-hud .l { font-family:var(--font-mono); font-size:13px; letter-spacing:.3em; color:var(--tx3); }
+.cover-hud .l b { color:var(--lime); }
+.cover-hud .r { font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.3em; color:var(--txdim); }
+.cover-title { position:relative; z-index:3; padding:150px var(--safe-x) 0 var(--safe-x); }
+.cover-kicker { font-family:var(--font-display-en); font-size:22px; letter-spacing:.42em; color:var(--lime); text-transform:uppercase; }
+.cover-h1-cn { font-family:var(--font-title-cn); font-weight:800; font-size:148px; line-height:1.04;
+  letter-spacing:.04em; color:var(--tx); margin-top:14px; }
+.cover-h1-cn .c2 { color:var(--lime); }
+.cover-h1-en { font-family:var(--font-display-en); font-weight:600; font-size:30px; letter-spacing:.4em;
+  color:var(--blue); text-transform:uppercase; margin-top:20px; }
+.cover-name { margin-top:28px; font-size:26px; letter-spacing:.3em; color:var(--tx2); }
+.cover-name b { color:var(--tx); font-weight:700; }
+.cover-meta { position:relative; z-index:3; margin:44px var(--safe-x) 0 var(--safe-x); display:flex; gap:60px; }
+.cover-meta .m { border-left:2px solid var(--line); padding-left:16px; }
+.cover-meta .m .k { font-family:var(--font-mono); font-size:10px; letter-spacing:.3em; color:var(--txdim); text-transform:uppercase; }
+.cover-meta .m .v { font-size:19px; color:var(--tx); margin-top:6px; letter-spacing:.04em; }
+.cover-meta .m .v b { color:var(--lime); }
+.cover-disciplines { position:relative; z-index:3; margin:26px var(--safe-x) 0 var(--safe-x); display:flex; gap:12px; }
+.cover-disciplines span { font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.26em; color:var(--tx2);
+  border:1px solid var(--line); padding:8px 16px; }
+.cover-right { position:absolute; right:120px; top:120px; bottom:120px; width:300px; z-index:1;
+  display:flex; flex-direction:column; justify-content:space-between; align-items:center;
+  border-left:1px solid rgba(255,255,255,.05); pointer-events:none; }
+.cover-right .cr-word { font-family:var(--font-display-en); font-weight:800; font-size:88px; line-height:.9;
+  color:rgba(255,255,255,.035); text-align:center; letter-spacing:-.02em; text-transform:uppercase;
+  -webkit-text-stroke:1px rgba(255,255,255,.04); }
+.cover-right .cr-ticks { display:flex; flex-direction:column; gap:12px; }
+.cover-right .cr-ticks i { display:block; width:46px; height:1px; background:rgba(255,255,255,.07); }
+.cover-right .cr-data { font-family:var(--font-mono); font-size:10px; letter-spacing:.34em;
+  color:rgba(255,255,255,.05); text-transform:uppercase; writing-mode:vertical-rl; }
+.cover-qr { position:absolute; right:var(--safe-x); bottom:40px; z-index:6; text-align:center; }
+.cover-qr img { width:96px; height:96px; image-rendering:pixelated; background:#fff; padding:6px;
+  box-shadow:4px 4px 0 rgba(0,0,0,.6); }
+.cover-qr .cap { font-family:var(--font-mono); font-size:9px; letter-spacing:.12em; color:var(--tx3); margin-top:8px; }
+
+/* ================= EXPERIENCE (2x2, enlarged inner typography) ================= */
+.exp-grid { position:relative; z-index:3; display:grid; grid-template-columns:1fr 1fr;
+  gap:30px 32px; padding:0 var(--safe-x); margin-top:30px; height:760px; align-content:start; }
+.exp-card { padding:44px 32px 26px; display:flex; flex-direction:column; }
+.exp-card .top { display:flex; justify-content:space-between; align-items:center; }
+.exp-card .period { font-family:var(--font-mono); font-size:15px; letter-spacing:.16em; color:var(--blue); }
+.exp-card .org { font-family:var(--font-title-cn); font-weight:700; font-size:32px; margin-top:14px;
+  letter-spacing:.02em; min-height:66px; line-height:1.25; }
+.exp-card .org .en2 { display:block; font-size:12px; color:var(--tx3); letter-spacing:.16em;
+  font-family:var(--font-mono); margin-top:6px; font-weight:400; }
+.exp-card .role { font-size:20px; color:var(--lime); margin-top:8px; letter-spacing:.02em; }
+.exp-card .duties { margin-top:14px; }
+.exp-card .duties li { font-size:17px; line-height:1.55; margin:5px 0; }
+.exp-card .kw { margin-top:12px; }
+.exp-card .kw .chip { font-size:13px; padding:5px 11px; }
+
+/* ================= PROJECT INDEX (grid locked; Stats Footer fixed) ================= */
+.idx-grid { position:relative; z-index:3; display:grid; grid-template-columns:repeat(5,1fr);
+  gap:20px; padding:0 var(--safe-x); margin-top:30px; height:770px; }
+.idx-card { padding:44px 22px 22px; display:grid;
+  grid-template-rows:auto auto auto auto 62px 1fr 160px; }
+.idx-card::before { content:''; position:absolute; top:0; left:16px; right:16px; height:2px; background:var(--lime); }
+.idx-card:nth-child(2)::before { background:var(--purple); }
+.idx-card:nth-child(3)::before { background:var(--orange); }
+.idx-card:nth-child(4)::before { background:var(--blue); }
+.idx-card:nth-child(5)::before { background:var(--pink); }
+.idx-card .no { font-family:var(--font-display-en); font-weight:700; font-size:64px; line-height:1; color:var(--lime); }
+.idx-card:nth-child(2) .no { color:var(--purple); }
+.idx-card:nth-child(3) .no { color:var(--orange); }
+.idx-card:nth-child(4) .no { color:var(--blue); }
+.idx-card:nth-child(5) .no { color:var(--pink); }
+.idx-card .t { font-family:var(--font-title-cn); font-weight:700; font-size:29px; margin-top:14px; line-height:1.15; }
+.idx-card .t2 { font-family:var(--font-mono); font-size:12px; letter-spacing:.16em; color:var(--tx3); margin-top:6px; text-transform:uppercase; }
+.idx-card .d { font-size:var(--fs-body); color:var(--tx2); line-height:1.7; margin-top:14px; }
+.idx-card .cats { margin-top:14px; }
+.idx-card .cats .chip { font-size:var(--fs-chip); padding:5px 11px; }
+/* fixed stats footer region — same divider Y on all five cards */
+.idx-card .foot { grid-row:7; padding-top:14px; border-top:1px solid var(--line); }
+.idx-card .foot .fr { display:flex; gap:10px; margin:6px 0; align-items:baseline; }
+.idx-card .foot .fr .k { font-family:var(--font-mono); font-size:var(--fs-meta); letter-spacing:.14em; color:var(--tx3); width:92px; flex:none; }
+.idx-card .foot .fr .v { font-size:15px; color:var(--tx2); line-height:1.5; }
+.idx-card .foot .fr .v b { color:var(--lime); font-weight:700; font-size:16px; }
+.idx-card .foot .fr .v .more { color:var(--tx3); }
+
+/* ================= LEVEL-01 / TRACK OVERVIEW (ONE template) ================= */
+.ov-grid { position:relative; z-index:3; padding:0 var(--safe-x); margin-top:26px; }
+.ov-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; height:118px; }
+.ov-metric { position:relative; padding:16px 12px; text-align:center; background:var(--panel); border:1px solid var(--line-soft);
+  display:flex; flex-direction:column; justify-content:center;
+  clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 0); }
+.ov-metric .stat { position:absolute; top:7px; left:10px; font-family:var(--font-mono); font-size:9px;
+  letter-spacing:.18em; color:rgba(255,255,255,.3); }
+.ov-metric .v { font-family:var(--font-display-en); font-weight:700; font-size:46px; color:var(--lime);
+  line-height:1; font-variant-numeric:tabular-nums; }
+.ov-metric .zc { font-size:17px; color:var(--tx); margin-top:5px; letter-spacing:.02em; }
+.ov-metric .l { font-family:var(--font-mono); font-size:9.5px; letter-spacing:.2em; color:var(--tx3); margin-top:2px; text-transform:uppercase; }
+.ov-main { display:grid; grid-template-columns:32fr 68fr; gap:32px; margin-top:30px; height:620px; }
+/* workflow — STRICT VERTICAL STEPPER */
+.ov-workflow { padding:44px 26px 22px; display:flex; flex-direction:column; }
+.ov-workflow .wf-title { font-family:var(--font-title-cn); font-weight:700; font-size:var(--fs-section-title); margin-bottom:22px; }
+.ov-workflow .wf-title .en { font-size:12px; letter-spacing:.22em; margin-left:8px; color:var(--blue); }
+.ov-wf-grid { display:flex; flex-direction:column; flex:1; }
+.wf-step { flex:1; display:flex; gap:16px; align-items:stretch; min-height:0; }
+.wf-rail { display:flex; flex-direction:column; align-items:center; width:58px; flex:none; }
+.wf-no { font-family:var(--font-display-en); font-weight:700; font-size:15px; color:var(--lime); line-height:1; }
+.wf-dot { width:8px; height:8px; background:var(--lime); margin-top:7px; flex:none;
+  box-shadow:0 0 0 3px rgba(184,255,61,.14); }
+.wf-line { flex:1; width:2px; min-height:12px; margin-top:3px;
+  background:linear-gradient(rgba(184,255,61,.4), rgba(255,255,255,.07)); }
+.wf-step:last-child .wf-line { display:none; }
+.wf-txt { font-size:20px; font-weight:600; color:var(--tx); align-self:flex-start; letter-spacing:.02em; }
+/* featured 68% */
+.ov-featured { display:flex; flex-direction:column; gap:22px; }
+.ov-featured .ft-title { font-family:var(--font-title-cn); font-weight:700; font-size:var(--fs-section-title);
+  display:flex; align-items:baseline; }
+.ov-featured .ft-title .en { font-size:12px; letter-spacing:.22em; margin-left:8px; color:var(--blue); }
+.ov-featured .ft-title .plat { margin-left:auto; font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; color:var(--tx2); }
+.ov-featured .ft-title .plat em { font-style:normal; color:var(--lime); }
+.ov-feat { padding:20px 24px; display:flex; gap:26px; align-items:center; flex:1; }
+.ov-feat .panel-tag { font-size:13px; }
+.ov-feat .fc { flex:none; }
+.ov-feat .fc .fno { font-family:var(--font-display-en); font-weight:700; font-size:44px; color:var(--lime); line-height:1; }
+.ov-feat:nth-child(2) .fc .fno { color:var(--purple); }
+.ov-feat img { width:var(--overview-featured-img-w); height:var(--overview-featured-img-h);
+  object-fit:contain; flex:none; border:1px solid var(--line); background:#050806; }
+.ov-feat .fi { flex:1; min-width:0; }
+.ov-feat .fn { font-size:28px; font-weight:700; letter-spacing:.03em; }
+.ov-feat .fn .en { display:block; font-size:13px; letter-spacing:.16em; margin-left:0; margin-top:4px;
+  font-weight:400; color:var(--tx3); text-transform:uppercase; }
+.ov-feat .fm { font-family:var(--font-mono); font-size:15px; letter-spacing:.1em; color:var(--tx3); margin-top:6px; }
+.ov-feat .fd { font-size:16px; color:var(--tx2); margin-top:8px; line-height:1.7; }
+.ov-feat .fk { margin-top:10px; }
+.ov-feat .fk .chip { font-size:var(--fs-chip); padding:4px 10px; }
+
+/* ================= CASE DETAIL (ONE template, no delivery) ================= */
+.case-grid { position:relative; z-index:3; display:grid; grid-template-columns:60fr 40fr;
+  gap:44px; padding:0 var(--safe-x); margin-top:20px; height:806px; }
+/* hero frame: corner brackets + frame code overlay */
+.case-media .bigwrap { position:relative; }
+.case-media .bigwrap .big { width:100%; display:block; border:1px solid var(--line);
+  box-shadow:4px 4px 0 rgba(0,0,0,.45); height:var(--case-hero-h); object-fit:contain; background:#050806; }
+.case-media .bigwrap .cb { position:absolute; width:14px; height:14px; border:1.5px solid rgba(184,255,61,.55); }
+.case-media .bigwrap .cb.tl { top:6px; left:6px; border-right:none; border-bottom:none; }
+.case-media .bigwrap .cb.br { bottom:6px; right:6px; border-left:none; border-top:none; }
+.case-media .bigwrap .fcode { position:absolute; right:10px; bottom:8px; font-family:var(--font-mono); font-size:9px;
+  letter-spacing:.22em; color:rgba(255,255,255,.4); background:rgba(7,11,9,.55); padding:3px 8px; }
+.case-media .big.portrait { position:relative; overflow:hidden; }
+.case-media .big.portrait .pv-bg { position:absolute; inset:-40px; width:calc(100% + 80px); height:calc(100% + 80px);
+  object-fit:cover; }  /* blur 已预烘焙到 assets-optimized/portrait/*_bg.jpg（v8 性能优化） */
+.case-media .big.portrait .pv-dim { position:absolute; inset:0;
+  background:linear-gradient(90deg, rgba(7,11,9,.72), transparent 26%, transparent 74%, rgba(7,11,9,.72)); }
+.case-media .big.portrait .pv-fg { position:relative; display:block; margin:0 auto; height:100%; width:auto;
+  max-width:100%; object-fit:contain; }
+.frame3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px; position:relative; }
+.frame3::before { content:''; position:absolute; left:8px; right:8px; top:-9px; height:1px;
+  background:linear-gradient(90deg, rgba(184,255,61,.28), rgba(184,255,61,.06) 45%, rgba(255,255,255,.05)); }
+.frame3 .f { position:relative; }
+.frame3 .f img { width:100%; display:block; border:1px solid var(--line); height:var(--case-frame-h);
+  object-fit:contain; background:#050806; }
+.frame3 .f .ftag { position:absolute; top:6px; left:6px; font-family:var(--font-mono); font-size:9px;
+  letter-spacing:.12em; color:#06100a; background:var(--lime); padding:2px 6px; font-weight:700; }
+.frame3 .f:nth-child(2) .ftag { background:var(--purple); color:#fff; }
+.frame3 .f:nth-child(3) .ftag { background:var(--orange); color:#fff; }
+.frame3 .f .fcap { font-family:var(--font-mono); font-size:9px; letter-spacing:.16em; color:var(--txdim); margin-top:4px; text-transform:uppercase; }
+/* right info column */
+.case-info { display:flex; flex-direction:column; }
+.case-info .case-prod { font-family:var(--font-mono); font-size:14px; letter-spacing:.18em; color:var(--purple); text-transform:uppercase; }
+.case-info .case-prod.b { color:var(--blue); }
+.case-info .case-prod.o { color:var(--orange); }
+.case-info .case-name { font-family:var(--font-title-cn); font-weight:800; font-size:var(--fs-case-title); margin-top:8px; line-height:1.05; }
+.case-info .case-name .en2 { display:block; font-family:var(--font-display-en); font-size:17px; font-weight:400;
+  letter-spacing:.16em; color:var(--tx3); margin-top:5px; text-transform:uppercase; }
+.case-info .meta-row { margin-top:8px; }
+.case-info .meta-row .chip { font-size:var(--fs-chip); padding:5px 11px; }
+/* section labels — CN first, 21px, with small system number */
+.case-sec { margin-top:30px; }
+.case-sec.first { margin-top:12px; }
+.case-sec.mywork { margin-top:36px; flex:1; display:flex; flex-direction:column; min-height:0; }
+.case-sec .bt { font-family:var(--font-title-cn); font-weight:700; font-size:21px; letter-spacing:.03em;
+  color:var(--lime); margin-bottom:8px; }
+.case-sec .bt .sno { font-family:var(--font-mono); font-size:11px; color:var(--txdim); margin-right:9px; letter-spacing:.1em; }
+.case-sec .bt .en { font-family:var(--font-mono); color:var(--tx3); margin-left:10px; font-size:10px; letter-spacing:.2em; text-transform:uppercase; }
+.case-sec .bt.p { color:var(--purple); }
+.case-sec .bt.o { color:var(--orange); }
+.case-sec .bt.b { color:var(--blue); }
+/* 2x2 meta (cut corner, roomier) */
+.case-meta { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.case-meta .cm { border:1px solid var(--line); padding:8px 14px; background:var(--bg);
+  clip-path:polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%, 0 0); }
+.case-meta .cm .k { font-size:13px; color:var(--tx); letter-spacing:.02em; }
+.case-meta .cm .k span { font-family:var(--font-mono); font-size:10px; letter-spacing:.16em; color:var(--tx3); margin-left:6px; text-transform:uppercase; }
+.case-meta .cm .v { font-size:17px; color:var(--tx); margin-top:4px; line-height:1.4; }
+/* desc */
+.case-desc { font-size:var(--fs-body-lg); color:var(--tx2); line-height:1.7; }
+/* mywork — Focus 并入后的编号条目（03），纵向填充分配右侧空间 */
+.mywork-list { flex:1; display:flex; flex-direction:column; justify-content:space-evenly; min-height:0; }
+.mywork-list .mw { display:flex; gap:12px; align-items:baseline; }
+.mywork-list .mw .no { font-family:var(--font-mono); color:var(--lime); font-size:14px; flex:none; width:26px; }
+.mywork-list .mw .txt { font-size:17px; line-height:1.7; color:var(--tx); }
+/* QR view online */
+.case-view { display:flex; align-items:center; gap:18px; margin-top:32px; }
+.case-view img { width:76px; height:76px; image-rendering:pixelated; background:#fff; padding:4px;
+  box-shadow:2px 2px 0 rgba(0,0,0,.5); }
+.case-view .vv { font-size:15px; color:var(--tx2); line-height:1.5; }
+.case-view .vv b { color:var(--lime); font-weight:600; }
+
+/* ================= MORE WORKS (card grid unchanged, media/text enlarged) ================= */
+.more-grid { position:relative; z-index:3; padding:0 var(--safe-x); margin-top:18px; }
+.thumb-group-title { font-family:var(--font-title-cn); font-weight:700; font-size:21px; color:var(--lime); margin:4px 0 8px; }
+.thumb-group-title .en { font-family:var(--font-mono); font-size:11px; letter-spacing:.22em; color:var(--tx3); margin-left:10px; text-transform:uppercase; }
+.thumb-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.thumb { border:1px solid var(--line-soft); background:var(--panel); overflow:hidden; }
+.thumb-media { width:100%; height:var(--more-thumb-h); display:flex; align-items:center; justify-content:center;
+  background:#050806; overflow:hidden; border-bottom:1px solid var(--line); }
+.thumb-media img { display:block; width:100%; height:100%; object-fit:contain; }
+.thumb .n { font-size:18px; font-weight:600; padding:8px 12px; color:var(--tx); line-height:1.3; }
+
+/* ================= SKILLS (3x2 enlarged; Toolset full-width; Learning removed) ================= */
+.skill-grid { position:relative; z-index:3; display:grid; grid-template-columns:repeat(3,1fr);
+  gap:28px 26px; padding:0 var(--safe-x); margin-top:26px; height:620px; }
+.skill-card { padding:44px 28px 26px; }
+.skill-card .sc-cn { font-family:var(--font-title-cn); font-weight:700; font-size:32px; }
+.skill-card .sc-en { font-family:var(--font-display-en); font-size:12px; letter-spacing:.24em; color:var(--blue); text-transform:uppercase; margin-top:6px; }
+.skill-card .st { font-family:var(--font-mono); font-size:14px; letter-spacing:.1em; color:var(--tx3); margin-top:12px; line-height:1.6; }
+.skill-card .st b { color:var(--lime); font-weight:600; }
+.skill-card .st .sdot { display:inline-block; width:8px; height:8px; background:var(--lime); margin-right:7px; }
+.skill-card .st.PRACTICE b { color:var(--orange); }
+.skill-card .st.PRACTICE .sdot { background:var(--orange); }
+.skill-card .sn { margin-top:14px; display:flex; flex-wrap:wrap; gap:8px 8px; line-height:1.6; }
+.skill-card .sn .chip { font-size:14.5px; padding:6px 11px; margin:0; }
+.skills-bottom { position:relative; z-index:3; padding:0 var(--safe-x); margin-top:16px; }
+.sb-mod { padding:34px 24px 18px; }
+.sb-mod .sb-title { font-family:var(--font-title-cn); font-weight:700; font-size:29px; margin-bottom:12px; }
+.sb-mod .sb-title .en { font-size:12px; letter-spacing:.22em; margin-left:8px; color:var(--blue); }
+.tool-row { display:flex; gap:12px; flex-wrap:wrap; }
+.tool { font-family:var(--font-mono); font-size:14px; letter-spacing:.06em; color:var(--tx);
+  border:1px solid var(--line); padding:9px 16px; background:var(--bg); }
+.tool .tname { margin-right:8px; }
+.tool .tst { font-style:normal; font-size:12px; letter-spacing:.1em; padding:2px 7px; border:1px solid currentColor; }
+.tool .tst.PROFICIENT { color:var(--purple); }
+.tool .tst.WORKING { color:var(--blue); }
+.tool .tst.PRACTICE { color:var(--orange); }
+.tool .tst.LEARNING { color:var(--lime); }
+
+/* ================= CONTACT (STATUS & BASE removed; redistributed) ================= */
+.contact-wrap { position:relative; z-index:3; display:grid; grid-template-columns:1.45fr 1fr;
+  gap:60px; padding:40px var(--safe-x) 0 var(--safe-x); height:780px; }
+.contact-wrap > div:first-child { display:flex; flex-direction:column; justify-content:center; }
+.contact-big { font-family:var(--font-title-cn); font-weight:800; font-size:80px; line-height:1.08; letter-spacing:.02em; }
+.contact-big .acc { color:var(--lime); }
+.contact-sub { font-size:19px; color:var(--tx2); margin-top:30px; }
+.contact-list { margin-top:44px; }
+.contact-item { display:flex; gap:18px; border-bottom:1px solid var(--line); padding:24px 0; align-items:center; }
+.contact-item .k { font-family:var(--font-mono); font-size:13px; letter-spacing:.18em; color:var(--tx3); width:180px; flex:none; }
+.contact-item .v { font-size:20px; letter-spacing:.04em; }
+.contact-qr { text-align:center; padding:40px 24px 24px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.contact-qr img { width:210px; height:210px; image-rendering:pixelated; background:#fff; padding:10px;
+  box-shadow:6px 6px 0 rgba(0,0,0,.6); }
+.contact-qr .cap { font-family:var(--font-mono); font-size:11px; letter-spacing:.18em; color:var(--tx3); margin-top:16px; }
+.contact-qr .cap b { color:var(--lime); font-weight:600; }
+.contact-qr .site { font-family:var(--font-mono); font-size:11px; letter-spacing:.12em; color:var(--tx3); margin-top:12px; }
+
+/* ================= PRINT / PDF 渲染优化（v8） ================= */
+@media print {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+</style>
+</head>
+<body>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">01</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    
+<div class="cover-hud">
+  <div class="l">[ <b>PORTFOLIO</b> ] &nbsp;V.2027</div>
+  <div class="r">JAZIM LAU / 2027</div>
+</div>
+<div class="cover-right">
+  <div class="cr-word">MOTION<br>2027</div>
+  <div class="cr-ticks"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="cr-data">GAME MOTION / VIDEO DESIGN</div>
+</div>
+<div class="cover-title">
+  <div class="cover-kicker">GAME MOTION DESIGNER</div>
+  <div class="cover-h1-cn">游戏<br><span class="c2">动效设计</span></div>
+  <div class="cover-h1-en">DESIGNING MOTION FOR PLAYABLE EXPERIENCES</div>
+  <div class="cover-name"><b>刘俊熙</b> / Liu Junxi</div>
+</div>
+<div class="cover-meta">
+  <div class="m"><div class="k">ROLE</div><div class="v">游戏动效设计</div></div>
+  <div class="m"><div class="k">STATUS</div><div class="v"><b>2027</b> / OPEN</div></div>
+  <div class="m"><div class="k">EMAIL</div><div class="v">jazimlau@yeah.net</div></div>
+</div>
+<div class="cover-disciplines">
+  <span>GAME MOTION</span><span>UI MOTION</span><span>VIDEO DESIGN</span><span>REAL-TIME PRACTICE</span>
+</div>
+<div class="cover-qr"><img src="assets-optimized/qr/qr-home.png" alt="QR"><div class="cap">SCAN TO OPEN<br>ONLINE PORTFOLIO</div></div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>01</b> / 21</div>
+      <div class="pgname">PORTFOLIO / 2027</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">02</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>EXPERIENCE</div><h1>履历记录</h1><div class="rule o"></div></div><div class="exp-grid">
+    <div class="exp-card panel"><span class="panel-tag">MISSION 01</span>
+      <div class="top"><div class="period">2026.06 — PRESENT</div><span class="chip on">ACTIVE</span></div>
+      <div class="org">杭州网易雷火科技有限公司<span class="en2">NETEASE LEIHUO</span></div>
+      <div class="role">动效实习生（精英实习）</div>
+      <div class="duties"><ul class="list"><li>游戏 UI / KV / 页面动效制作</li><li>动画方案、资源处理与技术交付</li><li>UI 动效预演及上线走查</li></ul></div>
+      <div class="kw"><span class="chip">UI MOTION</span><span class="chip">KV MOTION</span><span class="chip">DELIVERY</span><span class="chip">AIGC</span><span class="chip">3D ASSET</span></div>
+    </div>
+    <div class="exp-card panel"><span class="panel-tag">MISSION 02</span>
+      <div class="top"><div class="period">2025.04 — 2025.07</div><span class="chip">COMPLETE</span></div>
+      <div class="org">网易（杭州）网络有限公司<span class="en2">NETEASE GAMES</span></div>
+      <div class="role">游戏视频制作实习生</div>
+      <div class="duties"><ul class="list"><li>官号社媒及节点宣发视频</li><li>素材重组、剪辑与动态包装</li><li>视频 UI / 信息层设计</li></ul></div>
+      <div class="kw"><span class="chip">SOCIAL</span><span class="chip">PROMO</span><span class="chip">MOTION PACKAGE</span><span class="chip">CONTENT</span></div>
+    </div>
+    <div class="exp-card panel"><span class="panel-tag">MISSION 03</span>
+      <div class="top"><div class="period">2023.01 — 2023.07</div><span class="chip">COMPLETE</span></div>
+      <div class="org">网易游戏（广州博冠信息科技有限公司）<span class="en2">NETEASE GAMES</span></div>
+      <div class="role">视频设计实习生</div>
+      <div class="duties"><ul class="list"><li>游戏广告素材制作</li><li>剪辑、混剪与视觉包装</li><li>根据投放反馈调整节奏与卖点</li></ul></div>
+      <div class="kw"><span class="chip">GAME ADS</span><span class="chip">BGC / PUGC</span><span class="chip">MIXED EDIT</span><span class="chip">AD PACING</span></div>
+    </div>
+    <div class="exp-card panel"><span class="panel-tag">MISSION 04</span>
+      <div class="top"><div class="period">2021.03 — 2021.09</div><span class="chip">COMPLETE</span></div>
+      <div class="org">广州梦映动漫网络科技有限公司<span class="en2">MENGYING</span></div>
+      <div class="role">动画实习生</div>
+      <div class="duties"><ul class="list"><li>2D 角色微动效</li><li>画面特效与动态漫画</li><li>新媒体动画内容</li></ul></div>
+      <div class="kw"><span class="chip">2D MOTION</span><span class="chip">CHARACTER</span><span class="chip">VFX</span><span class="chip">MOTION COMIC</span></div>
+    </div></div>
+    <div class="pfoot">
+      <div class="pgidx"><b>02</b> / 21</div>
+      <div class="pgname">EXPERIENCE</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">03</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype idx"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>PROJECT INDEX</div><h1>作品索引</h1><div class="rule b"></div></div><div class="idx-grid">
+    <div class="idx-card panel"><span class="panel-tag">TRACK 01</span>
+      <div class="no">01</div>
+      <div class="t">雷火产品动效</div>
+      <div class="t2">LEIHUO / GAME MOTION SYSTEM</div>
+      <div class="d">游戏端内及端外动态设计，覆盖 UI、KV、H5 与资源交付。</div>
+      <div class="cats"><span class="chip">UI MOTION</span><span class="chip">KV</span><span class="chip">H5</span><span class="chip">DELIVERY</span></div>
+      
+      <div class="foot">
+        <div class="fr"><div class="k">CASES</div><div class="v"><b>07</b></div></div>
+        <div class="fr"><div class="k">PRODUCTS</div><div class="v">永劫无间 · 逆水寒 · 炉石传说 · 魔兽世界 · + 3 MORE</div></div>
+      </div>
+    </div>
+    <div class="idx-card panel"><span class="panel-tag">TRACK 02</span>
+      <div class="no">02</div>
+      <div class="t">游戏 UI 动效练习</div>
+      <div class="t2">GAME UI MOTION STUDIES</div>
+      <div class="d">围绕视觉预演与实时引擎实现进行系统 UI 动效练习。</div>
+      <div class="cats"><span class="chip">AE</span><span class="chip">UE5</span><span class="chip">UNITY</span><span class="chip">UI MOTION</span></div>
+      
+      <div class="foot">
+        <div class="fr"><div class="k">CASES</div><div class="v"><b>03</b></div></div>
+        <div class="fr"><div class="k">MODULES</div><div class="v">AE · UE5 · UNITY</div></div>
+      </div>
+    </div>
+    <div class="idx-card panel"><span class="panel-tag">TRACK 03</span>
+      <div class="no">03</div>
+      <div class="t">游戏广告视频</div>
+      <div class="t2">GAME AD FILMS</div>
+      <div class="d">覆盖多类型营销视频的剪辑、包装与广告节奏设计。</div>
+      <div class="cats"><span class="chip">BGC</span><span class="chip">PUGC</span><span class="chip">KOL</span><span class="chip">AD VIDEO</span></div>
+      
+      <div class="foot">
+        <div class="fr"><div class="k">CASES</div><div class="v"><b>09</b></div></div>
+        <div class="fr"><div class="k">PRODUCTS</div><div class="v">梦幻西游 · 阴阳师手游 · 率土之滨 · 逆水寒手游 · + 5 MORE</div></div>
+      </div>
+    </div>
+    <div class="idx-card panel"><span class="panel-tag">TRACK 04</span>
+      <div class="no">04</div>
+      <div class="t">游戏宣发视频</div>
+      <div class="t2">GAME PROMOTION FILMS</div>
+      <div class="d">围绕版本节点完成素材重组、剪辑及动态包装。</div>
+      <div class="cats"><span class="chip">PROMO</span><span class="chip">MIXED EDIT</span><span class="chip">PACKAGE</span></div>
+      
+      <div class="foot">
+        <div class="fr"><div class="k">CASES</div><div class="v"><b>05</b></div></div>
+        <div class="fr"><div class="k">PRODUCTS</div><div class="v">巅峰极速 · 遗忘之海 · 暗黑破坏神3 · 头号追击 · + 1 MORE</div></div>
+      </div>
+    </div>
+    <div class="idx-card panel"><span class="panel-tag">TRACK 05</span>
+      <div class="no">05</div>
+      <div class="t">游戏社媒视频</div>
+      <div class="t2">GAME SOCIAL VIDEOS</div>
+      <div class="d">围绕官方账号进行创意短视频与动态内容制作。</div>
+      <div class="cats"><span class="chip">SOCIAL</span><span class="chip">CREATIVE</span><span class="chip">SHORT VIDEO</span></div>
+      
+      <div class="foot">
+        <div class="fr"><div class="k">CASES</div><div class="v"><b>17</b></div></div>
+        <div class="fr"><div class="k">PRODUCTS</div><div class="v">演绎之星 · 最惨官方 · 公司里突然闯进一只狼 · 我的表情包 · + 13 MORE</div></div>
+      </div>
+    </div></div>
+    <div class="pfoot">
+      <div class="pgidx"><b>03</b> / 21</div>
+      <div class="pgname">PROJECT INDEX</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">04</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype lv1"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>LEIHUO GAME MOTION</div><h1>雷火产品动效</h1><div class="rule p"></div></div>
+<div class="ov-grid">
+  <div class="ov-metrics"><div class="ov-metric"><span class="stat">STAT 01</span><div class="v">14</div><div class="zc">参与项目</div><div class="l">PROJECTS</div></div><div class="ov-metric"><span class="stat">STAT 02</span><div class="v">83</div><div class="zc">动态需求模块</div><div class="l">MOTION MODULES</div></div><div class="ov-metric"><span class="stat">STAT 03</span><div class="v">65</div><div class="zc">动效资源</div><div class="l">MOTION ASSETS</div></div><div class="ov-metric"><span class="stat">STAT 04</span><div class="v">10</div><div class="zc">上线项目</div><div class="l">LAUNCHED</div></div></div>
+  <div class="ov-main">
+    <div class="ov-workflow panel"><span class="panel-tag">工作链路</span>
+      <div class="wf-title">工作链路 <span class="en">WORKFLOW</span></div>
+      <div class="ov-wf-grid">
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">01</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">需求拆解</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">02</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动画方案</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">03</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">素材拆分</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">04</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动效设计</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">05</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">AIGC辅助制作</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">06</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">前端资源输出</div>
+  </div></div>
+    </div>
+    <div class="ov-featured"><div class="ft-title">精选案例 <span class="en">FEATURED CASES</span></div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 01</span>
+    <div class="fc"><div class="fno">01</div></div>
+    <img src="assets-optimized/feat/wudao.jpg" alt="武道大会">
+    <div class="fi">
+      <div class="fn">武道大会<span class="en">Martial Arts Tournament</span></div>
+      <div class="fm">炉石传说 · 端内活动</div>
+      <div class="fd">炉石传说端内「武道大会」促活活动的动画：抽奖演出、稀有度发光反馈、任务刷新与升级效果的节奏设计。</div>
+      <div class="fk"><span class="chip chip">交互动效</span><span class="chip chip">反馈演出</span></div>
+    </div>
+  </div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 02</span>
+    <div class="fc"><div class="fno">02</div></div>
+    <img src="assets-optimized/feat/jiuzhou.jpg" alt="九州秘境">
+    <div class="fi">
+      <div class="fn">九州秘境<span class="en">Mystic Realm</span></div>
+      <div class="fm">逆水寒 · 官网 / 预约页</div>
+      <div class="fd">国风题材下的端外动效处理：新服预约页的 KV 主视觉氛围建立与核心卖点的节奏引导。</div>
+      <div class="fk"><span class="chip chip">KV 动效</span><span class="chip chip">UI 反馈</span><span class="chip chip">双端适配</span></div>
+    </div>
+  </div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>04</b> / 21</div>
+      <div class="pgname">LEIHUO OVERVIEW</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">05</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>HEARTHSTONE</div><h1>炉石传说</h1><div class="rule p"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/wudao.jpg" alt="武道大会"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/wudao_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/wudao_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/wudao_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod p">炉石传说 · 端内活动</div>
+    <div class="case-name">武道大会<span class="en2">Martial Arts Tournament</span></div>
+    <div class="meta-row"><span class="chip chip p">IN-GAME</span><span class="chip chip p">GACHA</span><span class="chip chip p">FEEDBACK</span></div>
+    <div class="case-sec first"><div class="bt p"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">炉石传说 · 端内活动</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2026.06</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">端内活动 / UI 动效</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">端内动效 / 反馈动效</div></div></div></div>
+    <div class="case-sec"><div class="bt p"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">炉石传说端内「武道大会」促活活动的动画：抽奖演出、稀有度发光反馈、任务刷新与升级效果的节奏设计。</p></div>
+    <div class="case-sec mywork"><div class="bt p"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">任务刷新与升级状态反馈动效</span></div><div class="mw"><span class="no">02</span><span class="txt">抽奖演出与稀有度发光反馈设计</span></div><div class="mw"><span class="no">03</span><span class="txt">奖励演出的节奏与获得情绪设计</span></div><div class="mw"><span class="no">04</span><span class="txt">动效方案、制作与端内还原跟进</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-wudao.png" alt="QR"><div class="vv"><b>VIEW MOTION ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>05</b> / 21</div>
+      <div class="pgname">CASE 01</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">06</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>JUSTICE ONLINE</div><h1>逆水寒</h1><div class="rule b"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/jiuzhou.jpg" alt="九州秘境"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/jiuzhou_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/jiuzhou_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/jiuzhou_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod b">逆水寒 · 官网 / 预约页</div>
+    <div class="case-name">九州秘境<span class="en2">Mystic Realm</span></div>
+    <div class="meta-row"><span class="chip chip b">H5</span><span class="chip chip b">KV MOTION</span><span class="chip chip b">INTERACTION</span></div>
+    <div class="case-sec first"><div class="bt b"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">逆水寒 · 官网 / 预约页</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2026.06</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">预约 H5 / 活动页</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">KV 动效 / UI 动效 / 双端适配</div></div></div></div>
+    <div class="case-sec"><div class="bt b"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">国风题材下的端外动效处理：新服预约页的 KV 主视觉氛围建立与核心卖点的节奏引导。</p></div>
+    <div class="case-sec mywork"><div class="bt b"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">KV 主视觉氛围动态建立</span></div><div class="mw"><span class="no">02</span><span class="txt">核心卖点的节奏引导</span></div><div class="mw"><span class="no">03</span><span class="txt">UI 交互反馈动效</span></div><div class="mw"><span class="no">04</span><span class="txt">PC / 移动端双端适配</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-jiuzhou.png" alt="QR"><div class="vv"><b>VIEW MOTION ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>06</b> / 21</div>
+      <div class="pgname">CASE 02</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">07</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype lv1"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME UI MOTION STUDIES</div><h1>游戏 UI 动效练习</h1><div class="rule p"></div></div>
+<div class="ov-grid">
+  <div class="ov-metrics"><div class="ov-metric"><span class="stat">STAT 01</span><div class="v">3</div><div class="zc">实践模块</div><div class="l">MODULES</div></div><div class="ov-metric"><span class="stat">STAT 02</span><div class="v">8</div><div class="zc">动效练习</div><div class="l">STUDIES</div></div><div class="ov-metric"><span class="stat">STAT 03</span><div class="v">UI</div><div class="zc">核心方向</div><div class="l">MOTION FOCUS</div></div><div class="ov-metric"><span class="stat">STAT 04</span><div class="v">AE</div><div class="zc">主要预演工具</div><div class="l">PREVIS</div></div></div>
+  <div class="ov-main">
+    <div class="ov-workflow panel"><span class="panel-tag">工作链路</span>
+      <div class="wf-title">工作链路 <span class="en">WORKFLOW</span></div>
+      <div class="ov-wf-grid">
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">01</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">参考拆解</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">02</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">结构分层</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">03</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">节奏草案</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">04</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动效制作</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">05</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">光效叠加</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">06</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">引擎复现</div>
+  </div></div>
+    </div>
+    <div class="ov-featured"><div class="ft-title">精选案例 <span class="en">FEATURED CASES</span></div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 01</span>
+    <div class="fc"><div class="fno">01</div></div>
+    <img src="assets-optimized/feat/kejifeng.jpg" alt="科技风结算">
+    <div class="fi">
+      <div class="fn">科技风结算<span class="en">Sci-fi Victory Settlement</span></div>
+      <div class="fm">AE 预演 · 动效预演</div>
+      <div class="fd">科技风胜利结算的动效预演：结算数据展示、等级跃升与胜利反馈的节奏与光效表现。</div>
+      <div class="fk"><span class="chip chip">节奏设计</span><span class="chip chip">动效预演</span></div>
+    </div>
+  </div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 02</span>
+    <div class="fc"><div class="fno">02</div></div>
+    <img src="assets-optimized/feat/gongxi.jpg" alt="恭喜获得">
+    <div class="fi">
+      <div class="fn">恭喜获得<span class="en">Gacha Reward</span></div>
+      <div class="fm">AE 预演 · 动效预演</div>
+      <div class="fd">游戏抽卡「恭喜获得」反馈的动效预演：获得结果揭晓、卡面展示与庆祝反馈的节奏与光效表现，强化稀有度层级与获得感。</div>
+      <div class="fk"><span class="chip chip">节奏设计</span><span class="chip chip">动效预演</span></div>
+    </div>
+  </div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>07</b> / 21</div>
+      <div class="pgname">GAME UI OVERVIEW</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">08</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME UI MOTION STUDIES</div><h1>游戏 UI 动效练习</h1><div class="rule p"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/kejifeng.jpg" alt="科技风结算"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/kejifeng_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/kejifeng_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/kejifeng_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod p">AE 预演 · 动效预演</div>
+    <div class="case-name">科技风结算<span class="en2">Sci-fi Victory Settlement</span></div>
+    <div class="meta-row"><span class="chip chip p">AFTER EFFECTS</span><span class="chip chip p">PACING</span><span class="chip chip p">PREVIS</span></div>
+    <div class="case-sec first"><div class="bt p"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">AE 预演 · 动效预演</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2026.05</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">UI 动效 / 视觉预演</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">动效预演 / 节奏设计</div></div></div></div>
+    <div class="case-sec"><div class="bt p"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">科技风胜利结算的动效预演：结算数据展示、等级跃升与胜利反馈的节奏与光效表现。</p></div>
+    <div class="case-sec mywork"><div class="bt p"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">结算数据层级与阅读顺序编排</span></div><div class="mw"><span class="no">02</span><span class="txt">光效与节奏营造胜利完成感</span></div><div class="mw"><span class="no">03</span><span class="txt">结算时长控制与节奏编排</span></div><div class="mw"><span class="no">04</span><span class="txt">动效预演及参数说明输出</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-ae-previs.png" alt="QR"><div class="vv"><b>VIEW MOTION ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>08</b> / 21</div>
+      <div class="pgname">CASE 01</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">09</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME UI MOTION STUDIES</div><h1>游戏 UI 动效练习</h1><div class="rule b"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/gongxi.jpg" alt="恭喜获得"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/gongxi_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/gongxi_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/gongxi_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod b">AE 预演 · 动效预演</div>
+    <div class="case-name">恭喜获得<span class="en2">Gacha Reward</span></div>
+    <div class="meta-row"><span class="chip chip b">AFTER EFFECTS</span><span class="chip chip b">PACING</span><span class="chip chip b">PREVIS</span></div>
+    <div class="case-sec first"><div class="bt b"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">AE 预演 · 动效预演</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2026.05</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">UI 动效 / 视觉预演</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">动效预演 / 节奏设计</div></div></div></div>
+    <div class="case-sec"><div class="bt b"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">游戏抽卡「恭喜获得」反馈的动效预演：获得结果揭晓、卡面展示与庆祝反馈的节奏与光效表现，强化稀有度层级与获得感。</p></div>
+    <div class="case-sec mywork"><div class="bt b"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">预备—爆发—余韵的获得反馈节奏</span></div><div class="mw"><span class="no">02</span><span class="txt">光效与粒子突出稀有度层级</span></div><div class="mw"><span class="no">03</span><span class="txt">演出时长控制，高频抽卡不疲劳</span></div><div class="mw"><span class="no">04</span><span class="txt">动效预演与参数说明输出</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-ae-previs.png" alt="QR"><div class="vv"><b>VIEW MOTION ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>09</b> / 21</div>
+      <div class="pgname">CASE 02</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">10</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype lv1"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME PROMOTION FILMS</div><h1>游戏宣发视频</h1><div class="rule o"></div></div>
+<div class="ov-grid">
+  <div class="ov-metrics"><div class="ov-metric"><span class="stat">STAT 01</span><div class="v">05</div><div class="zc">案例</div><div class="l">CASES</div></div><div class="ov-metric"><span class="stat">STAT 02</span><div class="v">25</div><div class="zc">参与内容</div><div class="l">CONTENT</div></div><div class="ov-metric"><span class="stat">STAT 03</span><div class="v">2200W+</div><div class="zc">累计播放</div><div class="l">VIEWS</div></div><div class="ov-metric"><span class="stat">STAT 04</span><div class="v">212W+</div><div class="zc">累计点赞</div><div class="l">LIKES</div></div></div>
+  <div class="ov-main">
+    <div class="ov-workflow panel"><span class="panel-tag">工作链路</span>
+      <div class="wf-title">工作链路 <span class="en">WORKFLOW</span></div>
+      <div class="ov-wf-grid">
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">01</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">脚本理解</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">02</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">素材梳理</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">03</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">节奏排布</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">04</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动态包装</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">05</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">合成输出</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">06</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">平台适配</div>
+  </div></div>
+    </div>
+    <div class="ov-featured"><div class="ft-title">精选案例 <span class="en">FEATURED CASES</span></div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 01</span>
+    <div class="fc"><div class="fno">01</div></div>
+    <img src="assets-optimized/feat/yiwang.jpg" alt="遗忘之海">
+    <div class="fi">
+      <div class="fn">遗忘之海<span class="en">Forgotten Sea</span></div>
+      <div class="fm">遗忘之海 · 游戏宣发视频</div>
+      <div class="fd">面向版本节点的宣发视频，围绕传播目标在极短时间内把卖点讲清楚。</div>
+      
+    </div>
+  </div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 02</span>
+    <div class="fc"><div class="fno">02</div></div>
+    <img src="assets-optimized/feat/dianfeng.jpg" alt="巅峰极速">
+    <div class="fi">
+      <div class="fn">巅峰极速<span class="en">Peak Speed</span></div>
+      <div class="fm">巅峰极速 · 游戏宣发视频</div>
+      <div class="fd">面向版本节点的宣发视频，围绕传播目标在极短时间内把卖点讲清楚。</div>
+      
+    </div>
+  </div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>10</b> / 21</div>
+      <div class="pgname">PROMOTION OVERVIEW</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">11</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>FORGOTTEN SEA</div><h1>遗忘之海</h1><div class="rule o"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/yiwang.jpg" alt="遗忘之海"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/yiwang_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/yiwang_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/yiwang_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod o">遗忘之海 · 游戏宣发视频</div>
+    <div class="case-name">遗忘之海<span class="en2">Forgotten Sea</span></div>
+    <div class="meta-row"><span class="chip chip o">PROMOTION</span><span class="chip chip o">EDITING</span><span class="chip chip o">MOTION</span></div>
+    <div class="case-sec first"><div class="bt o"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">遗忘之海 · 游戏宣发视频</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2025.05</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">宣发视频</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">宣发视频 / 动态包装</div></div></div></div>
+    <div class="case-sec"><div class="bt o"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">面向版本节点的宣发视频，围绕传播目标在极短时间内把卖点讲清楚。</p></div>
+    <div class="case-sec mywork"><div class="bt o"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">版本节点宣发视频制作</span></div><div class="mw"><span class="no">02</span><span class="txt">卖点信息组织与节奏编排</span></div><div class="mw"><span class="no">03</span><span class="txt">动态包装与视觉呈现</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-forgotten.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>11</b> / 21</div>
+      <div class="pgname">CASE 01</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">12</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>PEAK SPEED</div><h1>巅峰极速</h1><div class="rule b"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/dianfeng.jpg" alt="巅峰极速"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/dianfeng_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/dianfeng_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/dianfeng_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod b">巅峰极速 · 游戏宣发视频</div>
+    <div class="case-name">巅峰极速<span class="en2">Peak Speed</span></div>
+    <div class="meta-row"><span class="chip chip b">PROMOTION</span><span class="chip chip b">EDITING</span><span class="chip chip b">MOTION</span></div>
+    <div class="case-sec first"><div class="bt b"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">巅峰极速 · 游戏宣发视频</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2023.06</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">宣发视频</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">宣发视频 / 动态包装</div></div></div></div>
+    <div class="case-sec"><div class="bt b"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">面向版本节点的宣发视频，围绕传播目标在极短时间内把卖点讲清楚。</p></div>
+    <div class="case-sec mywork"><div class="bt b"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">版本节点宣发视频制作</span></div><div class="mw"><span class="no">02</span><span class="txt">卖点信息组织与节奏编排</span></div><div class="mw"><span class="no">03</span><span class="txt">动态包装与视觉呈现</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-peak.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>12</b> / 21</div>
+      <div class="pgname">CASE 02</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">13</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype lv1"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME AD FILMS</div><h1>游戏广告视频</h1><div class="rule b"></div></div>
+<div class="ov-grid">
+  <div class="ov-metrics"><div class="ov-metric"><span class="stat">STAT 01</span><div class="v">09</div><div class="zc">广告项目</div><div class="l">AD FILMS</div></div><div class="ov-metric"><span class="stat">STAT 02</span><div class="v">02</div><div class="zc">精选案例</div><div class="l">FEATURED</div></div><div class="ov-metric"><span class="stat">STAT 03</span><div class="v">BGC</div><div class="zc">品牌内容</div><div class="l">BRANDED</div></div><div class="ov-metric"><span class="stat">STAT 04</span><div class="v">PUGC</div><div class="zc">达人内容</div><div class="l">CREATOR</div></div></div>
+  <div class="ov-main">
+    <div class="ov-workflow panel"><span class="panel-tag">工作链路</span>
+      <div class="wf-title">工作链路 <span class="en">WORKFLOW</span></div>
+      <div class="ov-wf-grid">
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">01</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">需求理解</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">02</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">广告类型判断</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">03</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">脚本与素材梳理</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">04</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">节奏剪辑</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">05</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动态包装</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">06</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">成片调整</div>
+  </div></div>
+    </div>
+    <div class="ov-featured"><div class="ft-title">精选案例 <span class="en">FEATURED CASES</span></div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 01</span>
+    <div class="fc"><div class="fno">01</div></div>
+    <img src="assets-optimized/feat/tianqi.jpg" alt="梦幻西游 · 天地棋局宣传片">
+    <div class="fi">
+      <div class="fn">梦幻西游 · 天地棋局宣传片<span class="en">World Chess Promo</span></div>
+      <div class="fm">梦幻西游 · 广告视频 / 动态包装</div>
+      <div class="fd">经典Q版题材的广告内容：活泼节奏的动态包装与活动视觉的动态化呈现。</div>
+      
+    </div>
+  </div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 02</span>
+    <div class="fc"><div class="fno">02</div></div>
+    <img src="assets-optimized/feat/yinhun.jpg" alt="阴阳师手游 · 银魂联动">
+    <div class="fi">
+      <div class="fn">阴阳师手游 · 银魂联动<span class="en">Gintama Collaboration</span></div>
+      <div class="fm">阴阳师手游 · 广告视频 / 动态包装</div>
+      <div class="fd">日式和风题材的视频动效：氛围感包装、字幕与信息层的动态设计。</div>
+      
+    </div>
+  </div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>13</b> / 21</div>
+      <div class="pgname">AD OVERVIEW</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">14</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>FANTASY WESTWARD JOURNEY</div><h1>梦幻西游</h1><div class="rule b"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/tianqi.jpg" alt="梦幻西游 · 天地棋局宣传片"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/tianqi_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/tianqi_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/tianqi_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod b">梦幻西游 · 广告视频 / 动态包装</div>
+    <div class="case-name">梦幻西游 · 天地棋局宣传片<span class="en2">World Chess Promo</span></div>
+    <div class="meta-row"><span class="chip chip b">MOTION GRAPHICS</span><span class="chip chip b">AD FILM</span><span class="chip chip b">UI MOTION</span></div>
+    <div class="case-sec first"><div class="bt b"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">梦幻西游 · 广告视频 / 动态包装</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2023</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">动态包装</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">动态包装 / 剪辑</div></div></div></div>
+    <div class="case-sec"><div class="bt b"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">经典Q版题材的广告内容：活泼节奏的动态包装与活动视觉的动态化呈现。</p></div>
+    <div class="case-sec mywork"><div class="bt b"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">活动视觉的动态化呈现</span></div><div class="mw"><span class="no">02</span><span class="txt">活泼节奏的动态包装</span></div><div class="mw"><span class="no">03</span><span class="txt">剪辑与节奏编排</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-mhxy.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>14</b> / 21</div>
+      <div class="pgname">CASE 01</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">15</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>ONMYOJI MOBILE</div><h1>阴阳师手游</h1><div class="rule o"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><img class="big" src="assets-optimized/hero/yinhun.jpg" alt="阴阳师手游 · 银魂联动"><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/yinhun_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/yinhun_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/yinhun_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod o">阴阳师手游 · 广告视频 / 动态包装</div>
+    <div class="case-name">阴阳师手游 · 银魂联动<span class="en2">Gintama Collaboration</span></div>
+    <div class="meta-row"><span class="chip chip o">AMBIENT</span><span class="chip chip o">SUBTITLE</span><span class="chip chip o">AD FILM</span></div>
+    <div class="case-sec first"><div class="bt o"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">阴阳师手游 · 广告视频 / 动态包装</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2023</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">动态包装</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">动态包装 / 字幕信息层</div></div></div></div>
+    <div class="case-sec"><div class="bt o"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">日式和风题材的视频动效：氛围感包装、字幕与信息层的动态设计。</p></div>
+    <div class="case-sec mywork"><div class="bt o"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">氛围感动态包装</span></div><div class="mw"><span class="no">02</span><span class="txt">字幕与信息层的动态设计</span></div><div class="mw"><span class="no">03</span><span class="txt">日式和风风格的动效呈现</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-yys.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>15</b> / 21</div>
+      <div class="pgname">CASE 02</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">16</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype lv1"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME SOCIAL VIDEOS</div><h1>游戏社媒视频</h1><div class="rule o"></div></div>
+<div class="ov-grid">
+  <div class="ov-metrics"><div class="ov-metric"><span class="stat">STAT 01</span><div class="v">17</div><div class="zc">精选案例</div><div class="l">SELECTED</div></div><div class="ov-metric"><span class="stat">STAT 02</span><div class="v">30+</div><div class="zc">参与内容</div><div class="l">CONTENT</div></div><div class="ov-metric"><span class="stat">STAT 03</span><div class="v">2200W+</div><div class="zc">累计播放</div><div class="l">VIEWS</div></div><div class="ov-metric"><span class="stat">STAT 04</span><div class="v">210W+</div><div class="zc">累计点赞</div><div class="l">LIKES</div></div></div>
+  <div class="ov-main">
+    <div class="ov-workflow panel"><span class="panel-tag">工作链路</span>
+      <div class="wf-title">工作链路 <span class="en">WORKFLOW</span></div>
+      <div class="ov-wf-grid">
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">01</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">热点判断</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">02</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">创意脚本</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">03</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">素材梳理</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">04</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">快速剪辑</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">05</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">动态包装</div>
+  </div>
+  <div class="wf-step">
+    <div class="wf-rail"><span class="wf-no">06</span><i class="wf-dot"></i><i class="wf-line"></i></div>
+    <div class="wf-txt">平台适配</div>
+  </div></div>
+    </div>
+    <div class="ov-featured"><div class="ft-title">精选案例 <span class="en">FEATURED CASES</span><span class="plat">平台 <em>PLATFORM</em> · 抖音 · Bilibili · 快手 · 视频号</span></div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 01</span>
+    <div class="fc"><div class="fno">01</div></div>
+    <img src="assets-optimized/feat/zuican.jpg" alt="最惨官方">
+    <div class="fi">
+      <div class="fn">最惨官方<span class="en">Poorest Official</span></div>
+      <div class="fm">最惨官方 · 游戏社媒视频</div>
+      <div class="fd">以官号人设自嘲为核心的社媒内容：梗的快速建立与节奏编排。</div>
+      
+    </div>
+  </div>
+  <div class="ov-feat panel"><span class="panel-tag">CASE 02</span>
+    <div class="fc"><div class="fno">02</div></div>
+    <img src="assets-optimized/feat/wolf.jpg" alt="公司里突然闯进一只狼">
+    <div class="fi">
+      <div class="fn">公司里突然闯进一只狼<span class="en">A Wolf Barged In</span></div>
+      <div class="fm">公司里突然闯进一只狼 · 游戏社媒视频</div>
+      <div class="fd">公司场景的反差剧情短剧：以 MMD 形式制作，将 3D 模型合成到实景画面中，配合闯入感的镜头节奏与音效呈现。</div>
+      
+    </div>
+  </div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>16</b> / 21</div>
+      <div class="pgname">SOCIAL OVERVIEW</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">17</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME SOCIAL VIDEOS</div><h1>游戏社媒视频</h1><div class="rule o"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><div class="big portrait"><img class="pv-bg" src="assets-optimized/portrait/zuican_bg.jpg" alt=""><div class="pv-dim"></div><img class="pv-fg" src="assets-optimized/portrait/zuican_fg.jpg" alt="最惨官方"></div><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/zuican_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/zuican_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/zuican_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod o">最惨官方 · 游戏社媒视频</div>
+    <div class="case-name">最惨官方<span class="en2">Poorest Official</span></div>
+    <div class="meta-row"><span class="chip chip o">SOCIAL VIDEO</span><span class="chip chip o">EDITING</span><span class="chip chip o">PERSONA</span></div>
+    <div class="case-sec first"><div class="bt o"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">抖音 · Bilibili · 快手 · 视频号</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2025</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">创意策划</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">创意策划 / 快速剪辑 / 动态包装</div></div></div></div>
+    <div class="case-sec"><div class="bt o"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">以官号人设自嘲为核心的社媒内容：梗的快速建立与节奏编排。</p></div>
+    <div class="case-sec mywork"><div class="bt o"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">创意策划：官号自嘲人设与梗</span></div><div class="mw"><span class="no">02</span><span class="txt">快速剪辑与节奏编排</span></div><div class="mw"><span class="no">03</span><span class="txt">动态包装与内容呈现</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-poorest.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>17</b> / 21</div>
+      <div class="pgname">CASE 01</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">18</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype case"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>GAME SOCIAL VIDEOS</div><h1>游戏社媒视频</h1><div class="rule p"></div></div>
+<div class="case-grid">
+  <div class="case-media">
+    <div class="bigwrap"><div class="big portrait"><img class="pv-bg" src="assets-optimized/portrait/wolf_bg.jpg" alt=""><div class="pv-dim"></div><img class="pv-fg" src="assets-optimized/portrait/wolf_fg.jpg" alt="公司里突然闯进一只狼"></div><i class="cb tl"></i><i class="cb br"></i><span class="fcode">MOTION VIEW · FRAME / ACTIVE</span></div>
+    <div class="frame3">
+      <div class="f"><img src="assets-optimized/frames/wolf_s.jpg" alt="START">
+        <span class="ftag">START</span><div class="fcap">FRAME 01 / S</div></div>
+      <div class="f"><img src="assets-optimized/frames/wolf_m.jpg" alt="MID">
+        <span class="ftag">MID</span><div class="fcap">FRAME 02 / M</div></div>
+      <div class="f"><img src="assets-optimized/frames/wolf_e.jpg" alt="END">
+        <span class="ftag">END</span><div class="fcap">FRAME 03 / E</div></div></div>
+  </div>
+  <div class="case-info">
+    <div class="case-prod p">公司里突然闯进一只狼 · 游戏社媒视频</div>
+    <div class="case-name">公司里突然闯进一只狼<span class="en2">A Wolf Barged In</span></div>
+    <div class="meta-row"><span class="chip chip p">SOCIAL VIDEO</span><span class="chip chip p">SKIT</span><span class="chip chip p">EDITING</span></div>
+    <div class="case-sec first"><div class="bt p"><span class="sno">01</span>项目信息<span class="en">PROJECT META</span></div><div class="case-meta"><div class="cm"><div class="k">平台<span>PLATFORM</span></div><div class="v">抖音 · Bilibili · 快手 · 视频号</div></div><div class="cm"><div class="k">年份<span>YEAR</span></div><div class="v">2025</div></div><div class="cm"><div class="k">类型<span>TYPE</span></div><div class="v">创意策划</div></div><div class="cm"><div class="k">职责<span>ROLE</span></div><div class="v">创意策划 / 快速剪辑 / 动态包装</div></div></div></div>
+    <div class="case-sec"><div class="bt p"><span class="sno">02</span>项目简介<span class="en">PROJECT OVERVIEW</span></div><p class="case-desc">公司场景的反差剧情短剧：以 MMD 形式制作，将 3D 模型合成到实景画面中，配合闯入感的镜头节奏与音效呈现。</p></div>
+    <div class="case-sec mywork"><div class="bt p"><span class="sno">03</span>我的工作<span class="en">MY WORK</span></div><div class="mywork-list"><div class="mw"><span class="no">01</span><span class="txt">创意策划：反差剧情内容</span></div><div class="mw"><span class="no">02</span><span class="txt">快速剪辑：闯入感镜头节奏</span></div><div class="mw"><span class="no">03</span><span class="txt">动态包装与音效配合</span></div></div></div>
+    <div class="case-view"><img src="assets-optimized/qr/qr-wolf.png" alt="QR"><div class="vv"><b>VIEW FILM ONLINE</b><br>扫码查看完整动态案例</div></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>18</b> / 21</div>
+      <div class="pgname">CASE 02</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">19</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>MORE PROJECTS</div><h1>更多项目</h1><div class="rule o"></div></div><div class="more-grid"><div class="thumb-group-title">雷火产品动效<span class="en">LEIHUO</span></div><div class="thumb-grid"><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-wow.jpg" alt="魔兽世界"></div><div class="n">魔兽世界</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-naraka.jpg" alt="永劫无间"></div><div class="n">永劫无间</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-qingnv.jpg" alt="倩女幽魂"></div><div class="n">倩女幽魂</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-tianyu.jpg" alt="天谕"></div><div class="n">天谕</div></div></div><div class="thumb-group-title">游戏 UI 动效<span class="en">GAME UI</span></div><div class="thumb-grid"><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-ae-7day.jpg" alt="七日签到"></div><div class="n">七日签到</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-ae-lobby.jpg" alt="Lobby"></div><div class="n">Lobby</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-ue5.jpg" alt="UE5 图标动效"></div><div class="n">UE5 图标动效</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-unity.jpg" alt="Unity"></div><div class="n">Unity</div></div></div><div class="thumb-group-title">视频设计<span class="en">VIDEO</span></div><div class="thumb-grid"><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-diablo3.jpg" alt="暗黑破坏神3"></div><div class="n">暗黑破坏神3</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-7days.jpg" alt="七日世界"></div><div class="n">七日世界</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-slzh.jpg" alt="率土之滨"></div><div class="n">率土之滨</div></div><div class="thumb"><div class="thumb-media"><img src="assets-optimized/thumbs/more-xxyx.jpg" alt="小小英雄"></div><div class="n">小小英雄</div></div></div></div>
+    <div class="pfoot">
+      <div class="pgidx"><b>19</b> / 21</div>
+      <div class="pgname">MORE PROJECTS</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">20</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype skills"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>SKILLS / TOOLSET</div><h1>能力系统</h1><div class="rule p"></div></div>
+<div class="skill-grid">
+    <div class="skill-card panel"><span class="panel-tag">NODE 01</span>
+      <div class="sc-cn">动效设计</div>
+      <div class="sc-en">MOTION DESIGN</div>
+      <div class="st PROFICIENT"><i class="sdot"></i><b>PROFICIENT</b> · 熟练应用</div>
+      <div class="sn"><span class="chip">游戏UI动效</span><span class="chip">KV主视觉动效</span><span class="chip">Slogan动态设计</span><span class="chip">按钮及状态反馈</span><span class="chip">界面入场和转场</span></div>
+    </div>
+    <div class="skill-card panel"><span class="panel-tag">NODE 02</span>
+      <div class="sc-cn">视频设计</div>
+      <div class="sc-en">VIDEO DESIGN</div>
+      <div class="st PROFICIENT"><i class="sdot"></i><b>PROFICIENT</b> · 熟练应用</div>
+      <div class="sn"><span class="chip">游戏宣发视频</span><span class="chip">游戏广告视频</span><span class="chip">新媒体社媒视频</span><span class="chip">剪辑与节奏设计</span><span class="chip on">MG动态包装</span></div>
+    </div>
+    <div class="skill-card panel"><span class="panel-tag">NODE 03</span>
+      <div class="sc-cn">素材处理</div>
+      <div class="sc-en">ASSET PRODUCTION</div>
+      <div class="st PROFICIENT"><i class="sdot"></i><b>PROFICIENT</b> · 熟练应用</div>
+      <div class="sn"><span class="chip">设计稿拆解</span><span class="chip">切图与补图</span><span class="chip">图层整理</span><span class="chip">透明通道处理</span><span class="chip">序列帧导出</span></div>
+    </div>
+    <div class="skill-card panel"><span class="panel-tag">NODE 04</span>
+      <div class="sc-cn">引擎与三维</div>
+      <div class="sc-en">ENGINE &amp; 3D</div>
+      <div class="st PRACTICE"><i class="sdot"></i><b>PRACTICE</b> · 实践中</div>
+      <div class="sn"><span class="chip">UE5基础UI动效</span><span class="chip">Sequencer</span><span class="chip on">Niagara基础练习</span><span class="chip">Unity UGUI基础</span><span class="chip">Blender模型处理</span></div>
+    </div>
+    <div class="skill-card panel"><span class="panel-tag">NODE 05</span>
+      <div class="sc-cn">工作流</div>
+      <div class="sc-en">WORKFLOW</div>
+      <div class="st PROFICIENT"><i class="sdot"></i><b>PROFICIENT</b> · 熟练应用</div>
+      <div class="sn"><span class="chip">需求拆解</span><span class="chip">动画方案撰写</span><span class="chip">动效预演</span><span class="chip">AIGC辅助制作</span><span class="chip">跨部门协作</span></div>
+    </div>
+    <div class="skill-card panel"><span class="panel-tag">NODE 06</span>
+      <div class="sc-cn">AIGC</div>
+      <div class="sc-en">AIGC</div>
+      <div class="st PRACTICE"><i class="sdot"></i><b>PRACTICE</b> · 实践中</div>
+      <div class="sn"><span class="chip">AI视频生成</span><span class="chip">AI生图</span><span class="chip">AI拆图</span><span class="chip on">AI音效 / 音乐</span><span class="chip">AI素材调整</span></div>
+    </div></div>
+<div class="skills-bottom">
+  <div class="sb-mod panel"><span class="panel-tag">TOOLSET</span>
+    <div class="sb-title">工具链 <span class="en">TOOLSET</span></div>
+    <div class="tool-row"><span class="tool"><span class="tname">After Effects</span><i class="tst PROFICIENT">熟练</i></span><span class="tool"><span class="tname">Photoshop</span><i class="tst PROFICIENT">熟练</i></span><span class="tool"><span class="tname">Premiere Pro</span><i class="tst PROFICIENT">熟练</i></span><span class="tool"><span class="tname">Figma</span><i class="tst LEARNING">学习中</i></span><span class="tool"><span class="tname">Blender</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">Unreal Engine 5</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">Unity</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">Seedance</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">Viggle</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">NanoBanana</span><i class="tst PRACTICE">实践中</i></span><span class="tool"><span class="tname">ComfyUI</span><i class="tst LEARNING">学习中</i></span><span class="tool"><span class="tname">Midjourney</span><i class="tst LEARNING">学习中</i></span></div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>20</b> / 21</div>
+      <div class="pgname">SKILLS / TOOLSET</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="bg-grid"></div><div class="bg-noise"></div>
+    <div class="ghost tiny">21</div>
+    <div class="track-line t1"><i class="track-pulse"></i></div>
+    <i class="ptype contact"></i>
+    <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+    
+    <div class="sysbar"><div class="r"><span class="dot"></span>JAZIM&middot;LAU &nbsp;/&nbsp; 2027</div></div>
+    <div class="phead"><div class="en-sub"><span class="sq">&#9632;</span>CONTACT</div><h1>联系通道</h1><div class="rule p"></div></div>
+<div class="contact-wrap">
+  <div>
+    <div class="contact-big">期待与您<span class="acc">合作</span></div>
+    <div class="contact-sub">感谢浏览，欢迎岗位沟通与项目交流。</div>
+    <div class="contact-list"><div class="contact-item"><div class="k">EMAIL / 邮箱</div><div class="v">jazimlau@yeah.net</div></div><div class="contact-item"><div class="k">PHONE / 手机</div><div class="v">+86 180 2451 6913</div></div><div class="contact-item"><div class="k">WECHAT / 微信</div><div class="v">wxid_a8c05c196d3b22</div></div><div class="contact-item"><div class="k">SCHOOL / 学校</div><div class="v">澳门城市大学 · 设计学硕士在读</div></div></div>
+  </div>
+  <div class="contact-qr panel"><span class="panel-tag">QR / 在线作品集</span>
+    <img src="assets-optimized/qr/qr-home.png" alt="QR">
+    <div class="cap">SCAN TO OPEN<br><b>ONLINE PORTFOLIO</b></div>
+    <div class="site">jazimprofile.com</div>
+  </div>
+</div>
+
+    <div class="pfoot">
+      <div class="pgidx"><b>21</b> / 21</div>
+      <div class="pgname">CONTACT</div>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+/* ════════════════════════════════════════════════════════════════════
+   PixelCharts —— Index 右侧精选数据图表（像素风：网格 / 切角 / 条纹 / 加载动画）
+   ════════════════════════════════════════════════════════════════════ */
+
+.charts {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.chartsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chartsLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+.chartsLabel i {
+  width: 7px;
+  height: 7px;
+  background: var(--accent-lime);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  animation: label-blink 1.6s steps(1) infinite;
+}
+
+@keyframes label-blink {
+  0%,
+  62% {
+    opacity: 1;
+  }
+  63%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+/* ---------- 核心数值 chips ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  --chip-accent: var(--text-primary);
+}
+
+.chip b {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-small);
+  color: var(--chip-accent);
+}
+
+.chip span {
+  color: var(--text-dim);
+}
+
+.chip[data-accent='lime'] {
+  --chip-accent: var(--accent-lime);
+}
+.chip[data-accent='purple'] {
+  --chip-accent: var(--accent-purple);
+}
+.chip[data-accent='orange'] {
+  --chip-accent: var(--accent-orange);
+}
+.chip[data-accent='blue'] {
+  --chip-accent: var(--accent-blue);
+}
+
+.chartsBody {
+  margin-top: 12px;
+}
+
+/* ══════════════ 圆环图 ══════════════ */
+
+.donut {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+  flex-wrap: wrap;
+}
+
+/* 尺寸用 clamp 跟随视口，矮屏自动缩小，底部不超出卡片 */
+.donutWrap {
+  position: relative;
+  width: clamp(120px, 10vw, 180px);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.donutSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.donutSeg {
+  opacity: 0.92;
+  transition: stroke-width 0.16s var(--ease-out), opacity 0.16s var(--ease-out);
+  cursor: crosshair;
+}
+
+/* 悬停：不再加粗描边（stroke-width 增大 + 方头线帽会让颜色互相穿模），
+   改为压暗其余分段 + 提亮当前分段，颜色互不侵占 */
+.donut:hover .donutSeg:not(:hover) {
+  opacity: 0.4 !important;
+}
+
+.donutSeg:hover {
+  opacity: 1 !important;
+  filter: brightness(1.4) drop-shadow(0 0 5px currentColor);
+}
+
+.donutCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  gap: 2px;
+}
+
+.donutCenter b {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.donutCenter span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.donutLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.donutLegend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  transition: color 0.15s var(--ease-out);
+}
+
+.donutLegend li i {
+  width: 8px;
+  height: 8px;
+  background: var(--lg);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.donutLegend li span {
+  color: var(--text-secondary);
+}
+
+.donutLegend li b {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.donutLegend li:hover span {
+  color: var(--text-primary);
+}
+
+/* ══════════════ 条形图 ══════════════ */
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.barRow {
+  position: relative;
+  display: grid;
+  /* 标签列固定等宽，保证各进度条轨道左右端点对齐 */
+  grid-template-columns: 150px 1fr 26px;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 像素 Tooltip：直角卡片 + 等宽数据标签 + 四角定位点 */
+.barTooltip {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 9px;
+  transform: translateY(-50%);
+  background: var(--background-elevated);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  white-space: nowrap;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 5px) 0,
+    100% 5px,
+    100% 100%,
+    5px 100%,
+    0 calc(100% - 5px)
+  );
+}
+
+.barTooltip::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 4px;
+  height: 4px;
+  border-top: 2px solid var(--accent-lime);
+  border-left: 2px solid var(--accent-lime);
+}
+
+.barTooltip i {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent-lime);
+}
+
+.barRowOn .barFill {
+  filter: brightness(1.35);
+  box-shadow: 0 0 12px var(--ba);
+}
+
+.barLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: right;
+  /* 允许换行，避免 ASSET PRODUCTION 这类长系统名被截断 */
+  white-space: normal;
+  line-height: 1.35;
+  transition: color 0.15s var(--ease-out);
+}
+
+.barTrack {
+  position: relative;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.barFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--bw);
+  background: var(--ba);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(7, 11, 9, 0.4) 0 3px,
+    transparent 3px 6px
+  );
+  transform-origin: left;
+  animation: bar-grow 0.8s steps(7) both;
+  animation-delay: calc(var(--i) * 0.09s);
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.barRow:hover .barFill {
+  filter: brightness(1.25);
+  box-shadow: 0 0 10px var(--ba);
+}
+
+.barRow:hover .barLabel {
+  color: var(--text-primary);
+}
+
+.barValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-small);
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ══════════════ 折线 / 面积图 ══════════════ */
+
+.line {
+  width: 100%;
+}
+
+.lineSvg {
+  width: 100%;
+  height: clamp(96px, 12vw, 130px);
+  display: block;
+  overflow: visible;
+}
+
+.linePath {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: line-draw 1.2s steps(24) forwards;
+}
+
+@keyframes line-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.lineDot {
+  animation: dot-pop 0.3s steps(2) both;
+  animation-delay: calc(var(--i) * 0.14s + 0.4s);
+  cursor: crosshair;
+  transition: fill 0.15s var(--ease-out);
+}
+
+.lineDot:hover {
+  fill: var(--accent-lime);
+  transform: scale(1.7);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes dot-pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: center;
+  }
+}
+
+.lineLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  gap: 4px;
+}
+
+.lineLabels li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lineLabels b {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-primary);
+}
+
+.lineLabels span {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--text-dim);
+}
+
+/* ══════════════ 里程碑时间线 ══════════════ */
+
+.milestones {
+  width: 100%;
+  padding: 6px 2px 2px;
+}
+
+.milestoneTrack {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 92px;
+  padding-top: 16px;
+}
+
+.milestoneTrack::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.milestoneFill {
+  position: absolute;
+  top: 19px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-lime) 0 6px,
+    transparent 6px 10px
+  );
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: milestone-grow 1.1s steps(14) forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes milestone-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.milestoneDot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  width: 24%;
+}
+
+.milestoneDot::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--background-main);
+  border: 2px solid var(--accent-purple);
+  box-shadow: 0 0 0 1px rgba(7, 11, 9, 0.9);
+  animation: dot-pop 0.3s steps(2) both;
+  animation-delay: calc(var(--i) * 0.13s + 0.2s);
+  z-index: 2;
+  transition: border-color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
+}
+
+.milestoneDot b {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--text-primary);
+}
+
+.milestoneDot span {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.milestoneDot em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.milestoneDot:hover::before {
+  border-color: var(--accent-lime);
+  box-shadow: 0 0 8px rgba(184, 255, 61, 0.55), 0 0 0 1px rgba(7, 11, 9, 0.9);
+}
+
+.milestoneDot:hover b {
+  color: var(--accent-lime);
+}
+
+/* 进行中的里程碑（2026 网易雷火）：橙色边框 + 呼吸光环。
+   需覆盖 hover 的 lime 态，因此放在 hover 规则之后。 */
+.milestoneDotActive::before {
+  border-color: var(--accent-orange);
+  animation: dot-pop 0.3s steps(2) both, dot-breathe 2.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.13s + 0.2s), 0.5s;
+}
+
+@keyframes dot-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 61, 0.55), 0 0 0 1px rgba(7, 11, 9, 0.9);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 107, 61, 0), 0 0 0 1px rgba(7, 11, 9, 0.9);
+  }
+}
+
+.milestoneDotActive:hover::before {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 8px rgba(255, 107, 61, 0.55), 0 0 0 1px rgba(7, 11, 9, 0.9);
+}
+
+.milestoneDotActive:hover b {
+  color: var(--accent-orange);
+}
+
+/* =========================================================================
+   工具链：具体软件 + 能力状态（TOOL PROFICIENCY）
+   ========================================================================= */
+
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid var(--border-soft);
+  border-left: 2px solid var(--border-strong);
+  transition: border-color 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+
+.toolRow:hover {
+  border-color: var(--purple-line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.toolName {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.toolRole {
+  font-style: normal;
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* 像素状态徽章：颜色取自真实工具状态（PROFICIENT / WORKING / PRACTICE / LEARNING） */
+.toolBadge {
+  flex: none;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ba);
+  border: 1px solid color-mix(in srgb, var(--ba) 45%, transparent);
+  background: color-mix(in srgb, var(--ba) 10%, transparent);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 5px) 0,
+    100% 5px,
+    100% 100%,
+    5px 100%,
+    0 calc(100% - 5px)
+  );
+}
+
+@media (max-width: 768px) {
+  .toolRow {
+    padding: 6px 8px;
+  }
+  .toolRole {
+    display: none;
+  }
+}
+
+/* =========================================================================
+   入场动画只播一次：后续切换模块/回看时不再播放，直接显示终态
+   ========================================================================= */
+
+.noEntry .barFill {
+  animation: none;
+}
+
+.noEntry .linePath {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+.noEntry .lineDot {
+  animation: none;
+}
+
+.noEntry .milestoneFill {
+  animation: none;
+  transform: scaleX(1);
+}
+
+.noEntry .milestoneDot::before {
+  animation: none;
+}
+
+/* 保留进行中里程碑（2026 网易雷火）的呼吸动画——它不是入场动画 */
+.noEntry .milestoneDotActive::before {
+  animation: dot-breathe 2.2s ease-in-out infinite;
+}
+
+/* =========================================================================
+   移动端：圆环缩小居中，图例改为两列，绝不出容器
+   ========================================================================= */
+
+@media (max-width: 768px) {
+  .donut {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .donutWrap {
+    width: clamp(104px, 32vw, 150px);
+  }
+
+  .donutLegend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 16px;
+  }
+}

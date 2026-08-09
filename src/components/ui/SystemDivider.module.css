@@ -1,0 +1,182 @@
+/* =========================================================================
+   SystemDivider —— 全站统一系统分割带
+   上部：分段线 + 状态标签 + 系统编号；下部：断续轨道 + 方向提示
+   ========================================================================= */
+
+.divider {
+  position: relative;
+  /* 区块节奏已由 --section-gap 统一；分割带只保留适度呼吸，
+     避免与相邻 Section 的 padding 叠加出「空了一屏」的空白 */
+  margin-top: clamp(24px, 3vh, 36px);
+  margin-bottom: clamp(24px, 3vh, 36px);
+  padding: 0;
+}
+
+/* ---------- 上部：状态标签行 ---------- */
+.upper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding-bottom: 12px;
+}
+
+/* 左侧分段线 */
+.rule {
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--accent-purple) 0 8px,
+    transparent 8px 14px
+  );
+  opacity: 0.7;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-soft);
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+/* 方形状态灯：低频呼吸 */
+.light {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  background: var(--accent-lime);
+  animation: divider-breathe 3s ease-in-out infinite;
+}
+
+@keyframes divider-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* 系统编号 */
+.code {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+/* ---------- 下部：断续轨道 + 方向提示 ---------- */
+.lower {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  min-width: 120px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.16) 0 5px,
+    transparent 5px 10px
+  );
+  overflow: hidden;
+}
+
+/* 沿轨道移动的像素光块（低频） */
+.trackPulse {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 6px;
+  height: 150%;
+  margin-top: -75%;
+  background: var(--accent-lime);
+  opacity: 0;
+}
+
+.trackLive .trackPulse {
+  animation: track-glide 7s steps(14) infinite;
+}
+
+@keyframes track-glide {
+  0% {
+    left: -4%;
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.65;
+  }
+  60% {
+    opacity: 0.65;
+  }
+  70% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.hintDot {
+  width: 3px;
+  height: 3px;
+  flex: none;
+  background: var(--accent-purple);
+}
+
+/* ---------- 移动端：允许换行、状态信息可缩减 ---------- */
+@media (max-width: 768px) {
+  .divider {
+    margin-top: clamp(16px, 2.5vh, 24px);
+    margin-bottom: clamp(16px, 2.5vh, 24px);
+  }
+  .tag {
+    padding: 4px 8px;
+  }
+  .hint {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light,
+  .trackLive .trackPulse {
+    animation: none;
+  }
+}

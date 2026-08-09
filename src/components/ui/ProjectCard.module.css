@@ -1,0 +1,637 @@
+﻿.card {
+  --card-accent: var(--accent-purple);
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: clamp(24px, 2.4vw, 40px);
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  /* 内层双层像素描边，强化终端面板感 */
+  box-shadow: inset 0 0 0 2px rgba(7, 11, 9, 0.55),
+    inset 0 0 0 3px var(--border-soft);
+  isolation: isolate;
+
+  /* 涓嶈鍒欏垏瑙?鈥斺€?鍙充笂澶у垏瑙?+ 宸︿笅灏忓垏瑙?*/
+  clip-path: polygon(
+    0 0,
+    calc(100% - 42px) 0,
+    100% 42px,
+    100% 100%,
+    22px 100%,
+    0 calc(100% - 22px)
+  );
+
+  transition: border-color 0.5s var(--ease-out), background 0.5s var(--ease-out);
+}
+
+.isActive {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    172deg,
+    var(--background-elevated) 0%,
+    var(--background-panel) 60%
+  );
+}
+
+/* 点击选中反馈：border → 紫 + marker → lime + 短扫描线 + SELECTED */
+.cardFlash {
+  border-color: var(--accent-purple) !important;
+  transition-duration: 0.1s;
+}
+
+.cardFlash .statusDot,
+.cardFlash .dutyTick,
+.cardFlash .subModuleChipOn i {
+  background: var(--accent-lime);
+}
+
+.selectedScan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  z-index: 6;
+  background: linear-gradient(90deg, transparent, var(--accent-lime), transparent);
+  pointer-events: none;
+  animation: selected-scan 0.22s linear forwards;
+}
+
+@keyframes selected-scan {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.selectedTag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 6;
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  border: 1px solid rgba(184, 255, 61, 0.45);
+  background: var(--lime-soft);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 5px) 0,
+    100% 5px,
+    100% 100%,
+    5px 100%,
+    0 calc(100% - 5px)
+  );
+  pointer-events: none;
+}
+
+/* 闈炲綋鍓嶅崱鐗囷細闄嶄綆瀵规瘮锛屼綔涓哄彲鍒囨崲搴忓垪鐨勬殫绀?*/
+.prev,
+.next,
+.far {
+  cursor: pointer;
+}
+
+/* ---------- 鑳屾櫙瓒呭ぇ缂栧彿 ---------- */
+.ghostIndex {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.3em;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 20vw, 22rem);
+  font-weight: 800;
+  line-height: 0.7;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.028);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- 鍔ㄦ€佸潗鏍囩嚎 ---------- */
+.coords {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.coords i {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.coords i:nth-child(1) {
+  left: 0;
+  right: 0;
+  top: 33%;
+  height: 1px;
+}
+.coords i:nth-child(2) {
+  top: 0;
+  bottom: 0;
+  left: 38%;
+  width: 1px;
+}
+
+/* ---------- 甯冨眬 ---------- */
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(22px, 2.6vw, 46px);
+  align-items: start;
+}
+
+/* 浼樺厛绾?3锛氱揣鍑戝舰鎬侊紝濯掍綋鍗犳瘮鏇村皬 */
+.p3 .grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ---------- 澶撮儴 ---------- */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--card-accent);
+}
+
+/* ---------- 层级标签：LEVEL 01 TRACK / LEVEL 03 CASE ---------- */
+.levelTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: -4px 0 16px;
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.015);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+
+.levelTag b {
+  color: var(--card-accent);
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.statusDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  background: currentColor;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.statusOngoing {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.3);
+}
+.statusDelivered {
+  color: #a99cff;
+  border-color: var(--purple-line);
+}
+.statusStudy {
+  color: var(--accent-orange);
+  border-color: rgba(255, 113, 61, 0.3);
+}
+.statusArchive {
+  color: var(--text-tertiary);
+}
+
+/* ---------- 鏍囬 ---------- */
+.title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.5vw, 2.75rem);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-wrap: balance;
+}
+
+.p3 .title {
+  font-size: clamp(1.25rem, 1.7vw, 1.75rem);
+}
+
+.titleZh {
+  font-size: clamp(0.9rem, 1.05vw, 1.0625rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--card-accent);
+  margin-bottom: 10px;
+}
+
+/* 中间空位：项目服务标签 */
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.tagRow li {
+  padding: 3px 7px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* 类型 / 职责信息 */
+.metaRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.metaRow {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.metaRow dt {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.metaRow dd {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.cta {
+  margin-top: auto;
+  /* 按钮对齐到左下角 */
+  align-self: flex-start;
+}
+
+/* ---------- 鍙充晶濯掍綋 ---------- */
+.media {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* ---------- 一级项目卡片的二级项目筛选（放在预览视频上方） ----------
+   结构：LEVEL 02 标签 → 提示（标签正下方 6~10px）→ 产品横向 Grid */
+.subModuleBar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--card-accent);
+}
+
+.subModuleLabel {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* 产品选择器：横向 Grid（内容宽、不 stretch），随容器宽度自动换列 */
+.subModuleList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(126px, max-content));
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+}
+
+/* 二级筛选辅助提示：位于标签正下方 + 轻微箭头位移（不持续强闪）。
+   与筛选面板 subHint 同步放大，作为明确的交互引导。 */
+.subModuleHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.subModuleHint i {
+  font-style: normal;
+  color: var(--accent-lime);
+  animation: hint-arrow 2.6s steps(2) infinite;
+}
+
+@keyframes hint-arrow {
+  0%,
+  55% {
+    transform: translateX(0);
+  }
+  65%,
+  100% {
+    transform: translateX(4px);
+  }
+}
+
+.subModuleChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(7, 11, 9, 0.5);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.subModuleChip:hover,
+.subModuleChip:focus-visible {
+  color: var(--card-accent);
+  border-color: var(--card-accent);
+  background: rgba(7, 11, 9, 0.9);
+}
+
+/* 二级项目条高亮跟随：当前预览视频所属的子模块点亮 */
+.subModuleChipOn,
+.subModuleChipOn:hover {
+  color: #0a0a0d;
+  background: var(--card-accent);
+  border-color: var(--card-accent);
+}
+
+.subModuleChipOn .subModuleIndex {
+  color: inherit;
+}
+
+.subModuleIndex {
+  color: var(--text-dim);
+}
+
+.videoBox {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%
+  );
+}
+
+/* 视频预览旁的左右切换箭头容器（仅活动卡显示，模块内切换视频）。
+   箭头按钮几何/动效已收敛到共享组件 VideoNav（src/components/ui/VideoNav.module.css），
+   此处只保留容器：绝对铺满、z-index 6 高于视频与 HUD、非交互部分不挡视频点击。 */
+.videoNav {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* ---------- 渚ц竟淇℃伅闈㈡澘 ---------- */
+.sidePanel {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid var(--border-soft);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    0 100%
+  );
+}
+
+.sideTitle {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* MISSION DATA 旁的像素信号条：竖向分段、上下扫描（非静止） */
+.sideTitle::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 14px;
+  margin-left: 8px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--card-accent) 0 3px,
+    transparent 3px 6px
+  );
+  background-position: 0 0;
+  background-size: 100% 6px;
+  vertical-align: -2px;
+  animation: mission-scan 0.9s steps(4) infinite;
+}
+
+@keyframes mission-scan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 6px;
+  }
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.metricValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.5vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.metricLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ---------- 鎵弿妗?---------- */
+.scanFrame {
+  position: absolute;
+  inset: 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scanFrame i {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: rgba(255, 255, 255, 0.16);
+  transition: border-color 0.5s var(--ease-out);
+}
+
+.scanFrame i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.scanFrame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.scanFrame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.scanFrame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.isActive .scanFrame i {
+  border-color: var(--card-accent);
+}
+
+/* =========================================================================
+   鍝嶅簲寮忥細绉诲姩绔」鐩崱鏀逛负绾靛悜缁撴瀯
+   ========================================================================= */
+
+@media (max-width: 1100px) {
+  .grid,
+  .p3 .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media {
+    order: -1;
+  }
+
+  .card {
+    clip-path: polygon(
+      0 0,
+      calc(100% - 26px) 0,
+      100% 26px,
+      100% 100%,
+      14px 100%,
+      0 calc(100% - 14px)
+    );
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 18px;
+  }
+
+  .ghostIndex {
+    font-size: 8rem;
+  }
+
+  .head {
+    flex-wrap: wrap;
+  }
+
+  /* 触控区 ≥ 44px */
+  .subModuleChip {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .scanFrame i,
+  .status {
+    transition: none;
+  }
+  .sideTitle::after {
+    animation: none;
+  }
+}

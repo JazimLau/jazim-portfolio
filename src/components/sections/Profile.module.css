@@ -1,0 +1,728 @@
+/* =========================================================================
+   Profile —— 角色档案：上半分栏 + 能力卡 + TOOLSET + 任务统计
+   ========================================================================= */
+
+.root {
+  position: relative;
+}
+
+/* 顶部留白跟随全站统一节奏（.section 的 padding-block = --section-gap / 2），
+   不再单独硬编码 padding-top，避免与全局区块节奏叠加出重复留白 */
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* =========================================================================
+   上半：左右分栏
+   ========================================================================= */
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  margin-bottom: clamp(48px, 7vh, 80px);
+}
+
+.left {
+  min-width: 0;
+}
+
+/* ---------- 正文 ---------- */
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 680px;
+  margin-bottom: clamp(26px, 3.5vh, 40px);
+}
+
+.introText {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+/* ---------- 职业状态三行 ---------- */
+.classBlock {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: clamp(24px, 3vh, 36px);
+  overflow: hidden;
+}
+
+.classRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 12px;
+  border-left: 2px solid var(--border-primary);
+  will-change: transform, opacity;
+}
+
+.classRow + .classRow {
+  margin-top: 10px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.classKey {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.classValue {
+  font-family: var(--font-display);
+  font-weight: 550;
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-align: right;
+  line-height: 1.6;
+}
+
+.classRow:first-child {
+  border-left-color: var(--accent-lime);
+}
+
+/* =========================================================================
+   右：PLAYER DATA 档案面板
+   ========================================================================= */
+
+.panelCol {
+  min-width: 0;
+  position: sticky;
+  top: 120px;
+}
+
+.playerPanel {
+  position: relative;
+  padding: clamp(20px, 2.5vw, 30px);
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-pixel);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 22px) 0,
+    100% 22px,
+    100% 100%,
+    22px 100%,
+    0 calc(100% - 22px)
+  );
+  will-change: clip-path;
+}
+
+/* 边框绘制层：与面板同形，进场时自上而下展开 */
+.panelFrame {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid var(--accent-lime);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 22px) 0,
+    100% 22px,
+    100% 100%,
+    22px 100%,
+    0 calc(100% - 22px)
+  );
+  transform-origin: left top;
+  will-change: transform;
+}
+
+/* 左上编号 / 右上 ACTIVE */
+.panelIndex {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.panelActive {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+.panelActive i {
+  width: 5px;
+  height: 5px;
+  background: var(--accent-lime);
+  animation: panel-blink 1.4s steps(1) infinite;
+}
+
+@keyframes panel-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* 十字定位线 */
+.panelCrossH,
+.panelCrossV {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.panelCrossH {
+  top: 26%;
+  right: 0;
+  width: 60px;
+  height: 1px;
+}
+
+.panelCrossV {
+  top: 0;
+  right: 34%;
+  width: 1px;
+  height: 46px;
+}
+
+/* 坐标 */
+.panelCoords {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+/* 面板头 */
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 22px;
+  margin-bottom: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.panelHeadTitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  color: var(--text-primary);
+}
+
+.panelHeadSeq {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+/* 数据行 */
+.playerList {
+  margin: 0;
+}
+
+.playerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  will-change: transform, opacity;
+}
+
+.playerRow dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.playerRow dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 面板脚 */
+.panelFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.panelLoaded {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+.panelLoaded i {
+  width: 5px;
+  height: 5px;
+  background: var(--accent-lime);
+}
+
+.panelBuild {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   能力档案卡：两列不对称（MOTION DESIGN 更宽）
+   ========================================================================= */
+
+.abilities {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+  margin-bottom: clamp(48px, 7vh, 80px);
+}
+
+/* 第 5 张卡跨满整行 */
+.abilities > :nth-child(5) {
+  grid-column: 1 / -1;
+}
+
+.abilityItem,
+.abilityWide {
+  position: relative;
+  padding: clamp(18px, 2vw, 26px);
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 16px) 0,
+    100% 16px,
+    100% 100%,
+    16px 100%,
+    0 calc(100% - 16px)
+  );
+  transition: border-color var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.abilityItem:hover,
+.abilityWide:hover {
+  border-color: var(--accent-purple);
+  transform: translateY(-3px);
+}
+
+.abilityRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--accent-lime) 0 7px,
+    transparent 7px 12px
+  );
+  transform-origin: left center;
+}
+
+/* 角部像素点阵装饰 + 右下角状态点 */
+.abilityItem::after,
+.abilityWide::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+  background-image: radial-gradient(
+    rgba(184, 255, 61, 0.16) 1px,
+    transparent 1.5px
+  );
+  background-size: 4px 4px;
+  opacity: 0.6;
+}
+
+.abilityItem::before,
+.abilityWide::before {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 3px;
+  height: 3px;
+  background: var(--accent-lime);
+  animation: ability-dot 3.2s ease-in-out infinite;
+}
+
+@keyframes ability-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.abilityHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.abilityIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--accent-purple);
+}
+
+.abilityTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.abilityEn {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.abilityBody {
+  max-width: 52ch;
+  font-size: var(--fs-small);
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* =========================================================================
+   下半：TOOLSET + CV
+   ========================================================================= */
+
+.lower {
+  margin-bottom: clamp(48px, 7vh, 80px);
+}
+
+/* ---------- 教育背景：硕士 / 本科紧凑卡 ---------- */
+.eduBlock {
+  margin-bottom: 28px;
+}
+
+.eduGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.eduCard {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-soft);
+  border-left: 2px solid var(--purple-line);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+.eduHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.eduHead b {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+.eduPeriod {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.eduSchool {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.eduMajor {
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.eduMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.eduMeta i {
+  width: 3px;
+  height: 3px;
+  background: var(--accent-purple);
+}
+
+.eduResearch {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-purple);
+}
+
+/* 研究方向小标签 */
+.eduTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.eduTags span {
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.02);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+
+@media (max-width: 640px) {
+  .eduGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.toolsBlock {
+  margin-bottom: 24px;
+}
+
+/* 下载 CV 按钮：与工具链模块保持清晰间距，避免覆盖 */
+.cvBtn {
+  margin-top: clamp(28px, 4vh, 52px);
+}
+
+.blockLabel {
+  display: block;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.toolsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 标准横向排版：图标 | 工具名/分类（两行文字列） | 右侧状态标签 */
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 14px 16px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  will-change: transform, opacity;
+  min-width: 0;
+}
+
+.tool:hover {
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+}
+
+.toolIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  color: var(--accent-purple);
+  border: 1px solid var(--purple-line);
+  background: var(--purple-soft);
+}
+
+.toolText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.toolName {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolRole {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolState {
+  margin-left: auto;
+  flex: none;
+  padding: 3px 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.toolState[data-state='PROFICIENT'] {
+  color: var(--accent-purple);
+  border-color: var(--purple-line);
+  background: var(--purple-soft);
+}
+
+.toolState[data-state='WORKING'] {
+  color: var(--accent-blue);
+  border-color: rgba(91, 200, 255, 0.3);
+  background: var(--cyan-soft);
+}
+
+.toolState[data-state='PRACTICE'] {
+  color: var(--accent-orange);
+  border-color: rgba(255, 107, 61, 0.32);
+  background: var(--orange-soft);
+}
+
+/* LEARNING 与 Skills 能力矩阵的学习中一致：lime 绿 */
+.toolState[data-state='LEARNING'] {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.32);
+  background: var(--lime-soft);
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+@media (max-width: 1200px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .panelCol {
+    position: static;
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 768px) {
+  .abilities {
+    grid-template-columns: 1fr;
+  }
+  .abilities > :nth-child(5) {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panelActive i {
+    animation: none;
+  }
+}

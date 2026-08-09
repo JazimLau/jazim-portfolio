@@ -1,0 +1,516 @@
+.wrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--background-elevated);
+  border: 1px solid var(--border-color);
+  isolation: isolate;
+}
+
+.video,
+.cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 视频：放进固定横屏预览框内居中（contain），上下预留安全区，避免 HUD 遮挡内容；
+   竖向视频因此收进横屏框，不再把预览框撑高 */
+.video {
+  box-sizing: border-box;
+  object-fit: contain;
+  padding-block: var(--media-safe-y, clamp(16px, 7%, 40px));
+  /* 换源 / 暂停时透明淡出，露出封面层，避免黑帧跳闪 */
+  transition: opacity 0.25s var(--ease-out);
+}
+
+/* auto 模式：未真正播放（换源加载中 / 暂停）时视频层透明，封面/底板可见 */
+.videoIdle {
+  opacity: 0;
+}
+
+.cover {
+  z-index: 1;
+  object-fit: cover;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.coverHidden {
+  opacity: 0;
+}
+
+/* ---------- 占位底板 ---------- */
+.fallback {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+
+.fallbackIndex {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.055);
+  user-select: none;
+}
+
+.fallbackNote {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.fallbackDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  animation: pending-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes pending-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ---------- 压暗 / 颗粒 ---------- */
+.veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+      to top,
+      rgba(7, 7, 10, 0.82) 0%,
+      rgba(7, 7, 10, 0.16) 42%,
+      rgba(7, 7, 10, 0.34) 100%
+    ),
+    radial-gradient(120% 90% at 50% 50%, transparent 30%, rgba(7, 7, 10, 0.5) 100%);
+  pointer-events: none;
+}
+
+.scan,
+.grain {
+  z-index: 3;
+}
+
+/* ---------- HUD ----------
+   容器始终在布局中（保证隐藏时预览框高度不变）；pointer-events:none 不挡视频。
+   底部 VIDEO 选择条（项目浏览层级）始终可见；
+   顶部信息 + 播放/时间/进度/音量（.hudControls）默认隐藏，
+   首次出现 / 交互时显示，约 3 秒后 0.55s 淡出。 */
+.hud {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 15px;
+  pointer-events: none;
+}
+
+/* 顶部信息条：随控制组一起自动隐藏（淡出只改 opacity/visibility，保持布局占位） */
+.hudTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s var(--ease-out), visibility 0s linear 0.55s;
+}
+
+.hudTopShow {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.55s var(--ease-out), visibility 0s;
+}
+
+/* 底部区域：控制行（.hudControls）+ VIDEO 选择条（.pickerRow）整体固定在底部，
+   进度条 / 播放 / 时间 / 音量因此始终位于视频底部 */
+.hudBottomArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 控制组（可自动隐藏的部分）：淡出只改 opacity/visibility，保持布局占位 */
+.hudControls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s var(--ease-out), visibility 0s linear 0.55s;
+}
+
+.hudControlsShow {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.55s var(--ease-out), visibility 0s;
+}
+
+/* 键盘聚焦 / 全屏：控制组与顶部信息条保持可见 */
+.wrap:focus-within .hudControls,
+.wrap:focus-within .hudTop,
+.wrap:fullscreen .hudControls,
+.wrap:fullscreen .hudTop {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hudTag,
+.hudStatus {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(7, 7, 10, 0.58);
+  border: 1px solid var(--border-soft);
+  padding: 4px 8px;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 62%;
+}
+
+.hudStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  white-space: nowrap;
+  color: var(--accent-lime);
+}
+
+.hudDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* HUD 右上角动作组：状态 + 全屏按钮（整体不收缩，避免与状态标签挤压截断） */
+.hudActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+/* 全屏切换按钮 */
+.fsBtn {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  padding: 0;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: rgba(7, 7, 10, 0.55);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.fsBtn:hover,
+.fsBtn:focus-visible {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+/* 全屏：铺满屏幕、纯黑衬底，HUD 与控件保持可用 */
+.wrap:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  background: #000;
+  border-color: transparent;
+}
+
+/* 底部控制行：Grid 四区 —— play / time / progress / volume。
+   Progress 占 minmax(0, 1fr)，任何宽度下只会收缩、永不延伸到 Volume 区域；
+   Volume 是独立固定列（自然宽度，flex-shrink:0），hover 不改变任何几何。 */
+.hudBottom {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-areas: 'play time progress volume';
+  align-items: center;
+  column-gap: 10px;
+}
+
+.playIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  grid-area: play;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: rgba(7, 7, 10, 0.55);
+}
+
+/* 暂停 / 播放切换按钮：HUD 默认不接收指针，这里单独放开 */
+.playBtn {
+  pointer-events: auto;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.playBtn:hover,
+.playBtn:focus-visible {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.timecode {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  grid-area: time;
+  white-space: nowrap;
+}
+
+/* 视频下方的播放进度：可点击 / 拖动跳转。
+   Grid 区域 minmax(0, 1fr) 保证它只会收缩、绝不延伸到 Volume 列；
+   min-width:0 防止内容撑破网格轨道。 */
+.progressTrack {
+  position: relative;
+  grid-area: progress;
+  min-width: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.progressTrack:hover {
+  height: 5px;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent-purple);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* ---------- 音量控制：开关按钮 + 调节条 ----------
+   独立 Grid 列（volume）：固定自然宽度、不参与弹性伸缩，
+   Progress 使用 minmax(0, 1fr) 后两者永不相交；hover 展开只改内部透明度，不动布局。 */
+.volumeGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  grid-area: volume;
+  pointer-events: auto;
+}
+
+.volumeBtn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  padding: 0;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: rgba(7, 7, 10, 0.55);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.volumeBtn:hover,
+.volumeBtn:focus-visible {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.volumeTrack {
+  position: relative;
+  width: 54px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.volumeTrack:hover {
+  height: 5px;
+}
+
+.volumeFill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent-cyan);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* 视频选择条（Video Index 层）：独立于 Playback Controls 的一行，
+   位于控制行下方，VIDEO 序号在左、selectorExtra 计数在右，
+   与 Progress / Volume 分属不同层级与行，永不复用同一 Grid Cell。 */
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  flex-wrap: wrap;
+}
+
+.pickerLabel {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  opacity: 0.85;
+}
+
+/* 右侧附加计数（如跨作品的扁平 01 / 07）：推到本行最右，
+   不进入任何控制区，也不覆盖音量/进度。 */
+.pickerExtra {
+  flex: none;
+  margin-left: auto;
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: rgba(7, 7, 10, 0.55);
+  border: 1px solid var(--border-color);
+}
+
+.pickerList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+}
+
+.pickBtn {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  background: rgba(7, 7, 10, 0.55);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.pickBtn:hover,
+.pickBtn:focus-visible {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.pickBtnOn,
+.pickBtnOn:hover {
+  color: #0a0a0d;
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+/* ---------- 四角定位线 ---------- */
+.frame {
+  position: absolute;
+  inset: 7px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.frame i {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-color: rgba(255, 255, 255, 0.34);
+  transition: border-color var(--dur-mid) var(--ease-out),
+    width var(--dur-mid) var(--ease-out), height var(--dur-mid) var(--ease-out);
+}
+
+.frame i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.frame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.frame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.frame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.wrap:hover .frame i {
+  width: 17px;
+  height: 17px;
+  border-color: var(--accent-purple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fallbackDot {
+    animation: none;
+  }
+  .frame i,
+  .cover {
+    transition: none;
+  }
+}

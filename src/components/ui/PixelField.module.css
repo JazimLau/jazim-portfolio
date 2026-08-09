@@ -1,0 +1,191 @@
+/* =========================================================================
+   PixelField —— 全站统一像素背景层
+   多层级网格 + 点阵 + 信号块 + 扫描层 + 坐标定位，低频待机动画。
+   置于内容之下（z-index: 0），pointer-events: none 不阻挡交互。
+   ========================================================================= */
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---------- 点阵层：随鼠标轻微视差（不再叠加规则网格） ---------- */
+.layer {
+  position: absolute;
+  inset: 0;
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  /* 位移由 JS RAF 逐帧写入（仅 transform 合成层）；不叠加 transition，避免与 RAF 互相干扰 */
+}
+
+.dot {
+  position: absolute;
+  background: rgba(242, 243, 235, 0.5);
+  animation: dot-breathe var(--dur, 5s) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes dot-breathe {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.45;
+    transform: translateY(-2px);
+  }
+}
+
+/* ---------- 信号块：低频闪烁 / 微移 ---------- */
+.signal {
+  position: absolute;
+  animation: signal-pulse var(--dur, 4s) steps(1) infinite;
+}
+
+@keyframes signal-pulse {
+  0%,
+  78% {
+    opacity: 0.15;
+    transform: translate(0, 0);
+  }
+  82% {
+    opacity: 0.7;
+    transform: translate(1px, -1px);
+  }
+  86% {
+    opacity: 0.3;
+    transform: translate(0, 0);
+  }
+  92% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+
+/* ---------- 扫描层：自上而下缓慢移动的系统扫描线 ---------- */
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(117, 87, 255, 0.32) 40%,
+    rgba(91, 200, 255, 0.32) 60%,
+    transparent
+  );
+  opacity: 0.55;
+  animation: scan-move 10s linear infinite;
+}
+
+@keyframes scan-move {
+  0% {
+    top: -2%;
+  }
+  100% {
+    top: 102%;
+  }
+}
+
+/* ---------- 坐标定位 ---------- */
+.coord {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.16);
+  user-select: none;
+}
+
+.coordTL {
+  top: 14px;
+  left: 16px;
+}
+
+.coordTR {
+  top: 14px;
+  right: 16px;
+}
+
+.coordBR {
+  bottom: 14px;
+  right: 16px;
+}
+
+/* 边角十字准星 */
+.crossTL,
+.crossBR {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.crossTL {
+  top: 8px;
+  left: 8px;
+  border-top: 1px solid rgba(117, 87, 255, 0.35);
+  border-left: 1px solid rgba(117, 87, 255, 0.35);
+}
+
+.crossBR {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 1px solid rgba(91, 200, 255, 0.3);
+  border-right: 1px solid rgba(91, 200, 255, 0.3);
+}
+
+/* ---------- 点击波纹：短暂像素扩散 ---------- */
+.ripple {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--accent-lime);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.rippleOn {
+  animation: ripple-out 0.5s steps(5) forwards;
+}
+
+@keyframes ripple-out {
+  0% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(7);
+  }
+}
+
+/* ---------- 移动端：减弱装饰密度，保留终端感 ---------- */
+@media (max-width: 768px) {
+  .coord {
+    font-size: 8px;
+  }
+  .coordTL {
+    display: none;
+  }
+  .signal {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan,
+  .dot,
+  .signal {
+    animation: none;
+    opacity: 0.18;
+  }
+}

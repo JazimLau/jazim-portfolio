@@ -1,0 +1,632 @@
+﻿.nav {
+  --nav-pad: 20px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  background: rgba(10, 10, 14, 0.72);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  transition: padding var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out);
+  padding-block: var(--nav-pad);
+}
+
+/* Opening 鏈熼棿瀵艰埅鏍忓湪灞忓箷涓婃柟锛岀粨鏉熷悗鍚戜笅褰掍綅 */
+.navHidden {
+  transform: translateY(-102%);
+  transition: transform 0.75s var(--ease-out);
+}
+
+.navReady {
+  transform: translateY(0);
+  transition: transform 0.75s var(--ease-out), padding var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out);
+}
+
+/* 婊氬姩鍚庤交寰帇缂?*/
+.scrolled {
+  --nav-pad: 12px;
+  background: rgba(8, 8, 11, 0.88);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+/* 搴曢儴缁嗙嚎 */
+.baseline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border-color) 12%,
+    var(--border-color) 88%,
+    transparent
+  );
+}
+
+/* =========================================================================
+   宸︼細涓汉鏍囪瘑
+   ========================================================================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex: none;
+  padding: 0;
+  text-align: left;
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--purple-line);
+  background: var(--purple-soft);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-pixel-sm);
+  transition: border-color var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out);
+}
+
+.brand:hover .badge {
+  border-color: var(--accent-purple);
+  background: rgba(116, 85, 255, 0.24);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+}
+
+.brandZh {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+
+.brandEn {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.16em;
+  color: var(--text-secondary);
+}
+
+/* 鑻辨枃鐗堟椂鍓瑁呯殑鏄腑鏂囧悕锛氱瓑瀹藉瓧浣撴病鏈夋眽瀛楋紝鎹㈠洖姝ｆ枃瀛椾綋 */
+:global(html[data-lang='EN']) .brandEn {
+  font-family: var(--font-body);
+  letter-spacing: 0.12em;
+}
+
+.build {
+  padding: 3px 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-soft);
+}
+
+/* =========================================================================
+   涓細绔犺妭瀵艰埅
+   ========================================================================= */
+
+.center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color var(--dur-mid) var(--ease-out);
+  overflow: hidden;
+}
+
+/* 鍍忕礌杈规鑳屾櫙锛氶珮浜笉鍙潬棰滆壊 */
+.capsule {
+  position: absolute;
+  inset: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--purple-soft);
+  border: 1px solid var(--purple-line);
+  box-shadow: var(--shadow-pixel-sm);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+/* 宸︿晶鍧愭爣鐐癸細鍍忕礌灏忔柟鍧?*/
+.coordDot {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 0;
+  background: var(--accent-lime);
+  opacity: 0;
+  transition: opacity var(--dur-mid) var(--ease-out);
+}
+
+/* 绔犺妭缂栧彿锛氬父椹讳綍鏄剧ず锛堝垵濮嬪０搴︾暐浣庯級锛宧over 鎻愪寒銆乤ctive 寮哄寲銆?
+   在正常文档流中占位（flex item），始终占据固定布局空间 —— 不位移文字，绝不重叠 */
+.linkNum {
+  flex: none;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  color: var(--accent-purple);
+  opacity: 0.72;
+  transform: translateX(0);
+  transition: opacity var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+/* 鏂囧瓧锛歨over 鏃舵í鍚戦敊浣嶃€侰N 涓嬩负銆屼腑鏂囦富琛?+ 鑻辨枃灏忓瓧鍓銆嶄袱琛?*/
+.linkText {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 1.1;
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.linkLabel {
+  display: block;
+}
+
+/* CN 涓嬩腑鏂囦富琛岋細绛夊瀛椾綋娌℃湁姹夊瓧锛屽洖閫€姝ｆ枃瀛椾綋骞舵敹绱у瓧璺?*/
+:global(html[data-lang='CN']) .linkLabel {
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+}
+
+/* 搴曢儴鐭嚎锛氫粠涓績鍚戜袱渚у睍寮€ */
+.underline {
+  position: absolute;
+  bottom: 4px;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: var(--accent-purple);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--text-primary);
+}
+
+.link:hover .linkNum,
+.link:focus-visible .linkNum {
+  opacity: 1;
+}
+
+.link:hover .underline,
+.link:focus-visible .underline {
+  transform: scaleX(1);
+}
+
+/* Press：按下时 pixel underline 短缩（80~160ms 反馈） */
+.link:active .underline {
+  transform: scaleX(0.4);
+}
+
+/* ---------- PROJECTS 提示态：像素点 + VIEW WORK → ----------
+   与编号、文字同为导航项的普通 flex item（gap 由 .link 统一控制），
+   不绝对定位、不位移，动画只作用于 opacity / 边框 / 小箭头，不产生布局变化 */
+.workHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 6px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent-lime);
+  border: 1px solid rgba(184, 255, 61, 0.35);
+  background: var(--lime-soft);
+  /* 初次进入约 1.4s 后闪一次，之后每 10s 一次轻微 pulse（克制的提示态） */
+  animation: work-hint 10s ease-in-out 1.4s infinite;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.workHintTail {
+  display: inline;
+}
+
+.workDot {
+  width: 4px;
+  height: 4px;
+  flex: none;
+  background: var(--accent-lime);
+}
+
+.workHint em {
+  font-style: normal;
+  font-weight: 600;
+}
+
+.workHint b {
+  font-weight: 600;
+}
+
+.link:hover .workHint,
+.link:focus-visible .workHint {
+  border-color: rgba(184, 255, 61, 0.7);
+  background: rgba(184, 255, 61, 0.2);
+}
+
+@keyframes work-hint {
+  0%,
+  6%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(0);
+  }
+  3% {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+}
+
+/* 移动端菜单中的 PROJECTS 辅助标签 */
+.mobileHint {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--accent-lime);
+  text-transform: uppercase;
+}
+
+/* ---------- 褰撳墠椤?---------- */
+.linkActive {
+  color: var(--text-primary);
+}
+
+.linkActive .capsule {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.linkActive .coordDot {
+  opacity: 1;
+  animation: coord-blink 2.4s ease-in-out infinite;
+}
+
+.linkActive .underline {
+  transform: scaleX(1);
+  background: var(--accent-lime);
+}
+
+/* Active：编号与导航文字同时强化（编号切到系统辅助色并满亮度） */
+.linkActive .linkNum {
+  opacity: 1;
+  color: var(--accent-lime);
+}
+
+@keyframes coord-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* =========================================================================
+   鍙筹細鍔熻兘鍖?   ========================================================================= */
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.langToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.langToggle:hover,
+.langToggle:focus-within {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* ---------- 鍒嗘寮忚瑷€寮€鍏?---------- */
+
+/* 澶栨鑷繁涓嶅啀鏄寜閽紝鍐呴儴涓や釜鐪熷疄鎸夐挳 + 涓€涓粦鍧?*/
+.langToggle {
+  position: relative;
+  gap: 0;
+  padding: 2px;
+}
+
+.langBtn {
+  position: relative;
+  z-index: 1;
+  min-width: 32px;
+  padding: 6px 8px;
+  font: inherit;
+  letter-spacing: var(--track-label);
+  text-align: center;
+  transition: color var(--dur-mid) var(--ease-out);
+}
+
+.langBtn:disabled {
+  /* 杩囨浮杩涜涓姝㈤噸澶嶇偣鍑伙紝浣嗕笉鍋氱伆鍖?鈥斺€?閬垮厤鐪嬭捣鏉ュ儚鍔熻兘澶辨晥 */
+  cursor: default;
+}
+
+.langOn {
+  color: var(--accent-lime);
+}
+
+.langOff {
+  color: var(--text-dim);
+}
+
+.langOff:hover,
+.langOff:focus-visible {
+  color: var(--text-primary);
+}
+
+/* 婊戝潡锛氬垏鎹㈡椂妯悜婊戣繃鍘伙紝璇█鏇挎崲鐨?棰勫憡鍔ㄤ綔" */
+.langMarker {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc(50% - 2px);
+  background: var(--lime-soft);
+  border: 1px solid rgba(184, 255, 61, 0.4);
+  transform: translateX(0);
+  transition: transform 0.52s var(--ease-in-out);
+  pointer-events: none;
+}
+
+.langMarker[data-pos='EN'] {
+  transform: translateX(100%);
+}
+
+.contactBtn {
+  flex: none;
+}
+
+/* ---------- 声音开关 ---------- */
+.soundBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.soundBtn:hover,
+.soundBtn:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.soundOn {
+  color: var(--accent-lime);
+}
+
+.soundOn:hover,
+.soundOn:focus-visible {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.5);
+}
+
+.soundText {
+  white-space: nowrap;
+}
+
+/* 绐勫睆鑿滃崟鎸夐挳 */
+.menuBtn {
+  display: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* =========================================================================
+   绐勫睆绠€鍖栬彍鍗?   ========================================================================= */
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-nav) - 1);
+  padding: 88px 24px 28px;
+  background: var(--overlay-deep);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border-color);
+  transform: translateY(-101%);
+  transition: transform 0.55s var(--ease-out);
+  visibility: hidden;
+}
+
+.mobileOpen {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.mobileMenu ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileMenu li button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-soft);
+  text-align: left;
+}
+
+.mobileNum {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  color: var(--accent-purple);
+}
+
+.mobileFoot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-tertiary);
+}
+
+/* =========================================================================
+   鍝嶅簲寮?   ========================================================================= */
+
+/* 涓瓑灞忓箷锛氭敹绐勫鑸棿璺?*/
+@media (max-width: 1400px) {
+  .link {
+    padding: 9px 14px;
+    letter-spacing: 0.08em;
+  }
+  .build {
+    display: none;
+  }
+  /* 中等桌面：提示缩短为 VIEW →（隐藏 WORK 段），避免挤压、不重叠 */
+  .workHintTail {
+    display: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .langToggle {
+    padding: 8px;
+  }
+}
+
+/* 浣庝簬 900px锛氬垏鎹负绠€鍖栧鑸?*/
+@media (max-width: 900px) {
+  .center {
+    display: none;
+  }
+  .menuBtn {
+    display: grid;
+  }
+  .brandText {
+    gap: 1px;
+  }
+}
+
+@media (max-width: 620px) {
+  .contactBtn {
+    display: none;
+  }
+  .langToggle {
+    padding: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav,
+  .capsule,
+  .linkNum,
+  .linkText,
+  .underline,
+  .mobileMenu,
+  .badge {
+    transition: none;
+  }
+  .linkActive .coordDot {
+    animation: none;
+  }
+  /* 减少动效：提示态保持静态 accent，不脉冲 */
+  .workHint {
+    animation: none;
+    opacity: 1;
+    border-color: rgba(184, 255, 61, 0.45);
+  }
+}

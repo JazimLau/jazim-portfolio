@@ -1,0 +1,803 @@
+.root {
+  --accent: var(--accent-purple);
+  position: relative;
+  padding-top: 130px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  height: 100vh;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(40px, 5vw, 80px);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+  padding: 8px 13px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), gap var(--dur-fast) var(--ease-out);
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  gap: 13px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(28px, 3.6vw, 64px);
+  align-items: end;
+}
+
+.heroText {
+  min-width: 0;
+}
+
+.heroIndex {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.heroTitleWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 12px;
+  padding-bottom: 0.02em;
+}
+
+.heroTitle {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 5rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transform-origin: left center;
+  will-change: transform, clip-path;
+  text-wrap: balance;
+}
+
+.heroZhWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.heroZh {
+  display: block;
+  font-size: clamp(1rem, 1.4vw, 1.375rem);
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.heroDesc {
+  max-width: 56ch;
+  margin-bottom: 26px;
+  font-size: var(--fs-body);
+  line-height: 1.82;
+  color: var(--text-secondary);
+}
+
+/* ---------- 元数据 ---------- */
+.meta {
+  display: grid;
+  /* 固定 2 列，SERVICES 跨整行，避免长值在窄列里挤成一团 */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 13px 15px;
+  background: var(--background-panel);
+}
+
+/* 第 4 项（SERVICES）占满整行，长服务列表可舒展换行 */
+.metaItem:nth-child(4) {
+  grid-column: 1 / -1;
+}
+
+.metaKey {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.metaVal {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.heroMediaCol {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  /* 媒体列顶部钉定：heroGrid 为 align-items:end 时，左侧文字列高度变化
+     （不同作品标题/标签长短不一）会把媒体框整体推上推下，切作品即"跳动"。
+     align-self:start 让媒体框永远贴在行顶、位置恒定；文字列仍按 end 对齐，外观不变。 */
+  align-self: start;
+}
+
+/* ---------- 二级项目（子模块）筛选条：放在预览视频上方 ----------
+   层级：LEVEL 02 标签 → 产品横向 Grid（与 Projects 面板一致） */
+.subModuleBar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent);
+}
+
+.subModuleLabel {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.subModuleList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(126px, max-content));
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+}
+
+.subModuleChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(7, 11, 9, 0.5);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.subModuleChip:hover,
+.subModuleChip:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(7, 11, 9, 0.9);
+}
+
+/* 当前 Hero 视频归属的子模块高亮（随视频切换跟随） */
+.subModuleChipOn,
+.subModuleChipOn:hover,
+.subModuleChipOn:focus-visible {
+  color: #0a0a0d;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.subModuleChipOn .subModuleIndex {
+  color: inherit;
+}
+
+.subModuleIndex {
+  color: var(--text-dim);
+}
+
+.heroMedia {
+  position: relative;
+  min-width: 0;
+  will-change: clip-path, transform;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%);
+}
+
+/* 多视频左右切换箭头：几何与动效统一收敛到共享组件
+   VideoNav（src/components/ui/VideoNav.module.css），此处不再保留重复实现；
+   视频计数（如 01 / 07）已并入播放器底部 Video Index 选择行
+   （VideoPreview 的 selectorExtra），不再悬浮覆盖音量/进度控制区。 */
+
+/* =========================================================================
+   章节
+   ========================================================================= */
+
+.body {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(60px, 7vw, 110px);
+}
+
+.block {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(20px, 3vw, 60px);
+  padding-block: clamp(30px, 3.6vw, 54px);
+}
+
+.blockRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-color);
+  transform-origin: left center;
+}
+
+.blockHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  align-self: start;
+  position: sticky;
+  top: 120px;
+}
+
+.blockHead > * {
+  display: block;
+}
+
+.blockIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  color: var(--accent);
+}
+
+.blockTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.blockZh {
+  font-size: var(--fs-small);
+  letter-spacing: 0.16em;
+  color: var(--text-secondary);
+}
+
+.blockBody {
+  min-width: 0;
+}
+
+.para {
+  max-width: 66ch;
+  margin-bottom: 16px;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.para:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 要点 ---------- */
+.bullets {
+  display: grid;
+  gap: 10px;
+}
+
+.bullet {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.bulletTick {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+/* ---------- 流程条 ---------- */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.flowStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  transition: background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.flowStep:hover {
+  background: var(--background-elevated);
+  transform: translateY(-2px);
+}
+
+.flowNum {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.flowText {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.flowArrow {
+  color: var(--text-dim);
+  margin-left: 2px;
+}
+
+/* ---------- 工具 ---------- */
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 工具分组：组名行 + 组内 chips */
+.toolGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toolGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toolGroupLabel {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.toolGroupLabel b {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.toolGroupLabel span {
+  color: var(--text-dim);
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid var(--border-color);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.tool svg {
+  color: var(--accent);
+}
+
+/* =========================================================================
+   图集
+   ========================================================================= */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.shot {
+  position: relative;
+  overflow: hidden;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  will-change: clip-path;
+}
+
+.shotInner {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.shotImg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shotFallback {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+
+.shotFallbackText {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.shotCaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  border-top: 1px solid var(--border-soft);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.shotCaptionDim {
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   成果指标
+   ========================================================================= */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1px;
+  background: var(--border-soft);
+  border: 1px solid var(--border-soft);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 18px;
+  background: var(--background-panel);
+}
+
+.metricValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.metricLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   PREV / NEXT PROJECT
+   ========================================================================= */
+
+.nextNav {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border-color);
+  background: var(--background-panel);
+}
+
+.nextGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.nextInner {
+  display: block;
+  /* 横向留出安全线：内容不贴框边缘，左右各留足呼吸空间 */
+  padding-block: clamp(40px, 6vw, 90px);
+  padding-inline: clamp(16px, 2.2vw, 34px);
+  will-change: clip-path, transform;
+  transition: background var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover {
+  background: var(--background-elevated);
+}
+
+/* 上一项目：左侧栏，箭头在左，悬停向左滑 */
+.nextInnerPrev {
+  border-right: 1px solid var(--border-color);
+}
+
+.nextInnerPrev:hover .nextArrow {
+  transform: translateX(-14px);
+}
+
+.nextLabel {
+  display: block;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.nextRow {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 36px);
+}
+
+.nextIndex {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.1);
+  transition: color var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover .nextIndex {
+  color: var(--accent-purple);
+}
+
+.nextText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nextTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.nextZh {
+  font-size: var(--fs-small);
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+}
+
+.nextArrow {
+  flex: none;
+  color: var(--text-secondary);
+  transition: transform var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover .nextArrow {
+  transform: translateX(14px);
+  color: var(--accent-lime);
+}
+
+/* =========================================================================
+   底部退出栏
+   ========================================================================= */
+
+.exitBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: clamp(22px, 3vw, 36px);
+  border-top: 1px solid var(--border-color);
+}
+
+.exitBar .back {
+  margin-bottom: 0;
+}
+
+/* 退出栏按钮复用 .back 的等宽小字号，与顶部 BACK TO PROJECTS 大小一致；
+   仅清除 button 默认底色与指针样式 */
+.exitBar button.back {
+  background: transparent;
+  cursor: pointer;
+}
+
+/* =========================================================================
+   未找到项目
+   ========================================================================= */
+
+.missing {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-block: 140px 80px;
+}
+
+.missingCode {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  color: var(--accent-orange);
+}
+
+.missingTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-md);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.missingText {
+  max-width: 52ch;
+  margin-bottom: 30px;
+  color: var(--text-secondary);
+}
+
+.missingText code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 2px 6px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+@media (max-width: 1100px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+  .block {
+    grid-template-columns: 1fr;
+  }
+  .blockHead {
+    position: static;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    padding-top: 106px;
+  }
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+  .nextGrid {
+    grid-template-columns: 1fr;
+  }
+  .nextInnerPrev {
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .nextArrow {
+    display: none;
+  }
+  .flowText {
+    white-space: normal;
+  }
+  /* 触控区 ≥ 44px */
+  .subModuleChip {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .flowStep,
+  .nextInner,
+  .nextIndex,
+  .nextArrow {
+    transition: none;
+  }
+  .shotInner {
+    transform: none !important;
+  }
+}

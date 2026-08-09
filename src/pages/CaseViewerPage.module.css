@@ -1,0 +1,815 @@
+.root {
+  --accent: var(--accent-purple);
+  position: relative;
+  padding-top: 130px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  height: 100vh;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(40px, 5vw, 80px);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+  padding: 8px 13px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), gap var(--dur-fast) var(--ease-out);
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  gap: 13px;
+}
+
+/* 返回按钮用 <button> 实现时清除默认底色与指针 */
+button.back {
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ---------- 可点击层级面包屑：项目库 / TRACK / PRODUCT·MODULE / 当前 CASE·WORK ----------
+   父级为灰色链接（hover 变亮 + 像素下划线），当前项用 accent 且不可点击 */
+.crumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -12px 0 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.crumb a {
+  position: relative;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+/* 像素下划线：hover 时从中心向两侧展开 */
+.crumb a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.crumb a:hover,
+.crumb a:focus-visible {
+  color: var(--text-primary);
+}
+
+.crumb a:hover::after,
+.crumb a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.crumb i {
+  font-style: normal;
+  color: var(--text-dim);
+  opacity: 0.55;
+}
+
+.crumb span {
+  color: var(--text-secondary);
+}
+
+/* 当前项：accent 高亮，不可点击 */
+.crumbCurrent {
+  color: var(--accent) !important;
+}
+
+/* =========================================================================
+   同级案例导航（视频上方，紧凑）
+   ========================================================================= */
+
+.caseNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent);
+}
+
+.caseNavBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+a.caseNavBtn:hover,
+a.caseNavBtn:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.caseNavName {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caseNavDisabled {
+  color: var(--text-dim);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 作品级导航用 <button> 实现时，清除浏览器默认按钮样式 */
+button.caseNavBtn {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.caseNavCount {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(28px, 3.6vw, 64px);
+  align-items: end;
+}
+
+.heroText {
+  min-width: 0;
+}
+
+.heroIndex {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.heroTitleWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 12px;
+  padding-bottom: 0.02em;
+}
+
+.heroTitle {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 5rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transform-origin: left center;
+  text-wrap: balance;
+}
+
+.heroZhWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+
+.heroZh {
+  display: block;
+  font-size: clamp(1rem, 1.4vw, 1.375rem);
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.heroDesc {
+  max-width: 56ch;
+  margin-bottom: 26px;
+  font-size: var(--fs-body);
+  line-height: 1.82;
+  color: var(--text-secondary);
+}
+
+/* ---------- 元数据 ---------- */
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 13px 15px;
+  background: var(--background-panel);
+}
+
+.metaKey {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.metaVal {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.heroMedia {
+  position: relative;
+  min-width: 0;
+  /* 媒体列顶部钉定：heroGrid 为 align-items:end 时，左侧文字列高度变化
+     （不同作品标题/标签长短不一）会把媒体框整体推上推下，切作品即"跳动"。
+     align-self:start 让媒体框永远贴在行顶、位置恒定；文字列仍按 end 对齐，外观不变。 */
+  align-self: start;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%);
+}
+
+/* 作品轮播左右切换箭头：几何与动效统一收敛到共享组件
+   VideoNav（src/components/ui/VideoNav.module.css），此处不再保留重复实现；
+   跨作品的扁平视频计数（如 01 / 07）已并入播放器底部 Video Index 选择行
+   （VideoPreview 的 selectorExtra），不再悬浮覆盖音量/进度控制区。 */
+
+/* ---------- 活动项目筛选（对项目内的项目进行筛选） ---------- */
+.workBar {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(12px, 2vw, 22px);
+  margin-top: clamp(18px, 2.6vw, 34px);
+  padding: clamp(12px, 1.6vw, 16px);
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent);
+  flex-wrap: wrap;
+}
+
+.workLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.workSep {
+  width: 3px;
+  height: 3px;
+  background: var(--text-dim);
+  border-radius: 50%;
+}
+
+.workList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 0;
+}
+
+.workChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(7, 11, 9, 0.5);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.workChip:hover,
+.workChip:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.workChipOn,
+.workChipOn:hover {
+  color: #0a0a0d;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.workIndex {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.workCount {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: inherit;
+  opacity: 0.55;
+}
+
+/* =========================================================================
+   底部退出栏
+   ========================================================================= */
+
+.exitBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: clamp(22px, 3vw, 36px);
+  border-top: 1px solid var(--border-color);
+}
+
+.exitBar .back {
+  margin-bottom: 0;
+}
+
+.exitBar button.back {
+  background: transparent;
+  cursor: pointer;
+}
+
+/* =========================================================================
+   章节（项目背景 / 制作流程）
+   ========================================================================= */
+
+.body {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(60px, 7vw, 110px);
+}
+
+.block {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(20px, 3vw, 60px);
+  padding-block: clamp(30px, 3.6vw, 54px);
+}
+
+.blockRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.blockHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: start;
+  position: sticky;
+  top: 120px;
+}
+
+.blockIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  color: var(--accent);
+}
+
+.blockTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.blockZh {
+  font-size: var(--fs-small);
+  letter-spacing: 0.16em;
+  color: var(--text-secondary);
+}
+
+.blockBody {
+  min-width: 0;
+}
+
+.para {
+  max-width: 66ch;
+  margin-bottom: 16px;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.para:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 要点列表 ---------- */
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bullet {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-left: 6px;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.bulletTick {
+  position: relative;
+  top: 9px;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- 工具 chips ---------- */
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid var(--border-color);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.tool svg {
+  color: var(--accent);
+}
+
+/* ---------- 无详情占位 ---------- */
+.noDetail {
+  font-size: var(--fs-body);
+  color: var(--text-tertiary);
+  line-height: 1.8;
+}
+
+/* ---------- 流程条 ---------- */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.flowStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  border-left: 2px solid var(--accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  transition: background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.flowStep:hover {
+  background: var(--background-elevated);
+  transform: translateY(-2px);
+}
+
+.flowNum {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.flowText {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.flowArrow {
+  color: var(--text-dim);
+  margin-left: 2px;
+}
+
+/* =========================================================================
+   PREV / NEXT CASE（子层级内切换项目）
+   ========================================================================= */
+
+.nextNav {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border-color);
+  background: var(--background-panel);
+}
+
+.nextGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.nextInner {
+  display: block;
+  padding-block: clamp(40px, 6vw, 90px);
+  padding-inline: clamp(16px, 2.2vw, 34px);
+  transition: background var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover {
+  background: var(--background-elevated);
+}
+
+/* 作品级 PREV/NEXT 用 <button> 实现时清除浏览器默认按钮样式 */
+button.nextInner {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+/* 首尾禁用的 PREV/NEXT 卡：不响应 hover，视觉上弱化 */
+.nextInnerDisabled,
+.nextInnerDisabled:hover {
+  background: var(--background-panel);
+  cursor: not-allowed;
+}
+
+.nextInnerDisabled .nextTitle,
+.nextInnerDisabled .nextZh {
+  color: var(--text-dim);
+}
+
+.nextInnerDisabled .nextIndex {
+  color: rgba(255, 255, 255, 0.06);
+}
+
+.nextInnerPrev {
+  border-right: 1px solid var(--border-color);
+}
+
+.nextInnerPrev:hover .nextArrow {
+  transform: translateX(-14px);
+}
+
+.nextLabel {
+  display: block;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.nextRow {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 36px);
+}
+
+.nextIndex {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.1);
+  transition: color var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover .nextIndex {
+  color: var(--accent);
+}
+
+.nextText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nextTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.nextZh {
+  font-size: var(--fs-small);
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+}
+
+.nextArrow {
+  flex: none;
+  color: var(--text-secondary);
+  transition: transform var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
+}
+
+.nextInner:hover .nextArrow {
+  color: var(--accent-lime);
+}
+
+/* =========================================================================
+   未找到案例
+   ========================================================================= */
+
+.missingCode {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  color: var(--accent-orange);
+}
+
+.missingTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 14px 0 12px;
+}
+
+.missingText {
+  margin-bottom: 26px;
+  color: var(--text-secondary);
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+@media (max-width: 900px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .heroMedia {
+    order: -1;
+  }
+  .block {
+    grid-template-columns: 1fr;
+  }
+  .blockHead {
+    position: static;
+  }
+  .nextGrid {
+    grid-template-columns: 1fr;
+  }
+  .nextInnerPrev {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+/* 窄屏：案例导航只显示方向 + 编号，隐藏案例名，点击区保持可触 */
+@media (max-width: 640px) {
+  .caseNavName {
+    display: none;
+  }
+  .caseNavBtn {
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+    padding: 8px 12px;
+  }
+  /* 窄屏：面包屑允许横向滚动（父级仍可点击），避免强制换成多行 */
+  .crumb {
+    gap: 6px;
+    font-size: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .crumb::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .heroTitle {
+    transition: none;
+  }
+  .caseNavBtn,
+  .crumb a {
+    transition: none;
+  }
+}

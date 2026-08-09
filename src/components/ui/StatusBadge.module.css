@@ -1,0 +1,84 @@
+﻿.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.028);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex: none;
+  background: currentColor;
+}
+
+.text {
+  transform: translateY(0.5px);
+}
+
+/* ---------- 鑹茶皟 ---------- */
+.neutral {
+  color: var(--text-secondary);
+}
+.neutral .dot {
+  background: var(--text-tertiary);
+}
+
+.lime {
+  color: var(--accent-lime);
+  border-color: rgba(184, 255, 61, 0.32);
+  background: var(--lime-soft);
+}
+
+.purple {
+  color: #b9a5ff;
+  border-color: var(--purple-line);
+  background: var(--purple-soft);
+}
+
+.orange {
+  color: var(--accent-orange);
+  border-color: rgba(255, 113, 61, 0.32);
+  background: var(--orange-soft);
+}
+
+.pink {
+  color: var(--accent-pink);
+  border-color: rgba(224, 75, 154, 0.32);
+  background: var(--pink-soft);
+}
+
+/* 浣庨鍛煎惛 鈥斺€?鍙湪鐘舵€佺伅涓婂嚭鐜帮紝涓嶅仛婊″睆鍙戝厜 */
+.live {
+  animation: badge-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes badge-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    opacity: 0.4;
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live {
+    animation: none;
+  }
+}

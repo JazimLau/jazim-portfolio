@@ -1,0 +1,277 @@
+.btn {
+  --fill-origin: left center;
+  --btn-accent: var(--accent-purple);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  isolation: isolate;
+  overflow: hidden;
+
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+
+  /* 站点统一的切角语言 */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 9px) 0,
+    100% 9px,
+    100% 100%,
+    9px 100%,
+    0 calc(100% - 9px)
+  );
+
+  /* 像素硬阴影 */
+  box-shadow: var(--shadow-pixel-sm);
+
+  transition: color var(--dur-mid) var(--ease-out),
+    border-color var(--dur-mid) var(--ease-out),
+    box-shadow 0.12s var(--ease-out), filter 0.12s var(--ease-out);
+  will-change: transform;
+}
+
+/* ---------- PRESS（按下）：HUD 硬朗反馈，不用 scale 弹跳 ---------- */
+.btn:active {
+  box-shadow: inset 0 0 0 1px rgba(184, 255, 61, 0.45), var(--shadow-pixel-sm);
+  filter: brightness(0.85);
+}
+
+.btn:active .fill {
+  transform: scaleX(1);
+}
+
+/* ---------- 尺寸 ---------- */
+.sm {
+  padding: 9px 16px;
+  font-size: var(--fs-micro);
+}
+.md {
+  padding: 14px 22px;
+  font-size: var(--fs-label);
+}
+.lg {
+  padding: 18px 30px;
+  font-size: var(--fs-small);
+  letter-spacing: 0.12em;
+}
+
+.full {
+  width: 100%;
+}
+
+/* ---------- 方向性填充：从指针进入的一侧展开 ---------- */
+.fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-accent);
+  transform: scaleX(0);
+  transform-origin: var(--fill-origin);
+  transition: transform 0.52s var(--ease-out);
+}
+
+.btn:hover .fill,
+.btn:focus-visible .fill {
+  transform: scaleX(1);
+}
+
+/* ---------- 边缘扫描光：hover 时先掠过顶边，再填充 ---------- */
+.sweep {
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 1px;
+  z-index: 1;
+  background: linear-gradient(to right, transparent, var(--accent-lime), transparent);
+  opacity: 0;
+  transition: none;
+}
+
+.btn:hover .sweep,
+.btn:focus-visible .sweep {
+  animation: sweep-across 0.55s var(--ease-out) forwards;
+}
+
+@keyframes sweep-across {
+  0% {
+    left: -40%;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* ---------- 四角定位线展开（替代 scale 放大） ---------- */
+.corners {
+  position: absolute;
+  inset: 3px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.corners i {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: var(--accent-lime);
+  transition: width 0.36s var(--ease-out), height 0.36s var(--ease-out);
+}
+
+.corners i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.corners i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.corners i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.corners i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.btn:hover .corners i,
+.btn:focus-visible .corners i {
+  width: 9px;
+  height: 9px;
+}
+
+/* ---------- 箭头从左侧切入 + 文字右移 ---------- */
+.arrow {
+  position: absolute;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(-14px);
+  transition: transform 0.42s var(--ease-out), opacity 0.3s var(--ease-out);
+}
+
+.label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.42s var(--ease-out);
+}
+
+.btn:hover .arrow,
+.btn:focus-visible .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.btn:hover .label,
+.btn:focus-visible .label {
+  transform: translateX(11px);
+}
+
+/* ---------- 变体 ---------- */
+.primary {
+  --btn-accent: var(--accent-purple);
+  border-color: var(--purple-line);
+  background: var(--purple-soft);
+}
+.primary:hover,
+.primary:focus-visible {
+  color: #fff;
+  border-color: var(--accent-purple);
+}
+
+.solid {
+  --btn-accent: var(--text-primary);
+  color: var(--background-main);
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+}
+.solid:hover,
+.solid:focus-visible {
+  color: var(--background-main);
+}
+.solid .corners i {
+  border-color: var(--background-main);
+}
+
+.outline {
+  --btn-accent: var(--accent-purple);
+}
+.outline:hover,
+.outline:focus-visible {
+  color: #fff;
+  border-color: color-mix(in srgb, var(--btn-accent) 42%, transparent);
+}
+
+.ghost {
+  --btn-accent: rgba(255, 255, 255, 0.08);
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+.ghost:hover,
+.ghost:focus-visible {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* ---------- 禁用 ---------- */
+.disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.disabled .fill,
+.disabled .corners i,
+.disabled .sweep {
+  display: none;
+}
+
+/* ---------- 降级 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .fill,
+  .arrow,
+  .label,
+  .corners i {
+    transition: none;
+  }
+  .sweep {
+    display: none;
+  }
+  .btn:hover .label,
+  .btn:focus-visible .label {
+    transform: none;
+  }
+  .btn:hover .arrow,
+  .btn:focus-visible .arrow {
+    position: static;
+    transform: none;
+  }
+}

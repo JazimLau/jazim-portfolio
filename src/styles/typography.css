@@ -1,0 +1,94 @@
+/* =========================================================================
+   typography.css — 字体系统
+   英文标题窄体压缩，中文正文无衬线，数据等宽。
+   ========================================================================= */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.68;
+  color: var(--text-primary);
+}
+
+/* ---------- 展示级英文标题 ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.display-xl {
+  font-size: var(--fs-display-xl);
+}
+.display-lg {
+  font-size: var(--fs-display-lg);
+}
+.display-md {
+  font-size: var(--fs-display-md);
+}
+.display-sm {
+  font-size: var(--fs-display-sm);
+}
+
+/* ---------- 中文标题 ---------- */
+.title-zh {
+  font-family: var(--font-body);
+  font-weight: 650;
+  font-size: var(--fs-title);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- 等宽标签 / 数据 ---------- */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+.label-micro {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 正文 ---------- */
+.body-text {
+  font-size: var(--fs-body);
+  line-height: 1.78;
+  color: var(--text-secondary);
+}
+
+.body-text strong,
+.body-text b {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.lead {
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+/* 数字：等宽，避免计数动画时抖动 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}

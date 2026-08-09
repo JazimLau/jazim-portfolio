@@ -1,0 +1,63 @@
+name: Deploy GitHub Pages
+
+# 备用 / Mirror 站：push 到 main 后自动构建并发布到 GitHub Pages。
+# 全程不调用 *.bat / *.ps1 / npm run dev —— 与本地开发脚本完全无关。
+# 大型 HLS 媒体不在仓库内（.gitignore 排除），由 Tencent COS 提供，
+# 构建时通过 .env.github 的 VITE_MEDIA_BASE_URL 注入 media.jazimprofile.com。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read          # 只读源码
+  pages: write            # 写 Pages
+  id-token: write         # 部署用 OIDC token
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # ── 构建：Checkout → Node → npm ci → typecheck → build:github → 上传 Artifact ──
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build (GitHub Pages target)
+        run: npm run build:github
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: deploy-output/github-site
+
+  # ── 部署 ──────────────────────────────────────────────────────────────────
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

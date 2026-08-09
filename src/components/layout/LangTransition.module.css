@@ -1,0 +1,161 @@
+/* =========================================================================
+   LangTransition.module.css — 中英切换遮罩
+   竖条错位覆盖 → 换语言包 → 反向抽走。z-index 高于导航，低于 Opening。
+   ========================================================================= */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ---------- 竖条 ---------- */
+
+.bands {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  /* 不透明兜底：即使相邻竖条之间留了 1px 缝，缝隙下露出的也永远是
+     背景纯色，绝不会透过旧的页面文案（中英切换缝隙 bug 的根因修复） */
+  background: var(--background-main);
+}
+
+.band {
+  position: relative;
+  flex: 1 1 0;
+  /* 相邻竖条留 1px 缝，覆盖时能看出是分段推上来的 */
+  margin-right: 1px;
+  background: var(--background-main);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+.band:last-child {
+  margin-right: 0;
+}
+
+/* 每条竖条的前缘一道亮线，让推进方向可读 */
+.band::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--accent-purple),
+    transparent
+  );
+  opacity: 0.75;
+}
+
+/* 竖条内部的细网格，和站点其他面板同一套视觉语言 */
+.band::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.028) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 交错的两组竖条底色略有差异，避免大面积纯色显得扁平 */
+.band:nth-child(even) {
+  background: var(--background-panel);
+}
+
+.band:nth-child(even)::before {
+  background: linear-gradient(to right, transparent, var(--accent-pink), transparent);
+}
+
+/* ---------- 中央标签 ---------- */
+
+.label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  opacity: 0;
+  text-align: center;
+}
+
+.labelKicker {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.labelCode {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 11rem);
+  line-height: 0.86;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-shadow: 0 0 60px rgba(116, 85, 255, 0.45);
+}
+
+.labelName {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.labelBar {
+  position: relative;
+  display: block;
+  width: clamp(120px, 18vw, 260px);
+  height: 2px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+
+/* 纯 CSS 的进度扫掠，只在遮罩显示的那一小段时间里可见 */
+.labelBar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 42%;
+  background: var(--accent-purple);
+  animation: langSweep 0.9s var(--ease-in-out) infinite;
+}
+
+@keyframes langSweep {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+@media (max-width: 768px) {
+  /* 窄屏用更少的竖条读起来更干净：后 3 条并入邻条 */
+  .band:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .labelBar i {
+    animation: none;
+    width: 100%;
+  }
+
+  .band {
+    will-change: auto;
+  }
+}

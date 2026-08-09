@@ -1,0 +1,32 @@
+# ── 依赖与构建产物 ──────────────────────────────
+node_modules
+dist
+dist-ssr
+deploy-output/
+portfolio-review-export/
+
+# ── 大型 HLS 媒体：不入 Git（GitHub = 源码，Tencent COS = 媒体）──
+# 本地文件保留（Local Development / Source Media / Backup），仅 Git Ignore。
+public/assets/videos/
+
+# ── 环境变量 ───────────────────────────────────
+# 任何含 Secret 的 env 一律忽略；以下三个只含「公开 URL / base 路径」，放行入库。
+.env
+.env.local
+.env.*.local
+.env.*
+!.env.example
+!.env.production
+!.env.tencent
+!.env.github
+
+# ── 日志 / 临时 / OS / IDE ─────────────────────
+*.log
+*.local
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# 本地视觉自检截图，不入库
+shots/

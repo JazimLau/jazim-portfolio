@@ -1,0 +1,255 @@
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out);
+  will-change: transform;
+  /* 文字态（文本选中/复制）：整个 Reticle 隐藏，交还系统 text 光标 */
+}
+
+.visible {
+  opacity: 1;
+}
+
+.textMode {
+  opacity: 0 !important;
+}
+
+/* =========================================================================
+   HUD Reticle —— 四角断角 bracket + 中心像素点
+   ========================================================================= */
+
+.bracket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  transition: width 0.16s var(--ease-out), height 0.16s var(--ease-out),
+    margin 0.16s var(--ease-out), opacity 0.16s var(--ease-out);
+}
+
+/* 四角 L 形断角，低亮灰白 */
+.corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(243, 240, 233, 0.4);
+  transition: border-color 0.14s var(--ease-out), width 0.16s var(--ease-out),
+    height 0.16s var(--ease-out);
+}
+
+.corner[data-c='tl'] {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.corner[data-c='tr'] {
+  top: 0;
+  right: 0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.corner[data-c='bl'] {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.corner[data-c='br'] {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* 中心像素点：酸绿 */
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  background: var(--accent-lime);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  transition: background 0.12s var(--ease-out), width 0.12s var(--ease-out),
+    height 0.12s var(--ease-out), margin 0.12s var(--ease-out);
+}
+
+/* 扫描线：双击 / 选中反馈时的横向扫过 */
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  width: 16px;
+  height: 1px;
+  background: var(--accent-lime);
+  opacity: 0;
+  transform-origin: center;
+}
+
+/* 标签文字：出现在 bracket 右下方 */
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 8px 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  transition: opacity 0.12s var(--ease-out);
+}
+
+/* =========================================================================
+   状态：interactive / select / open / video —— bracket 展开 24 → 30px
+   ========================================================================= */
+
+.isInteractive .bracket,
+.isSelect .bracket,
+.isOpen .bracket,
+.isVideo .bracket,
+.isLabel .bracket {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+}
+
+.isSelect .corner,
+.isOpen .corner,
+.isVideo .corner,
+.isLabel .corner {
+  border-color: var(--purple-line);
+}
+
+.isSelect .corner {
+  border-color: var(--accent-lime);
+}
+
+.isOpen .corner {
+  border-color: var(--purple-line);
+}
+
+/* 中心点 hover 变酸绿（default 时已经 lime；保持高亮） */
+.isInteractive .dot,
+.isSelect .dot,
+.isOpen .dot,
+.isVideo .dot,
+.isLabel .dot {
+  background: var(--accent-lime);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), 0 0 4px rgba(184, 255, 61, 0.5);
+}
+
+/* =========================================================================
+   按下（左键）：bracket 快速内收 30 → 20px + 中心点 Accent Flash
+   ========================================================================= */
+
+.pressed .bracket {
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  transition-duration: 0.08s;
+}
+
+.pressed .corner {
+  border-color: var(--accent-lime);
+}
+
+.pressed .dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(184, 255, 61, 0.9);
+}
+
+/* =========================================================================
+   右键：bracket 变紫 + 右上角短暂 R
+   ========================================================================= */
+
+.right .corner {
+  border-color: var(--accent-purple) !important;
+}
+
+.right .dot {
+  background: var(--accent-purple);
+}
+
+.right .label {
+  color: var(--accent-purple);
+}
+
+/* =========================================================================
+   双击：×2 + 双扫描（两次快速横扫）
+   ========================================================================= */
+
+.dbl .scanline {
+  animation: dbl-scan 0.32s steps(6) 2;
+}
+
+@keyframes dbl-scan {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+}
+
+.dbl .label {
+  color: var(--accent-lime);
+}
+
+/* =========================================================================
+   禁用态：变暗 + —
+   ========================================================================= */
+
+.isDisabled .bracket {
+  opacity: 0.35;
+}
+
+.isDisabled .dot {
+  background: var(--text-dim);
+  box-shadow: none;
+}
+
+.isDisabled .label {
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   prefers-reduced-motion：保留 Reticle，但所有反馈瞬时切换
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .bracket,
+  .corner,
+  .dot,
+  .label,
+  .root {
+    transition: none;
+  }
+  .dbl .scanline {
+    animation: none;
+    opacity: 0;
+  }
+}

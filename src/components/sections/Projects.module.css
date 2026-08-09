@@ -1,0 +1,750 @@
+.root {
+  position: relative;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 背景超大编号 ---------- */
+.ghost {
+  position: absolute;
+  top: 50%;
+  right: 2vw;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 30vw, 34rem);
+  font-weight: 800;
+  line-height: 0.72;
+  letter-spacing: -0.07em;
+  color: rgba(255, 255, 255, 0.022);
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-50%);
+  will-change: transform, opacity;
+}
+
+/* =========================================================================
+   项目总数统计
+   ========================================================================= */
+
+.totalBar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent-lime);
+  background: rgba(255, 255, 255, 0.018);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}
+
+.totalStat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: none;
+}
+
+.totalBig {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 2.6vw, 2.7rem);
+  line-height: 1;
+  color: var(--accent-lime);
+  font-variant-numeric: tabular-nums;
+}
+
+.totalLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.totalBreaks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.totalChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+.totalChipZh {
+  font-family: var(--font-body);
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.totalChipCount {
+  padding-left: 7px;
+  border-left: 1px solid var(--border-color);
+  color: var(--accent-lime);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   筛选模块 / 选择项目模块：两个独立面板，视觉上明确区分
+   ========================================================================= */
+
+.filterPanel {
+  margin-bottom: 30px;
+  padding: 16px 18px 18px;
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid var(--border-color);
+  border-top: 2px solid var(--accent-purple);
+  box-shadow: var(--shadow-pixel-sm);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    12px 100%,
+    0 calc(100% - 12px)
+  );
+}
+
+.selectPanel {
+  padding: 18px 18px 8px;
+  background: rgba(255, 255, 255, 0.012);
+  border: 1px solid var(--border-color);
+  border-top: 2px solid var(--accent-lime);
+  box-shadow: var(--shadow-pixel-sm);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    12px 100%,
+    0 calc(100% - 12px)
+  );
+}
+
+/* 面板小标签：等宽系统字，低对比，放在面板顶部提示模块作用 */
+.moduleTag {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.selectPanel .controls {
+  margin-top: 18px;
+}
+
+/* ---------- 面板顶行：模块标签 + 首次浏览引导 ---------- */
+.panelTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.guide {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.guide b {
+  font-weight: 600;
+}
+
+.guide i {
+  font-style: normal;
+  color: var(--text-dim);
+}
+
+.guide span {
+  margin-left: 6px;
+  color: var(--text-dim);
+}
+
+.guideOn {
+  opacity: 1;
+}
+
+/* ---------- 层级标签：LEVEL 01 TRACK / LEVEL 02 PRODUCT ---------- */
+.levelTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+/* 有二级筛选时收窄底部间距，让「提示」正好落在 LEVEL 02 标签下方 6~10px */
+.levelTagsWithSub {
+  margin-bottom: 8px;
+}
+
+.levelTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.02);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+}
+
+.levelTag b {
+  font-weight: 600;
+  color: var(--accent-purple);
+}
+
+.levelTagOn {
+  color: var(--text-secondary);
+  border-color: var(--purple-line);
+  background: var(--purple-soft);
+}
+
+.levelTagOn b {
+  color: var(--accent-lime);
+}
+
+/* ---------- 二级筛选（LEVEL 02）：提示位于标签下方 + 产品横向 Grid ---------- */
+
+.subLevel {
+  margin-bottom: 14px;
+}
+
+/* 提示：从 8px 装饰小字提升为真正的交互引导（约 +35%），
+   酸绿箭头 + 灰白主文字 + 低亮像素 tag，比 LEVEL 标签醒目但低于 PRODUCT 标题。 */
+.subHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.subHint i {
+  font-style: normal;
+  color: var(--accent-lime);
+  animation: hint-arrow 2.6s steps(2) infinite;
+}
+
+/* 低亮像素 tag：SELECT PRODUCT →，不抢主视觉但明确可点击 */
+.subHintTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--accent-lime);
+  border: 1px solid rgba(184, 255, 61, 0.3);
+  background: var(--lime-soft);
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+}
+
+/* tag 内箭头不做往返位移，避免与主箭头双重动画 */
+.subHintTag i {
+  animation: none;
+}
+
+@keyframes hint-arrow {
+  0%,
+  55% {
+    transform: translateX(0);
+  }
+  65%,
+  100% {
+    transform: translateX(4px);
+  }
+}
+
+/* 产品选择器：横向 Grid，content 宽度（不 stretch 整行），桌面 4 列 + 第二行 3 列 */
+.subGrid {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  gap: 8px;
+  min-width: 0;
+}
+
+/* =========================================================================
+   下级内容滚动提示：告诉用户下方还有案例 / 视频 / 任务数据。
+   位于筛选面板底部（不压媒体），向下滚动进入内容后淡出。
+   ========================================================================= */
+.scrollHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-soft);
+  opacity: 1;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.scrollHintOff {
+  opacity: 0;
+}
+
+.scrollHintLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.scrollHintLine b {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.scrollHintArrow {
+  font-style: normal;
+  color: var(--accent-lime);
+  animation: scroll-hint-nudge 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes scroll-hint-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* =========================================================================
+   筛选器
+   ========================================================================= */
+
+.filterBar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid var(--border-color);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+
+.chip:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.chipOn {
+  color: var(--text-primary);
+  background: var(--purple-soft);
+  border-color: var(--purple-line);
+}
+
+.chip:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.chipZh {
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  letter-spacing: 0.08em;
+}
+
+.chipOn .chipZh {
+  color: var(--text-secondary);
+}
+
+.chipCount {
+  padding-left: 7px;
+  border-left: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.chipOn .chipCount {
+  color: var(--accent-lime);
+}
+
+/* ---------- 计数器 ---------- */
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 二级筛选按钮（雷火/游戏UI/广告 子层级，Grid 项） ---------- */
+.subChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 7px 14px;
+  font-family: var(--font-mono);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: 0;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+
+.subChip:hover,
+.subChip:focus-visible {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+.subChipOn {
+  border-color: var(--accent-purple);
+  background: var(--purple-soft);
+  color: var(--text-primary);
+}
+
+.subIndex {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.subLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subCount {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  color: var(--accent-lime);
+}
+
+.subChipOn .subIndex {
+  color: var(--accent-purple);
+}
+
+.counterNow {
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  color: var(--text-primary);
+}
+
+.counterSep {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+
+.counterAll {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* =========================================================================
+   舞台
+   ========================================================================= */
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  padding-block: 4px;
+  cursor: grab;
+  touch-action: pan-y;
+  will-change: clip-path;
+  /* 左右边缘轻微淡出，强化"序列继续延伸"的感觉 */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+}
+
+.stage:focus-visible {
+  outline: 2px solid var(--accent-lime);
+  outline-offset: 4px;
+}
+
+.stageDragging {
+  cursor: grabbing;
+}
+
+.track {
+  display: flex;
+  align-items: flex-start;
+  will-change: transform;
+}
+
+.slot {
+  min-width: 0;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+}
+
+.empty {
+  padding: 60px 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   控制条
+   ========================================================================= */
+
+.controls {
+  display: flex;
+  align-items: center;
+  /* 上一个在左、下一个在右 */
+  justify-content: space-between;
+  gap: clamp(14px, 2vw, 28px);
+  margin-top: 26px;
+}
+
+.navBtnPrev {
+  flex: none;
+}
+
+.navBtnNext {
+  flex: none;
+}
+
+.navBtns {
+  display: flex;
+  gap: 7px;
+  flex: none;
+}
+
+.navBtn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.navBtn:hover:not(:disabled),
+.navBtn:focus-visible:not(:disabled) {
+  color: var(--accent-lime);
+  border-color: var(--accent-lime);
+  background: var(--lime-soft);
+}
+
+.navBtn:disabled {
+  opacity: 0.26;
+  cursor: not-allowed;
+}
+
+/* ---------- 进度 ---------- */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+}
+
+.pip {
+  flex: 1;
+  max-width: 84px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.11);
+  transition: background 0.34s var(--ease-out), height 0.34s var(--ease-out);
+}
+
+.pip:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.pipOn {
+  height: 5px;
+  background: var(--accent-purple);
+}
+
+.dragHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+/* 超宽桌面：一行 5 个 + 第二行 2 个 */
+@media (min-width: 1600px) {
+  .subGrid {
+    grid-template-columns: repeat(5, max-content);
+  }
+}
+
+@media (max-width: 1100px) {
+  .filterBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .counter {
+    order: -1;
+  }
+  /* Tablet：一行 3 个左右 */
+  .subGrid {
+    grid-template-columns: repeat(3, max-content);
+  }
+}
+
+@media (max-width: 768px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+  .dragHint {
+    width: 100%;
+    justify-content: center;
+  }
+  .chipZh {
+    display: none;
+  }
+  .ghost {
+    font-size: 10rem;
+    right: -2vw;
+  }
+  .panelTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .guide span {
+    display: none;
+  }
+  /* Mobile：一行 2 个，触控区 ≥ 44px */
+  .subGrid {
+    grid-template-columns: repeat(2, minmax(0, max-content));
+  }
+  .subChip {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+}
+
+/* 极窄屏（320px）：允许 1 个 / 行，不产生横向滚动 */
+@media (max-width: 380px) {
+  .subGrid {
+    grid-template-columns: repeat(auto-fit, minmax(132px, max-content));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .navBtn,
+  .pip {
+    transition: none;
+  }
+  .ghost {
+    opacity: 0.6;
+  }
+  .subHint i,
+  .scrollHintArrow {
+    animation: none;
+  }
+}

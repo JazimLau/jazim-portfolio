@@ -1,0 +1,166 @@
+﻿/* =========================================================================
+   variables.css 鈥?璁捐绯荤粺浠ょ墝
+   鎵€鏈夐鑹层€佸瓧浣撱€侀棿璺濄€佺紦鍔ㄣ€佸眰绾ч兘闆嗕腑鍦ㄨ繖閲岋紱鏀硅繖涓枃浠跺嵆鍙崲鑲ゃ€?   ========================================================================= */
+
+:root {
+  /* ---------- 棰滆壊锛氬熀纭€ ----------
+     涓€ч粦鐏板簳锛堟棤缁胯壊鐩革級+ 绫崇櫧鏂囧瓧 + 鍥涜壊寮鸿皟銆?     姣斾緥锛?0% 榛?娣辩伆銆?5% 绫崇櫧鐏般€?% 楂橀ケ鍜屽己璋冭壊銆?*/
+  --background-main: #070b09;
+  --background-panel: #0b100d;
+  --background-elevated: #101612;
+  --background-panel-active: #151d18;
+  --text-primary: #f2f3eb;
+  --text-secondary: #b1b8b1;
+  --border-color: rgba(255, 255, 255, 0.14);
+
+  /* ---------- 棰滆壊锛氬己璋?----------
+     閰告€х豢 lime锛氬綋鍓嶇姸鎬?/ 鏍稿績鎸夐挳 / 绯荤粺鍦ㄧ嚎 / 閲嶈鏁版嵁 / 褰撳墠閫変腑椤?     绱壊 purple锛氶〉闈㈢紪鍙?/ 鑳藉姏鐘舵€?/ 灏戦噺杈规
+     姗欒壊 orange锛氬疄璺电姸鎬?/ 瑙嗛鏁版嵁 / 鎻愮ず璀︾ず
+     钃濊壊 blue锛氳緟鍔╁喎鑹诧紙瑙嗛 / 閾炬帴 / 娆¤寮鸿皟锛?*/
+  --accent-purple: #7557ff;
+  --accent-lime: #b8ff3d;
+  --accent-orange: #ff6b3d;
+  --accent-blue: #5bc8ff;
+  /* 淇濈暀绮夎壊浣滀负灏忛潰绉緟鍔╋紙涓嶅啀鐢ㄤ簬澶ф爣棰樻笎鍙橈級 */
+  --accent-pink: #e04b9a;
+  /* AIGC 绯荤粺鐨勫己璋冭壊锛欰I 宸ュ叿閾剧殑鍐疯壊璇嗗埆 */
+  --accent-cyan: #5bc8ff;
+  /* Timeline 灞ュ巻鎴愭灉鍏抽敭璇嶇殑寮鸿皟鑹诧細绔欑偣涓诲己璋冭壊 lime */
+  --accent-gold: var(--accent-lime);
+
+  /* ---------- 棰滆壊锛氳竟妗?---------- */
+  --border-primary: #2c352f;
+  --border-active: #556158;
+
+  /* ---------- 棰滆壊锛氭淳鐢?---------- */
+  --purple-soft: rgba(117, 87, 255, 0.14);
+  --purple-line: rgba(117, 87, 255, 0.42);
+  --purple-glow: rgba(117, 87, 255, 0.35);
+  --pink-soft: rgba(224, 75, 154, 0.14);
+  --lime-soft: rgba(184, 255, 61, 0.12);
+  --orange-soft: rgba(255, 107, 61, 0.14);
+  --cyan-soft: rgba(91, 200, 255, 0.13);
+  --cyan-line: rgba(91, 200, 255, 0.4);
+  --gold-glow: rgba(184, 255, 61, 0.55);
+
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  /* 杩欎袱绾х敤浜庡皬瀛楀彿鏍囩锛屼寒搴︽寜瀵规瘮搴﹁姹備笂璋冭繃锛?     #b1b8b1 瀵?#0b100d 绾?8:1锛堝皬瀛?AA 鍚堟牸锛夛紝
+     #6f7972 绾?4.6:1锛岀敤浜庤楗版€ф垨澶у瓧鍙锋枃鏈€?*/
+  --text-tertiary: #8f9891;
+  --text-dim: #6f7972;
+
+  --overlay-dark: rgba(7, 11, 9, 0.72);
+  --overlay-deep: rgba(7, 11, 9, 0.92);
+
+  /* ---------- 鐗堝績涓庨棿璺?---------- */
+  --shell-max: 1700px;
+  --shell-gutter: 40px;
+  --shell-width: min(var(--shell-max), calc(100vw - var(--shell-gutter) * 2));
+
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 14px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+  --space-2xl: 96px;
+  --space-3xl: 140px;
+
+  /* 区块纵向节奏：相邻 Section 内容之间的统一间距（各 Section padding-block = gap/2）。
+     替代旧的 --section-pad-y（clamp(96px,11vh,168px)），消除「分割带 + 双侧大 padding」
+     叠加出的近 300px 空档。 */
+  --section-gap: clamp(64px, 6vh, 96px);
+
+  /* ---------- 瀛椾綋 ---------- */
+  /* 鑻辨枃澶ф爣棰橈細Barlow Condensed 鈥斺€?绐勪綋鍘嬬缉銆佸瓧閲?700鈥?00锛屽啿鍑诲姏寮轰笖鍙鎬ч珮锛?     涓撶敤浜庡叏绔欓〉闈㈣秴澶ф爣棰樹笌 Hero 鏍囬锛涗繚鐣?Arial Narrow 绛夌獎浣撳洖閫€銆?*/
+  --font-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow",
+    "Oswald", "Bahnschrift SemiCondensed", "Bahnschrift Condensed",
+    "Bahnschrift", Impact, "Segoe UI", system-ui, sans-serif;
+  /* 涓枃姝ｆ枃锛氱幇浠ｆ棤琛嚎锛?6鈥?8px / 琛岄珮 1.75鈥?.9 */
+  --font-body: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei UI",
+    "Microsoft YaHei", "Noto Sans SC", "Hiragino Sans GB", system-ui, sans-serif;
+  /* 绯荤粺鏍囩 / 鏁版嵁锛欼BM Plex Mono 鈥斺€?缁堢绛夊锛?1鈥?3px / 瀛楄窛 0.08鈥?.16em */
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", "Cascadia Mono", Consolas,
+    "SF Mono", "Roboto Mono", "Courier New",
+    "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC",
+    "Hiragino Sans GB", monospace;
+
+  /* 瀛楀彿灞傜骇锛?     椤甸潰瓒呭ぇ鏍囬 clamp(76px, 9vw, 168px) 鈫?--fs-display-xl
+     Hero 鏍囬    clamp(64px, 7.5vw, 138px) 鈫?--fs-display-lg
+     妯″潡涓枃鏍囬 24鈥?6px                      鈫?--fs-title
+     鍗＄墖鏍囬     18鈥?6px                      鈫?--fs-display-sm
+     姝ｆ枃         16鈥?8px                      鈫?--fs-body
+     鏁版嵁鏁板瓧     48鈥?8px                      鈫?--fs-stat
+     绯荤粺鏍囩     11鈥?3px                      鈫?--fs-label / --fs-micro */
+  --fs-display-xl: clamp(4.75rem, 9vw, 10.5rem);
+  --fs-display-lg: clamp(4rem, 7.5vw, 8.625rem);
+  --fs-display-md: clamp(2rem, 3.6vw, 3.5rem);
+  --fs-display-sm: clamp(1.125rem, 1.5vw, 1.625rem);
+  --fs-title: clamp(1.5rem, 2.2vw, 2.25rem);
+  --fs-body: clamp(1rem, 1.05vw, 1.125rem);
+  --fs-stat: clamp(2.75rem, 5.5vw, 5.5rem);
+  --fs-small: 0.8125rem;
+  --fs-label: 0.75rem;
+  --fs-micro: 0.6875rem;
+
+  /* Barlow Condensed 绐勪綋鏀剁揣瀛楄窛锛屼繚鎸佹爣棰樼殑绱у噾鍔涢噺鎰?*/
+  --track-display: -0.02em;
+  --track-label: 0.14em;
+  --track-wide: 0.24em;
+
+  /* ---------- 鍦嗚涓庣嚎 ---------- */
+  /* 鍍忕礌涓婚锛氭柟瑙掑寲锛屽彧淇濈暀鏋佸皬鍦嗚鍋氱紦鍐?*/
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-pill: 999px;
+  --hairline: 1px;
+
+  /* 鍍忕礌纭槾褰憋細鏃犳ā绯婄殑鍋忕Щ鎶曞奖锛岃惀閫犲潡鐘?琛楁満"璐ㄦ劅 */
+  --shadow-pixel: 3px 3px 0 0 rgba(0, 0, 0, 0.55);
+  --shadow-pixel-sm: 2px 2px 0 0 rgba(0, 0, 0, 0.5);
+  --shadow-pixel-purple: 4px 4px 0 0 rgba(116, 85, 255, 0.32);
+  --shadow-pixel-lime: 3px 3px 0 0 rgba(184, 255, 61, 0.28);
+
+  /* 鍒囪灏哄锛堥厤鍚?clip-path 浣跨敤锛?*/
+  --cut-sm: 10px;
+  --cut-md: 18px;
+  --cut-lg: 32px;
+
+  /* ---------- 鍔ㄦ晥 ---------- */
+  --dur-fast: 0.18s;
+  --dur-mid: 0.36s;
+  --dur-slow: 0.68s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* ---------- 灞傜骇 ---------- */
+  --z-canvas: 0;
+  --z-content: 10;
+  --z-nav: 200;
+  --z-panel: 300;
+  --z-cursor: 900;
+  --z-opening: 1000;
+
+  /* ---------- 缃戞牸涓庡櫔鐐?---------- */
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --grid-size: 44px;
+  --noise-opacity: 0.05;
+}
+
+/* 鏇村皬鐨勫睆骞曟敹绱х増蹇冪暀鐧?*/
+@media (max-width: 1200px) {
+  :root {
+    --shell-gutter: 26px;
+    --section-gap: clamp(48px, 6vh, 76px);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --shell-gutter: 18px;
+    --grid-size: 44px;
+  }
+}

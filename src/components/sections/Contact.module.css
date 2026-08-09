@@ -1,0 +1,633 @@
+﻿.root {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  padding-block: clamp(80px, 10vh, 130px) 26px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+}
+
+/* =========================================================================
+   鑳屾櫙
+   ========================================================================= */
+
+/* 瓒呭嚭灞忓箷鐨勫法澶?CONTACT 鏂囧瓧 */
+.bigWord {
+  position: absolute;
+  left: -4vw;
+  bottom: -6vh;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-size: clamp(11rem, 27vw, 30rem);
+  font-weight: 800;
+  line-height: 0.7;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.055);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+
+/* 缂撴參绉诲姩鐨勫潗鏍囩嚎 */
+.coordLines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.coordLines span {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.coordLines span:nth-child(1) {
+  left: 0;
+  right: 0;
+  top: 22%;
+  height: 1px;
+  animation: drift-y 22s steps(26) infinite alternate;
+}
+.coordLines span:nth-child(2) {
+  left: 0;
+  right: 0;
+  bottom: 26%;
+  height: 1px;
+  animation: drift-y 28s steps(30) infinite alternate-reverse;
+}
+.coordLines span:nth-child(3) {
+  top: 0;
+  bottom: 0;
+  left: 28%;
+  width: 1px;
+  animation: drift-x 26s steps(24) infinite alternate;
+}
+.coordLines span:nth-child(4) {
+  top: 0;
+  bottom: 0;
+  right: 22%;
+  width: 1px;
+  animation: drift-x 32s steps(28) infinite alternate-reverse;
+}
+
+@keyframes drift-y {
+  from {
+    transform: translateY(-30px);
+  }
+  to {
+    transform: translateY(30px);
+  }
+}
+
+@keyframes drift-x {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+
+/* 榧犳爣浣嶇疆鐨勫皬鑼冨洿鍏夌収 */
+.light {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 460px;
+  height: 460px;
+  margin: -230px 0 0 -230px;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    rgba(116, 85, 255, 0.13) 0%,
+    rgba(116, 85, 255, 0.05) 40%,
+    transparent 70%
+  );
+  will-change: transform, opacity;
+}
+
+.grid,
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* =========================================================================
+   鍐呭
+   ========================================================================= */
+
+.content {
+  position: relative;
+  z-index: var(--z-content);
+  width: var(--shell-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(30px, 4vw, 76px);
+  align-items: start;
+  margin-bottom: clamp(34px, 4vw, 58px);
+}
+
+/* ---------- 宸?---------- */
+.kicker {
+  /* block：占满整行，让「建立连接」标题换到下一行并顶格，而不是跟在角标右侧 */
+  display: block;
+  width: fit-content;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  border: 1px solid rgba(255, 113, 61, 0.28);
+  background: var(--orange-soft);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+  will-change: clip-path;
+}
+
+/* titleWrap 鏀剁缉鍒板唴瀹瑰搴︼紙ESTABLISH / CONNECTION 涓よ閲屾洿瀹界殑涓€琛岋級锛?   瑙掓爣鍦ㄨ繖涓搴﹀唴璐村彸杈癸紝瀵归綈鐨勬槸鏍囬鏈韩鐨勫彸杈圭紭锛屼笉鏄暣涓崱鐗囩殑鍙宠竟缂樸€?*/
+.titleWrap {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 标题横向排版：ESTABLISH / CONNECTION（建立连接）同一行 */
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.26em;
+  margin-bottom: 16px;
+}
+
+.titleLine {
+  display: inline-flex;
+  overflow: hidden;
+  padding-bottom: 0.02em;
+}
+
+.titleA,
+.titleB {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: var(--fs-display-lg);
+  line-height: 1.04;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+  transform-origin: left center;
+  will-change: transform, clip-path;
+}
+
+.titleB {
+  transform-origin: right center;
+  color: var(--accent-purple);
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- 涓枃瑙掓爣锛氳创鍦ㄨ嫳鏂囧ぇ鏍囬鍙充笅瑙掞紝鎻忚竟寮鸿皟 ---------- */
+.zhCorner {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+  overflow: hidden;
+  margin-bottom: 26px;
+}
+
+.zhRule {
+  width: 20px;
+  height: 1px;
+  flex: none;
+  background: var(--accent-purple);
+  transform-origin: right center;
+}
+
+.zh {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent-lime);
+}
+
+.copy {
+  max-width: 54ch;
+}
+
+.copyText {
+  margin-bottom: 14px;
+  font-size: var(--fs-body);
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.copyEn {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+/* ---------- 鍙筹細鑱旂郴娓犻亾 ---------- */
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+/* 联系通道块标题：小型英文系统标签，与左侧中文大标题呼应 */
+.channelHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-bottom: 4px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  border: 1px solid rgba(184, 255, 61, 0.28);
+  background: var(--lime-soft);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+}
+
+/* 当前状态行：静态、带呼吸状态点 */
+.channelStatus {
+  cursor: default;
+}
+
+.channelStatus .channelValue {
+  color: var(--accent-lime);
+}
+
+.statusDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-lime);
+  box-shadow: 0 0 0 3px rgba(184, 255, 61, 0.14);
+  animation: statusPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 17px;
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid var(--border-color);
+  will-change: clip-path;
+  transition: border-color var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    12px 100%,
+    0 calc(100% - 12px)
+  );
+}
+
+.channel:hover:not(.channelStatic):not(.channelStatus),
+.channel:focus-visible:not(.channelStatic):not(.channelStatus) {
+  border-color: var(--purple-line);
+  background: var(--purple-soft);
+  transform: translateX(5px);
+  box-shadow: 3px 3px 0 rgba(116, 85, 255, 0.16);
+}
+
+.channelStatic {
+  cursor: default;
+}
+
+/* 鏁磋涓嶅彲鐐癸紝浣嗚鍐呯殑鏄鹃湶鎸夐挳鍜屾嫧鍙烽摼鎺ヤ粛鐒舵槸鍙偣鐨?*/
+.channelStatic .revealBtn,
+.channelStatic .channelLink {
+  cursor: pointer;
+}
+
+.channelIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  color: var(--accent-purple);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.channelText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.channelLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.channelValue {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- 鎵嬫満鍙凤細鎺╃爜 / 鏄鹃湶 ---------- */
+
+/* 鎺╃爜鎬佺敤绛夊瀛椾綋锛屾槦鍙峰拰鏁板瓧瀵归綈锛屽睍寮€鏃跺搴︿笉璺?*/
+.channelMasked {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.channelLink {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  color: var(--accent-lime);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.channelLink:hover,
+.channelLink:focus-visible {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.revealBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  padding: 6px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.revealBtn:hover,
+.revealBtn:focus-visible {
+  color: var(--accent-lime);
+  background: var(--lime-soft);
+  border-color: rgba(184, 255, 61, 0.42);
+}
+
+.channelArrow {
+  flex: none;
+  color: var(--text-dim);
+  transition: color var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.channel:hover .channelArrow {
+  color: var(--accent-lime);
+  transform: translate(3px, -3px);
+}
+
+.privacy {
+  margin-top: 6px;
+  font-size: var(--fs-micro);
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   涓昏鎸夐挳
+   ========================================================================= */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: clamp(30px, 4vw, 52px);
+}
+
+/* =========================================================================
+   绯荤粺鍏抽棴鍔ㄧ敾
+   ========================================================================= */
+
+.shutdown {
+  position: relative;
+  margin-bottom: 22px;
+  height: 22px;
+}
+
+/* 虚线贯穿全宽（延伸至右边缘），不再在文字处断开 */
+.shutdownLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-purple) 0 7px,
+    transparent 7px 14px
+  );
+}
+
+/* 状态文字叠加在虚线上：靠右但右侧留出虚线空间，虚线在文字两侧贯穿 */
+.shutdownText {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-left: auto;
+  margin-right: 44px;
+  width: fit-content;
+  background: var(--background-main);
+  padding: 2px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   搴曢儴鐘舵€佹爮
+   ========================================================================= */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px clamp(14px, 2vw, 34px);
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.footItem {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.footItem:nth-child(2) {
+  color: var(--text-secondary);
+}
+
+/* =========================================================================
+   杩斿洖椤堕儴閬僵
+   ========================================================================= */
+
+.returnVeil {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-panel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: var(--overlay-deep);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s var(--ease-out), visibility 0.32s var(--ease-out);
+  pointer-events: none;
+}
+
+.returnOn {
+  opacity: 1;
+  visibility: visible;
+}
+
+.returnText {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+}
+
+.returnBar {
+  width: min(260px, 50vw);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  position: relative;
+}
+
+.returnBar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-lime);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.returnOn .returnBar::after {
+  animation: return-progress 1.3s var(--ease-out) forwards;
+}
+
+@keyframes return-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* =========================================================================
+   鍝嶅簲寮?   ========================================================================= */
+
+@media (max-width: 1100px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    padding-top: 96px;
+  }
+  .actions {
+    gap: 9px;
+  }
+  .footer {
+    gap: 8px 16px;
+  }
+  .bigWord {
+    font-size: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coordLines span {
+    animation: none;
+  }
+  .light {
+    display: none;
+  }
+  .channel,
+  .channelArrow {
+    transition: none;
+  }
+  .returnOn .returnBar::after {
+    animation: none;
+    transform: scaleX(1);
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "jazim-lau-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal portfolio for Jazim Lau (刘俊熙) — Game Motion Designer",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "portfolio:images": "python scripts/optimize-pdf-images.py",
+    "portfolio:pdf": "python scripts/build-pdf.py",
+    "build:deploy": "npm run typecheck && vite build --mode tencent --outDir deploy-output/tencent-site --emptyOutDir && node scripts/prepare-deploy-build.mjs deploy-output/tencent-site",
+    "build:github": "npm run typecheck && vite build --mode github --outDir deploy-output/github-site --emptyOutDir && node scripts/prepare-deploy-build.mjs deploy-output/github-site",
+    "prepare:deploy": "node scripts/prepare-deploy-build.mjs",
+    "package:deploy": "python scripts/package-tencent-deploy.py",
+    "manifest:media": "node scripts/generate-cos-manifest.mjs",
+    "verify:media": "node scripts/verify-production-media.mjs",
+    "cos:media": "powershell -NoProfile -ExecutionPolicy Bypass -File deploy-cos-media.ps1"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "hls.js": "^1.6.17",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9"
+  }
+}

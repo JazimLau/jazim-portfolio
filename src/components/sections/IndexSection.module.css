@@ -1,0 +1,884 @@
+/* =========================================================================
+   Index —— 系统目录：核心数据总览 + 模块目录
+   ========================================================================= */
+
+.root {
+  position: relative;
+}
+
+/* 截图拼贴底纹（极低透明度，仅增加层级感） */
+.collage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.05;
+  overflow: hidden;
+  pointer-events: none;
+}
+.collage span {
+  position: absolute;
+  border: 1px solid var(--border-color);
+  background: var(--background-panel);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
+}
+.collage span:nth-child(1) {
+  top: 8%;
+  left: -4%;
+  width: 30%;
+  height: 22%;
+  transform: rotate(-6deg);
+}
+.collage span:nth-child(2) {
+  top: 30%;
+  right: -6%;
+  width: 24%;
+  height: 30%;
+  transform: rotate(4deg);
+}
+.collage span:nth-child(3) {
+  bottom: 6%;
+  left: 18%;
+  width: 20%;
+  height: 18%;
+  transform: rotate(8deg);
+}
+.collage span:nth-child(4) {
+  bottom: 22%;
+  right: 14%;
+  width: 26%;
+  height: 20%;
+  transform: rotate(-4deg);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* 点击进入模块时的全屏像素扫描遮罩 */
+.scanOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-panel);
+  background: linear-gradient(
+    90deg,
+    rgba(184, 255, 61, 0.92),
+    rgba(184, 255, 61, 0.4)
+  );
+  animation: scan-fill 0.26s steps(6, end) forwards;
+  pointer-events: none;
+}
+
+@keyframes scan-fill {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- 描述段 ---------- */
+.intro {
+  max-width: 62ch;
+  margin-bottom: clamp(28px, 4vh, 44px);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* =========================================================================
+   核心数据总览：6 项数字面板
+   ========================================================================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: clamp(40px, 6vh, 64px);
+}
+
+.statCard {
+  --stat-accent: var(--accent-lime);
+  position: relative;
+  padding: 18px 18px 16px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% 100%,
+    14px 100%,
+    0 calc(100% - 14px)
+  );
+  transition: border-color var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.statCard[data-accent='lime'] {
+  --stat-accent: var(--accent-lime);
+}
+.statCard[data-accent='purple'] {
+  --stat-accent: var(--accent-purple);
+}
+.statCard[data-accent='orange'] {
+  --stat-accent: var(--accent-orange);
+}
+.statCard[data-accent='blue'] {
+  --stat-accent: var(--accent-blue);
+}
+
+.statCard:hover {
+  border-color: var(--stat-accent);
+  transform: translateY(-2px);
+}
+
+.statHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.statIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.statState {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--stat-accent);
+}
+
+.statState i {
+  width: 5px;
+  height: 5px;
+  background: var(--stat-accent);
+  animation: live-blink 1.4s steps(1) infinite;
+}
+
+@keyframes live-blink {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  61%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+.statValue {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 4.2vw, 3.9rem);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: var(--stat-accent);
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  margin-bottom: 12px;
+}
+
+.statLabel {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-title);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.statNote {
+  min-height: 2.6em;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--text-tertiary);
+  margin: 0 0 14px;
+}
+
+/* 像素状态条 */
+.statBar {
+  position: relative;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.statBar i {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to right,
+    var(--stat-accent) 0px,
+    var(--stat-accent) 5px,
+    transparent 5px,
+    transparent 7px
+  );
+  /* 用 background-position 平移条纹（周期 7px），避免 transform 露出空隙导致 hover 断裂 */
+  background-position: 0 0;
+  background-size: 7px 100%;
+}
+
+.statCard:hover .statBar i {
+  animation: bar-scan 0.9s linear infinite;
+}
+
+@keyframes bar-scan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 14px 0;
+  }
+}
+
+/* =========================================================================
+   模块目录：左列表 + 右详情
+   ========================================================================= */
+
+.menu {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.6fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: stretch;
+}
+
+.menuCol {
+  min-width: 0;
+  /* 模块目录背景框：低透明度，与右侧详情面板呼应 */
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid var(--border-soft);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}
+
+.colLabel {
+  display: block;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  text-align: left;
+  font-family: var(--font-body);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    padding-left var(--dur-mid) var(--ease-out);
+}
+
+.menuItem + .menuItem {
+  border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.025);
+  padding-left: 22px;
+}
+
+.menuItemActive {
+  background: var(--background-panel);
+  border-color: var(--border-color);
+  padding-left: 22px;
+}
+
+/* 左侧强调条：active 时点亮为 lime */
+.menuItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  transform: translateY(-50%);
+  background: var(--accent-lime);
+  transition: height var(--dur-mid) var(--ease-out);
+}
+
+.menuItemActive::before {
+  height: 60%;
+}
+
+.menuIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.menuItemActive .menuIndex {
+  color: var(--accent-lime);
+}
+
+/* 模块标题：英文代号在上、中文名在下 */
+.menuLabel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.menuLabelEn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.menuItemActive .menuLabelEn {
+  color: var(--text-primary);
+}
+
+.menuLabelZh {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.menuItemActive .menuLabelZh {
+  color: var(--text-secondary);
+}
+
+.menuState {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.menuItemActive .menuState {
+  opacity: 1;
+  color: var(--accent-lime);
+}
+
+/* 当前模块的「进入 →」：真实跳转控件，独立按钮，键盘可访问 */
+.menuEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  background: var(--lime-soft);
+  border: 1px solid rgba(184, 255, 61, 0.35);
+  border-radius: 0;
+  cursor: pointer;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 6px) 0,
+    100% 6px,
+    100% 100%,
+    6px 100%,
+    0 calc(100% - 6px)
+  );
+  transition: border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.menuEnter i {
+  font-style: normal;
+}
+
+.menuEnter:hover,
+.menuEnter:focus-visible {
+  background: rgba(184, 255, 61, 0.22);
+  border-color: var(--accent-lime);
+  transform: translateX(2px);
+}
+
+.menuEnter:focus-visible {
+  outline: 1px solid var(--accent-lime);
+  outline-offset: 2px;
+}
+
+/* 目录行本身（div）的键盘焦点反馈 */
+.menuItem:focus-visible {
+  outline: 1px solid var(--accent-purple);
+  outline-offset: -1px;
+}
+
+/* ---------- 右详情 ---------- */
+.detailCol {
+  min-width: 0;
+}
+
+.detailInner {
+  position: relative;
+  /* 至少撑满所在列（保持卡片完整），内容更高时自然增长，不裁切底部的图表 */
+  min-height: max(100%, 320px);
+  padding: clamp(22px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  /* 右侧模块内容整体垂直居中：内容不足可用高度时整组居中（标题/简介/信息卡/
+     数据/按钮作为一个内容组），内容更高时自然从上往下增长，不裁切。
+     用 flex 居中而非 top:50% translateY，连续切换模块位置稳定。 */
+  justify-content: center;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-pixel);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 20px) 0,
+    100% 20px,
+    100% 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+  /* 模块切换时的像素展开入场：只做 opacity + 位移，
+     clip-path 保持 polygon 切角不动，避免被 inset 覆盖 */
+  animation: detail-in var(--dur-slow) var(--ease-out) backwards;
+}
+
+@keyframes detail-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CONTACT 模块：删除图表后，详情上半部分内容居中展示 */
+.detailCentered {
+  align-items: center;
+  text-align: center;
+}
+
+.detailCentered .detailTop,
+.detailCentered .detailFoot {
+  justify-content: center;
+}
+
+/* 右下：模块序列号水印 */
+.detailInner::after {
+  content: 'MODULE';
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: rgba(255, 255, 255, 0.06);
+}
+
+.detailTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.detailIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  color: var(--accent-lime);
+}
+
+.detailTag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.detailTitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 14px;
+}
+
+.detailBrief {
+  max-width: 56ch;
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 22px;
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.keywords li {
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.022);
+}
+
+/* CONTACT 模块：联系方式三列卡片（EMAIL / PHONE / WECHAT）。
+   桌面 3 列横向展示、平板 2 列（2+1）、手机 1 列纵向。
+   保留隐私策略：手机 / 微信默认掩码，点击小眼睛展开；邮箱可直接显示并 mailto。 */
+.contactList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 28px;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.contactRow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--border-soft);
+  border-top: 2px solid var(--purple-line);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+.contactLabel {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* 值 + 小眼睛同一行：值占剩余宽度，长文本允许断行但不溢出卡片 */
+.contactValueRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.contactValue {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 邮箱：mailto 链接 */
+a.contactValue {
+  color: var(--accent-purple);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+a.contactValue:hover,
+a.contactValue:focus-visible {
+  color: var(--accent-lime);
+}
+
+/* 像素小眼睛按钮 */
+.eyeBtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.eyeBtn:hover,
+.eyeBtn:focus-visible,
+.eyeBtn[aria-pressed='true'] {
+  color: var(--accent-lime);
+  border-color: var(--accent-lime);
+}
+
+.eyeBtn:active {
+  transform: translateY(1px);
+}
+
+/* 补充信息卡：HOME / CONTACT 模块的组成、方向与指引 */
+.moduleExtra {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.extraCard {
+  min-width: 0;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--border-soft);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% 100%,
+    0 100%
+  );
+}
+
+.extraHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.extraCode {
+  font-weight: 600;
+  color: var(--accent-lime);
+}
+
+.extraLabel {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-dim);
+}
+
+/* 状态灯：低频呼吸 */
+.extraLight {
+  width: 4px;
+  height: 4px;
+  flex: none;
+  background: var(--accent-purple);
+  animation: extra-breathe 3.4s ease-in-out infinite;
+}
+
+@keyframes extra-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.extraList {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.extraList li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.extraList li::before {
+  content: '▪';
+  flex: none;
+  font-size: 7px;
+  color: var(--accent-purple);
+}
+
+.detailFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  /* 跟随内容组一起垂直居中（detailInner justify-content:center），
+     不再用 margin-top:auto 把按钮钉在卡片底部 */
+  padding-top: 26px;
+}
+
+.detailSeq {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.hint {
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+@media (max-width: 1200px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .menu {
+    grid-template-columns: 1fr;
+  }
+  .detailInner {
+    min-height: 280px;
+  }
+  /* 平板：联系方式 2 列（2 + 1） */
+  .contactList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .statValue {
+    font-size: clamp(2rem, 7vw, 2.6rem);
+  }
+  /* 手机：联系方式 1 列纵向 */
+  .contactList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statState i,
+  .statCard:hover .statBar i {
+    animation: none;
+  }
+  .detailInner {
+    animation: none;
+  }
+}
+
+/* =========================================================================
+   区块入场：由 React 控制类切换驱动（IntersectionObserver 触发）。
+   进入前挂 Hidden 类（隐藏态），进入后换成 In 类（跑一次入场动画）。
+   纯 CSS，不依赖 gsap 内联样式，StrictMode 重渲染不会抹掉入场动画。
+   ========================================================================= */
+.introHidden,
+.statCardHidden,
+.menuItemHidden {
+  opacity: 0;
+  transform: translateY(30%);
+}
+
+.introIn,
+.statCardIn,
+.menuItemIn {
+  animation: index-in-up 0.9s var(--ease-expo) backwards;
+}
+
+.statCardIn {
+  animation-delay: calc(var(--i, 0) * 0.14s);
+}
+
+.menuItemIn {
+  animation-delay: calc(var(--i, 0) * 0.06s);
+}
+
+@keyframes index-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

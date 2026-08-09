@@ -1,0 +1,164 @@
+.root {
+  position: relative;
+  margin-bottom: clamp(40px, 5vw, 80px);
+}
+
+.center {
+  text-align: center;
+}
+
+/* ---------- 编号 / 代号 ---------- */
+.kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.center .kicker {
+  justify-content: center;
+}
+
+.kicker > * {
+  display: inline-block;
+}
+
+.index {
+  color: var(--section-accent, var(--accent-purple));
+  font-weight: 600;
+}
+
+.slash {
+  color: var(--text-dim);
+}
+
+.code {
+  color: var(--text-secondary);
+}
+
+/* ---------- 标题组：英文大标题 + 右下角中文角标 ----------
+   titleWrap 用 inline-block 收缩到内容宽度（英文大标题通常是两者中更宽的一个），
+   角标再在这个宽度内 justify-content: flex-end 贴右边 —— 这样角标永远对齐的是
+   "标题本身的右边缘"，不是整个章节容器的右边缘，短词（INDEX / SKILLS）也不会
+   飘到离标题很远的地方。align='center' 时 inline-block 会跟着 .root 的
+   text-align: center 一起居中，角标改成居中对齐。 */
+.titleWrap {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* ---------- 英文大标题 ---------- */
+.title {
+  display: block;
+  /* 溢出隐藏，让 clip-path 与位移不撑破布局 */
+  overflow: hidden;
+  /* 像素字体的字形方正，行高与遮罩余量都比窄体宽松：
+     上下各留 0.09em 余量再用等量负 margin 收回，净位置不变；
+     下边距额外留 6px 净间距，给右下角标签一点贴合的呼吸空间。 */
+  font-size: var(--fs-display-lg);
+  padding-block: 0.09em;
+  margin-block: -0.09em 6px;
+}
+
+.titleInner {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-display-lg);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transform-origin: left center;
+  will-change: transform, clip-path;
+  /* 像素硬阴影：偏移投影模拟 8-bit 堆叠块 */
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+.center .titleInner {
+  transform-origin: center center;
+}
+
+/* ---------- 中文角标：贴在英文大标题右下角，描边强调 ---------- */
+.zhCorner {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.center .zhCorner {
+  justify-content: center;
+}
+
+.zhRule {
+  width: 20px;
+  height: 1px;
+  flex: none;
+  background: var(--section-accent, var(--accent-purple));
+  transform-origin: right center;
+}
+
+.center .zhRule {
+  display: none;
+}
+
+.zh {
+  flex: none;
+  font-size: clamp(1rem, 1.35vw, 1.375rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  /* 描边效果：填充色保留（可读性优先，中文笔画在这个字号下完全空心会糊成
+     一团），再叠一层强调色描边勾出轮廓，呼应角标数字的 accent。 */
+  color: var(--text-secondary);
+  -webkit-text-stroke: 0.6px var(--section-accent, var(--accent-purple));
+  paint-order: stroke fill;
+  will-change: clip-path;
+}
+
+/* ---------- 描述 ---------- */
+.desc {
+  max-width: 62ch;
+  margin-top: 22px;
+  font-size: var(--fs-body);
+  line-height: 1.78;
+  color: var(--text-secondary);
+}
+
+.center .desc {
+  margin-inline: auto;
+}
+
+@media (max-width: 768px) {
+  .zhCorner {
+    gap: 6px;
+  }
+  .zhRule {
+    width: 14px;
+  }
+}
+
+/* =========================================================================
+   compact 尺寸：Profile 首屏使用 —— 缩小标题 / 减少间距，让正文尽快露出
+   ========================================================================= */
+.compact {
+  margin-bottom: clamp(18px, 2.4vw, 34px);
+}
+
+.compact .kicker {
+  margin-bottom: 12px;
+}
+
+.compact .titleInner,
+.compact .title {
+  font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+}
+
+.compact .desc {
+  margin-top: 14px;
+}

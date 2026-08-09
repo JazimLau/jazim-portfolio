@@ -1,0 +1,973 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  padding-top: 96px;
+  padding-bottom: 20px;
+}
+
+/* =========================================================================
+   背景：纯 CSS 设计化底板（渐变 + 像素网格 + 噪点 + 扫描线）
+   ========================================================================= */
+
+.bg {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  will-change: transform;
+}
+
+.bgInner {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* 设计化底板：中性黑灰能量场（无绿色相），替代原视频占位 */
+.bgFallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(90% 70% at 50% 42%, #10150f 0%, #0a0e0b 55%, #070b09 100%);
+}
+
+/* 压暗 + 渐变，保证前景文字可读 */
+.bgVeil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      to right,
+      rgba(7, 11, 9, 0.92) 0%,
+      rgba(7, 11, 9, 0.6) 42%,
+      rgba(7, 11, 9, 0.8) 100%
+    ),
+    linear-gradient(to top, rgba(7, 11, 9, 0.96) 0%, rgba(7, 11, 9, 0.05) 46%),
+    radial-gradient(120% 90% at 50% 38%, transparent 26%, rgba(7, 11, 9, 0.5) 100%);
+}
+
+.bgGrid,
+.bgNoise,
+.bgScan {
+  position: absolute;
+  inset: 0;
+}
+
+.bgScan {
+  opacity: 0.5;
+}
+
+/* =========================================================================
+   前景：左 56% 身份信息 / 右 44% MOTION MONITOR
+   ========================================================================= */
+
+.content {
+  position: relative;
+  z-index: var(--z-content);
+  width: var(--shell-width);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100svh - 110px - 26px);
+  will-change: transform;
+}
+
+.grid {
+  display: grid;
+  /* minmax(0, …) 防止长内容把列撑破网格，避免监视器/标题溢出视口 */
+  grid-template-columns: minmax(0, 56%) minmax(0, 44%);
+  gap: clamp(24px, 3vw, 56px);
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- 左侧：身份信息 ---------- */
+.infoCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* 顶部 kicker：PLAYER PROFILE / 2027 —— 右上角 HUD 标签，位于 MOTION MONITOR 上方。
+   与 MOTION MONITOR / 状态徽章共用同一 max-width（560px）边界系统：
+   monitorCol 为 align-items:center，三个组件同为 width:100% + max-width:560px，
+   因此左右边界天然对齐（kicker 右边缘 ≈ Monitor 右边缘），不再依赖 viewport 定位。
+   文字右对齐；transform 上移 14px（不参与布局，不影响 Monitor 位置）。 */
+.kicker {
+  width: 100%;
+  max-width: 560px;
+  box-sizing: border-box;
+  text-align: right;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  border: 1px solid rgba(184, 255, 61, 0.28);
+  background: var(--lime-soft);
+  will-change: clip-path;
+  transform: translateY(-14px);
+}
+
+/* ---------- 主标题：三行窄体压缩大标题 ---------- */
+.title {
+  /* 与上方 PLAYER PROFILE / 2027 角标保持间距（首屏内压缩，节省垂直空间） */
+  margin-top: clamp(14px, 1.8vh, 26px);
+  margin-bottom: clamp(6px, 0.8vh, 10px);
+}
+
+.titleLine {
+  display: block;
+  overflow: hidden;
+  font-size: var(--fs-display-lg);
+  /* 压缩行间视觉空隙（仍保留裁切安全量，不显著缩小主标题） */
+  padding-block: 0.06em;
+  margin-block: -0.06em;
+}
+
+.line1,
+.line2,
+.line3 {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-display-lg);
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  transform-origin: left center;
+  will-change: transform, clip-path;
+  white-space: nowrap;
+  /* 像素硬阴影：偏移投影模拟 8-bit 堆叠块 */
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+.line2 {
+  transform-origin: right center;
+}
+
+/* JAZIM / LAU 名称行：较 PORTFOLIO 小一档（约 0.72×），仍保持大型标题层级 */
+.lineName {
+  font-size: clamp(2.9rem, 5.4vw, 6.2rem);
+}
+
+/* PORTFOLIO：酸性绿填充 —— 系统核心强调色，其余两行米白 */
+.accentLine {
+  color: var(--accent-lime);
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- 姓名块 ---------- */
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: clamp(4px, 0.6vh, 8px);
+  overflow: hidden;
+}
+
+.nameBlock > * {
+  display: flex;
+}
+
+.nameAlt {
+  align-items: center;
+  gap: 15px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  font-weight: 500;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.nameRule {
+  width: clamp(24px, 2.2vw, 40px);
+  height: 1px;
+  flex: none;
+  background: var(--border-strong);
+}
+
+:global(html[data-lang='EN']) .nameAlt {
+  font-family: var(--font-body);
+  text-transform: none;
+  letter-spacing: 0.2em;
+}
+
+.roleZh {
+  margin-bottom: 4px;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+}
+
+.desc {
+  max-width: 52ch;
+  margin-bottom: clamp(4px, 0.6vh, 8px);
+  overflow: hidden;
+}
+
+.desc > span {
+  display: block;
+  font-size: var(--fs-body);
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* ---------- 学科标签 ---------- */
+.disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-bottom: clamp(6px, 0.9vh, 10px);
+  overflow: hidden;
+}
+
+.disciplines li {
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.022);
+}
+
+/* ---------- 轻量系统信息：当前专注 / 正在精进 / 当前状态 ----------
+   填充标题与监视器之间的留白；低对比、紧凑、不抢主视觉。
+   首屏高度压缩：卡片高度 / 内边距 / 列表行高整体收紧 10~20%。 */
+.systemInfo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: clamp(6px, 0.9vh, 10px);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.sysCard {
+  min-width: 0;
+  padding: 5px 9px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: var(--shadow-pixel-sm);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 6px) 0,
+    100% 6px,
+    100% 100%,
+    0 100%
+  );
+  transition: border-color var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.sysCard:hover {
+  border-color: var(--purple-line);
+  transform: translateY(-1px);
+}
+
+.sysHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sysCode {
+  color: var(--accent-lime);
+}
+
+.sysLabel {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* 状态灯：低频呼吸 */
+.sysLight {
+  width: 4px;
+  height: 4px;
+  flex: none;
+  background: var(--accent-purple);
+  animation: sys-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes sys-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.sysList {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.sysList li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--fs-small);
+  line-height: 1.2;
+  color: var(--text-secondary);
+}
+
+.sysList li::before {
+  content: '▪';
+  flex: none;
+  font-size: 7px;
+  color: var(--accent-purple);
+}
+
+/* ---------- CTA ---------- */
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(4px, 0.6vh, 8px);
+}
+
+/* 首页 CTA：简历下载 / 联系我 —— 白色文字 + 白色描边，醒目可见 */
+.ctaRow .heroCta {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+}
+.ctaRow .heroCta:hover,
+.ctaRow .heroCta:focus-visible {
+  border-color: #fff;
+}
+
+/* 监视器下方状态徽章：MOTION SYSTEM ONLINE · STUDENT / INTERN · BASED IN GBA
+   属于右侧监视器列（正常文档流，不 absolute、不贴 viewport 底部），
+   与监视器面板同宽、左右边界对齐，距面板约 14px */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 10px;
+  width: 100%;
+  max-width: 560px; /* 与监视器同宽，左右边界对齐 */
+  margin-top: 14px;
+  opacity: 0.92;
+}
+
+/* =========================================================================
+   右侧：MOTION MONITOR 系统监视器
+   ========================================================================= */
+
+.monitorCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  will-change: transform;
+}
+
+.monitor {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  min-width: 0;
+  padding: 22px 22px 18px;
+  background: var(--background-panel);
+  border: 1px solid var(--border-color);
+  /* 像素切角面板 */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    18px 100%,
+    0 calc(100% - 18px)
+  );
+  box-shadow: var(--shadow-pixel), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  will-change: transform, clip-path;
+}
+
+/* 四角定位线（L 形），hover 时向外展开 */
+.corner {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+  border-color: var(--border-strong);
+  transition: width var(--dur-mid) var(--ease-out),
+    height var(--dur-mid) var(--ease-out), border-color var(--dur-mid) var(--ease-out);
+}
+.corner:nth-child(1) {
+  top: 7px;
+  left: 7px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.corner:nth-child(2) {
+  top: 7px;
+  right: 7px;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.corner:nth-child(3) {
+  bottom: 7px;
+  left: 7px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.corner:nth-child(4) {
+  bottom: 7px;
+  right: 7px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+.monitor:hover .corner {
+  width: 22px;
+  height: 22px;
+  border-color: var(--accent-lime);
+}
+
+/* 坐标文字 */
+.coords {
+  position: absolute;
+  top: 30px;
+  left: 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+/* 顶栏 */
+.monitorTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.monitorTitle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--accent-orange);
+}
+
+.recDot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-orange);
+  animation: rec-blink 1s steps(1) infinite;
+}
+
+/* REC 后的实时时间（北京时间） */
+.recTime {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+@keyframes rec-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+.timecode {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+/* 画面 */
+.screen {
+  position: relative;
+  height: clamp(150px, 19vh, 210px);
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0d120e 0%, #090c0a 100%);
+  border: 1px solid var(--border-color);
+}
+
+.screenSafe {
+  position: absolute;
+  inset: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+
+.screenTag {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* JL 水印：居中、低透明度，压在粒子游戏下层 */
+.screenMark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: rgba(242, 243, 235, 0.055);
+  -webkit-text-stroke: 1px rgba(242, 243, 235, 0.14);
+  user-select: none;
+  pointer-events: none;
+}
+
+.screenFrame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* 项目档案数据 */
+.data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* 列间距：让「项目编号|GMD-01」与右侧「项目名称」不贴在一起 */
+  gap: 8px 26px;
+  margin-bottom: 14px;
+}
+
+.dataRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dataRow dt {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.dataRow dd {
+  margin: 0 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-align: right;
+  /* 长内容允许合理换行，英文模式下避免 nowrap 溢出 / 截断 */
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+/* 类别行：Desktop / Tablet 横屏下强制单行（不换行）。
+   宽度不足时优先压缩字号与字距，而不是断行。 */
+.catRow {
+  white-space: nowrap;
+}
+
+.catRow dt {
+  flex: none;
+}
+
+.catRow dd {
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: clamp(0.62rem, 0.85vw, var(--fs-micro));
+  letter-spacing: 0.02em;
+}
+
+.statusOn {
+  color: var(--accent-lime) !important;
+}
+
+/* 像素进度条 */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.progressLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.progressTrack {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  background: repeating-linear-gradient(
+    to right,
+    var(--accent-lime) 0px,
+    var(--accent-lime) 6px,
+    transparent 6px,
+    transparent 8px
+  );
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.progressPct {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--accent-lime);
+  white-space: nowrap;
+}
+
+/* PLAY PREVIEW 悬停时进度条进入快速加载态 */
+.monitor:has(.playBtn:hover) .progressFill {
+  animation: fast-fill 0.5s linear infinite alternate;
+}
+
+@keyframes fast-fill {
+  from {
+    transform: scaleX(0.86);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* 底部操作 + 能力状态 */
+.monitorFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.playBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-lime);
+  background: var(--lime-soft);
+  border: 1px solid rgba(184, 255, 61, 0.32);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  /* 提示态：常驻脉冲光晕，吸引访客点击（悬停时仍保持） */
+  animation: play-attention 2.4s ease-in-out infinite;
+}
+
+.playBtn:hover {
+  background: rgba(184, 255, 61, 0.2);
+  border-color: var(--accent-lime);
+  transform: translateY(-1px);
+}
+
+/* 提示态呼吸光晕：外扩光环 0 → 6px 淡出，模拟"待点击"提示 */
+@keyframes play-attention {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(184, 255, 61, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(184, 255, 61, 0);
+  }
+}
+
+.capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.capability {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+
+.capability b {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.capability span {
+  color: var(--accent-lime);
+}
+
+/* =========================================================================
+   底部状态栏（全宽系统状态条）
+   ========================================================================= */
+
+.statusBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px clamp(16px, 2.4vw, 40px);
+  /* 与上方内容（按钮/状态卡）拉开间距，分割带视觉更舒展 */
+  margin-top: clamp(8px, 1.4vh, 18px);
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.statusItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.statusItem:last-child {
+  margin-left: auto;
+  color: var(--accent-lime);
+}
+
+.statusDot {
+  flex: none;
+}
+
+.scrollIcon {
+  animation: nudge 2.2s ease-in-out infinite;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* =========================================================================
+   响应式
+   ========================================================================= */
+
+@media (max-width: 1280px) {
+  .grid {
+    grid-template-columns: 54% 46%;
+  }
+  .data {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .monitor {
+    max-width: 620px;
+  }
+  /* 监视器放宽时，下方状态徽章同步放宽，保持左右边界对齐 */
+  .badges {
+    max-width: 620px;
+  }
+}
+
+/* 矮屏（如 1366×768 / 1280×720）：监视器内部紧凑，避免底部压出视口。
+   压缩画面高度 / 数据行 / 各区块间距，确保右侧列（含顶部 kicker）不高于左侧正文。 */
+@media (max-height: 820px) {
+  .monitor {
+    padding: 12px 16px 10px;
+  }
+  .screen {
+    height: clamp(96px, 11vh, 150px);
+    margin-bottom: 10px;
+  }
+  .dataRow {
+    padding: 3px 2px;
+  }
+  .monitorTop {
+    margin-top: 14px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+  }
+  .progress {
+    margin-bottom: 8px;
+  }
+  .monitorFoot {
+    margin-bottom: 8px;
+  }
+  .capabilities {
+    padding-top: 8px;
+  }
+}
+
+/* compact hero mode（1366×768 / 1280×720 等矮屏）：
+   左侧正文进一步收紧，确保两个 CTA 完整落在首屏。 */
+@media (max-height: 800px) {
+  .title {
+    margin-top: clamp(8px, 1.2vh, 14px);
+    margin-bottom: clamp(4px, 0.6vh, 8px);
+  }
+  .nameBlock {
+    gap: 2px;
+    margin-bottom: clamp(3px, 0.5vh, 6px);
+  }
+  .roleZh {
+    margin-bottom: 2px;
+  }
+  .desc {
+    margin-bottom: clamp(3px, 0.5vh, 6px);
+  }
+  .disciplines {
+    margin-bottom: clamp(4px, 0.6vh, 8px);
+  }
+  .systemInfo {
+    margin-bottom: clamp(4px, 0.6vh, 8px);
+    padding-top: 6px;
+  }
+  .sysCard {
+    padding: 4px 8px;
+  }
+  .sysList li {
+    line-height: 1.15;
+  }
+  .ctaRow {
+    gap: 7px;
+    margin-bottom: 0;
+  }
+  .statusBar {
+    margin-top: clamp(4px, 0.8vh, 10px);
+    padding-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 92px;
+  }
+  .content {
+    min-height: calc(100svh - 92px - 26px);
+  }
+  .ctaRow {
+    gap: 9px;
+  }
+  .disciplines li:nth-child(n + 4) {
+    display: none;
+  }
+  /* 移动端右上角 PLAYER PROFILE 弱化：并入顶部系统栏语境，不抢主标题 */
+  .kicker {
+    opacity: 0.6;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollIcon,
+  .recDot,
+  .playBtn,
+  .monitor:has(.playBtn:hover) .progressFill {
+    animation: none;
+  }
+  .bg,
+  .bgInner,
+  .content,
+  .monitor,
+  .monitorCol {
+    transform: none !important;
+  }
+}

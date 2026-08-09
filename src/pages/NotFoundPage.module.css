@@ -1,0 +1,117 @@
+.root {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-block: 140px 80px;
+}
+
+.grid,
+.noise {
+  position: absolute;
+  inset: 0;
+}
+
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--accent-orange) 40%,
+    var(--accent-purple) 60%,
+    transparent
+  );
+  opacity: 0.35;
+  will-change: transform;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+.codeWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.code {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-xl);
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.16);
+  transform-origin: left center;
+  will-change: transform, clip-path;
+}
+
+.titleWrap {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-md);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.text {
+  max-width: 56ch;
+  margin-bottom: 32px;
+  font-size: var(--fs-body);
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.textEn {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
+}
+
+.metaItem {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan {
+    display: none;
+  }
+}

@@ -1,0 +1,42 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-panel);
+  display: grid;
+  place-items: center;
+  background: var(--background-main);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--accent-purple);
+  opacity: 0;
+}
+
+/* 不设常驻 will-change / clip-path：
+   两者都会让本元素成为 fixed 后代的包含块，并裁掉 Opening 等固定定位遮罩。
+   转场期间由 GSAP 临时写入内联样式，结束后 clearProps 清除。 */
+.content {
+  position: relative;
+}

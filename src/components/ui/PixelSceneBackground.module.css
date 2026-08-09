@@ -1,0 +1,178 @@
+/* =========================================================================
+   PixelSceneBackground —— 区块级大尺度像素构图背景
+   大型阶梯块 / 大型编号 / 断续轨道+像素光块 / Dithering 点阵
+   ========================================================================= */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ---------- 大型阶梯块：不规则像素切割，非平滑圆角 ---------- */
+.block {
+  position: absolute;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% calc(100% - 24px),
+    calc(100% - 24px) 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 2px rgba(7, 11, 9, 0.6),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+  /* 背景框整体透明度降低一半，弱化视觉噪音 */
+  opacity: 0.5;
+}
+
+/* 低频待机：每 8–15s 一次 1–3px 阶梯边缘重排（位移），克制 */
+.blockIdle {
+  animation: block-idle 12s ease-in-out var(--bd, 0s) infinite;
+}
+
+@keyframes block-idle {
+  0%,
+  86% {
+    transform: translate(0, 0);
+  }
+  90% {
+    transform: translate(1px, -2px);
+  }
+  94% {
+    transform: translate(-1px, 1px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ---------- 大型系统编号：低透明但可辨、可被局部裁切 ---------- */
+.glyph {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  user-select: none;
+  text-transform: uppercase;
+  pointer-events: none;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.09);
+  mask-image: linear-gradient(to right, #000, #000 72%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000, #000 72%, transparent 100%);
+  animation: glyph-breathe 14s ease-in-out infinite;
+}
+
+@keyframes glyph-breathe {
+  0%,
+  88% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---------- 断续系统轨道 ---------- */
+.track {
+  position: absolute;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.14) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 12px 100%;
+  background-repeat: repeat-x;
+  opacity: 0.5;
+}
+
+/* 沿轨道移动的像素光块 */
+.trackPulse {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 130%;
+  margin-top: -65%;
+  background: var(--accent-lime);
+  opacity: 0;
+  animation: track-pulse 6s steps(12) infinite;
+}
+
+@keyframes track-pulse {
+  0% {
+    left: -4%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.7;
+  }
+  55% {
+    opacity: 0.7;
+  }
+  70% {
+    left: 100%;
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* ---------- Dithering 点阵：方块密度渐变过渡，非平滑模糊 ---------- */
+.dither {
+  position: absolute;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.12) 1px,
+    transparent 1.5px
+  );
+  background-size: 5px 5px;
+  opacity: 0.5;
+  mask-image: linear-gradient(to bottom, #000 20%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 20%, transparent 100%);
+}
+
+.ditherDense {
+  background-size: 3px 3px;
+  background-image: radial-gradient(
+    rgba(184, 255, 61, 0.16) 1px,
+    transparent 1.5px
+  );
+}
+
+/* ---------- 移动端：保留构图但减弱装饰 ---------- */
+@media (max-width: 768px) {
+  .glyph {
+    font-size: 0 !important;
+  }
+  .block {
+    border: 0;
+  }
+  .track {
+    opacity: 0.3;
+  }
+  .dither {
+    opacity: 0.35;
+  }
+  .blockIdle {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blockIdle,
+  .glyph,
+  .trackPulse {
+    animation: none;
+  }
+}

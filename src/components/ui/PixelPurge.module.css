@@ -1,0 +1,234 @@
+/* ════════════════════════════════════════════════════════════════════
+   PixelPurge —— 监视器内的像素粒子消除小游戏
+   风格：系统监视器 / 动态扫描，粒子为发光像素方块
+   ════════════════════════════════════════════════════════════════════ */
+
+.game {
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+}
+
+/* ---------- hover 提示 ---------- */
+.hint {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent-lime);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.hint b {
+  color: var(--text-primary);
+}
+
+.hintOn {
+  opacity: 1;
+}
+
+/* ---------- 隐藏计数 ---------- */
+.score {
+  position: absolute;
+  right: 10px;
+  bottom: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-label);
+  color: var(--text-dim);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.score i {
+  width: 4px;
+  height: 4px;
+  background: var(--accent-lime);
+  box-shadow: 0 0 6px rgba(184, 255, 61, 0.7);
+  animation: score-blink 1.2s steps(1) infinite;
+}
+
+@keyframes score-blink {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  61%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* ---------- 粒子 ---------- */
+.particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ps);
+  height: var(--ps);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: crosshair;
+  z-index: 2;
+  /* 位置由 JS RAF 直写 transform（--px/--py，合成层，不触发布局），
+     这里只做轻微的像素呼吸，避免与位置更新冲突 */
+  transform: translate(
+    calc(var(--px) - var(--ps) / 2),
+    calc(var(--py) - var(--ps) / 2)
+  );
+  animation: particle-breathe 2.6s ease-in-out infinite;
+  animation-delay: var(--pd);
+  will-change: transform;
+}
+
+.particle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* hover / 键盘聚焦：目标框旋转提示 */
+.particle::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1px dashed transparent;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.particle:hover::after,
+.particle:focus-visible::after {
+  border-color: currentColor;
+  opacity: 0.85;
+  animation: reticle 0.5s steps(2) infinite;
+}
+
+.particle:focus-visible {
+  outline: none;
+}
+
+@keyframes reticle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+/* 像素呼吸：只改透明度，不改位置/缩放（自然漂浮完全由 JS 驱动） */
+@keyframes particle-breathe {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* 四色粒子 */
+.lime {
+  color: var(--accent-lime);
+  filter: drop-shadow(0 0 5px rgba(184, 255, 61, 0.55));
+}
+.purple {
+  color: var(--accent-purple);
+  filter: drop-shadow(0 0 5px rgba(117, 87, 255, 0.55));
+}
+.orange {
+  color: var(--accent-orange);
+  filter: drop-shadow(0 0 5px rgba(255, 107, 61, 0.45));
+}
+.blue {
+  color: var(--accent-blue);
+  filter: drop-shadow(0 0 5px rgba(91, 200, 255, 0.45));
+}
+
+/* 三种形状（禁用圆润的 ring，只保留硬朗像素块与十字） */
+.block::before {
+  border-radius: 2px;
+}
+
+.cross::before {
+  background: transparent;
+  box-shadow: calc(var(--ps) * -0.32) 0 0 currentColor,
+    calc(var(--ps) * 0.32) 0 0 currentColor, 0 calc(var(--ps) * -0.32) 0 currentColor,
+    0 calc(var(--ps) * 0.32) 0 currentColor;
+}
+
+/* ---------- 像素爆点消散 ---------- */
+.burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.burst i {
+  position: absolute;
+  left: var(--bx);
+  top: var(--by);
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: currentColor;
+  opacity: 0;
+  animation: burst-fly 0.5s steps(4) forwards;
+  animation-delay: var(--dd);
+}
+
+@keyframes burst-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.3);
+  }
+}
+
+/* 爆点中心的短描边闪烁 */
+.burst::before {
+  content: '';
+  position: absolute;
+  left: var(--bx);
+  top: var(--by);
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 1px solid currentColor;
+  opacity: 0;
+  animation: burst-flash 0.34s steps(3) forwards;
+}
+
+@keyframes burst-flash {
+  0% {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
