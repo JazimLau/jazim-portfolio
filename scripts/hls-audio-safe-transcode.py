@@ -100,13 +100,24 @@ def transcode(src, out_dir, base, crf, height, seg_sec, bitrate_a, verify=True):
 
     info = probe_streams(src)
     has_audio = len(info.get('audio', [])) > 0
+    # 源音轨真实音量检测：无音轨或「静音轨」（-inf/-91dB 这类）一律视为无声源，
+    # 不生成「形式上有 Audio Track 但实际静音」的 AAC 音轨。
+    audible = False
+    if has_audio:
+        s_mean, s_max = volumedetect(src)
+        audible = (s_max is not None and s_max > -50.0)
+        print(f'  source volumedetect: mean={s_mean} max={s_max} audible={audible}')
+    keep_audio = has_audio and audible
     print(f'[source] {src}')
     print(f'  video streams: {info["video"]}')
     print(f'  audio streams: {info["audio"] if info["audio"] else "NONE"}')
+    print(f'  -> audio decision: {"KEEP (audible)" if keep_audio else "DROP (no audio stream / silent track)"}')
 
+    # 统一语义：源有声 -> 保留音轨；源无声/静音轨 -> 输出无声 HLS（不报错）。
+    # 注意：-an 只在此「已检测确认源无实际声音」的分支出现，不会误丢有声源音频。
     cmd = [FFMPEG, '-y', '-hide_banner', '-loglevel', 'error',
            '-i', src, '-map', '0:v:0']
-    if has_audio:
+    if keep_audio:
         cmd += ['-map', '0:a:0?', '-c:a', 'aac', '-b:a', bitrate_a, '-ac', '2']
     else:
         cmd += ['-an']
@@ -145,9 +156,9 @@ def transcode(src, out_dir, base, crf, height, seg_sec, bitrate_a, verify=True):
     for label, s in picks.items():
         p = os.path.join(out_dir, s)
         si = probe_streams(p)
-        a_ok = (len(si['audio']) > 0) if has_audio else (len(si['audio']) == 0)
+        a_ok = (len(si['audio']) > 0) if keep_audio else (len(si['audio']) == 0)
         mean, mx = volumedetect(p)
-        if has_audio:
+        if keep_audio:
             audible = (mean is not None and mx is not None and mx > -50.0)
             print(f'  [{label}] {s}: audio_streams={len(si["audio"])} vol=mean:{mean} max:{mx} audible={audible}')
             if not a_ok or not audible:
