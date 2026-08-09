@@ -51,6 +51,32 @@ jobs:
         with:
           path: deploy-output/github-site
 
+      # ── 同步静态资源到腾讯 COS（国内 CDN，页面入口 GitHub Pages + 资源 COS 秒开） ──
+      # 需在 GitHub 仓库 Settings → Secrets and variables → Actions 配置：
+      #   TENCENT_SECRET_ID / TENCENT_SECRET_KEY（腾讯云访问管理 → API 密钥管理 新建长期密钥）
+      # secrets 未配置时该步骤自动跳过（部署不受影响）；配置后每次构建自动同步 COS 资源。
+      - name: Sync static assets to Tencent COS
+        if: ${{ secrets.TENCENT_SECRET_ID != '' && secrets.TENCENT_SECRET_KEY != '' }}
+        env:
+          TENCENT_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
+          TENCENT_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
+        run: |
+          curl -sL -o /tmp/coscli https://github.com/tencentyun/coscli/releases/download/v1.0.8/coscli-v1.0.8-linux-amd64
+          chmod +x /tmp/coscli
+          cat > "$HOME/.cos.yaml" <<EOF
+          cos:
+            base:
+              secretid: "$TENCENT_SECRET_ID"
+              secretkey: "$TENCENT_SECRET_KEY"
+              protocol: https
+            buckets:
+              - name: jazimprofile-media-1465643833
+                alias: jazim-media
+                region: ap-guangzhou
+                endpoint: cos.ap-guangzhou.myqcloud.com
+          EOF
+          python3 scripts/sync-cos-assets.py deploy-output/github-site --coscli /tmp/coscli --target cos://jazim-media --endpoint cos.ap-guangzhou.myqcloud.com
+
   # ── 部署 ──────────────────────────────────────────────────────────────────
   deploy:
     environment:
