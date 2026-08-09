@@ -94,7 +94,12 @@ export function useHlsVideo(
           return
         }
         hls = new Hls({
-          maxBufferLength: 24,
+          /* 起播优化：COS 默认域名限速下，缩短目标缓冲 + 预取首分片，
+             让首个画面更快出现、切换视频等待更短 */
+          maxBufferLength: 10,
+          maxMaxBufferLength: 20,
+          backBufferLength: 30,
+          startFragPrefetch: true,
           enableWorker: true,
           lowLatencyMode: false,
         })
