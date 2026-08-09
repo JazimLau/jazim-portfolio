@@ -9,12 +9,12 @@
 
 | 项 | 值 |
 |---|---|
-| Git status | ⚠️ 本机未安装 Git（本地 Git 无法初始化，待用户安装） |
-| Branch | main（计划） |
-| Repository | 待用户创建（建议 `jazim-portfolio`） |
-| Visibility | 待用户选择（Public / Private） |
-| Tracked files（模拟） | 363 |
-| Tracked size（模拟） | 20.53 MB |
+| Git status | ✅ 已通过 GitKraken 完成 Init / Commit / Push |
+| Branch | main ✅ |
+| Repository | https://github.com/JazimLau/jazim-portfolio ✅（Public） |
+| Visibility | Public |
+| Tracked files | 374 |
+| Tracked size | 20.56 MB |
 | Largest tracked file | portfolio-output/Jazim-Lau-Game-Motion-Portfolio-2026.pdf（5.23 MB） |
 | HLS ignored count | 731（95 m3u8 + 635 ts + 1 README） |
 | HLS ignored size | 1563.91 MB |
@@ -32,12 +32,11 @@
 | 权限（最小） | contents: read · pages: write · id-token: write |
 | Environment | github-pages |
 | Node | 24（与本地 v24.18.0 一致） |
-| build:github | ✅ 本地验证 RC 0 |
-| Pages artifact | 58 文件 / 7.78 MB / index.html ✅ / **HLS=0** / base=`/jazim-portfolio/` ✅ |
-| Pages URL | 待部署后读取（不猜） |
-| Pages QA | 本地等价验证 ✅（详见 GITHUB_PAGES_ARTIFACT_REPORT.md） |
-| Media domain | ✅ 构建注入 media.jazimprofile.com |
-| COS CORS | 需加入 `https://USERNAME.github.io` Origin（CORS 不含 Path） |
+| Actions 状态 | ✅ **全绿**（Checkout / npm ci / Typecheck / Build / Configure / Upload / Deploy） |
+| Pages URL | ✅ **https://jazimlau.github.io/jazim-portfolio/**（已上线） |
+| Pages QA | ✅ 全部模块渲染 / 深链接 / 封面 / 视频指向 COS（详见 GITHUB_PAGES_ARTIFACT_REPORT.md） |
+| Media domain | ✅ 构建注入 media.jazimportfolio.com |
+| COS CORS | 需加入 `https://jazimlau.github.io`（已确认实际 Origin） |
 
 ## TENCENT
 
@@ -47,7 +46,7 @@
 | EdgeOne artifact | `deploy-output/tencent-site/`：58 文件 / 7.78 MB |
 | EdgeOne ZIP | `deploy-output/Jazim-Portfolio-EdgeOne.zip`：6.62 MB / 58 文件 / 根目录含 index.html ✅ |
 | HLS in EdgeOne | **0**（prepare-deploy-build 已剥离 731 文件 / 1563.91 MB） |
-| Domain | jazimprofile.com / www（待用户配置） |
+| Domain | jazimportfolio.com / www（待用户配置） |
 | HTTPS | 待用户配置 |
 | 生产媒体指向 | ✅ 已注入 COS（PRODUCTION_NETWORK_QA.md 实测请求 URL） |
 
@@ -62,7 +61,7 @@
 | other | 1（README.md） |
 | Total media | 731 文件 / 1563.91 MB |
 | Upload validation | 待 COS 生效（`npm run verify:media`，当前输出 PENDING，不误报） |
-| media.jazimprofile.com | 待用户配置（COS + 自定义域名 + DNS + HTTPS） |
+| media.jazimportfolio.com | 待用户配置（COS + 自定义域名 + DNS + HTTPS） |
 | CORS | 指南已生成（COS_CORS_GUIDE.md），需配置具体 Origin |
 | Manifest | ✅ `COS_MEDIA_UPLOAD_MANIFEST.csv`（含 sha256 / expected_cos_path / expected_public_url） |
 | HLS 完整性 | ✅ BROKEN LOCAL HLS REFERENCES = **0** |
@@ -79,9 +78,9 @@
 | Desktop QA | ✅（本地生产预览 8090 全模块渲染正常） |
 | Mobile QA | 待线上（样式与桌面同源，此前轮次已覆盖） |
 | Video QA | 本地开发 ✅（HLS 播放正常）；生产待 COS 生效后全量验证 |
-| PDF | ✅ 不变（QR 指向 jazimprofile.com） |
-| QR | ✅ 不变（指向 https://jazimprofile.com/#/...） |
-| Canonical | 正式站 = https://jazimprofile.com/（github.io 不作 Canonical） |
+| PDF | ✅ 不变（QR 指向 jazimportfolio.com） |
+| QR | ✅ 不变（指向 https://jazimportfolio.com/#/...） |
+| Canonical | 正式站 = https://jazimportfolio.com/（github.io 不作 Canonical） |
 
 ## SECURITY
 
@@ -96,14 +95,13 @@
 
 按顺序，一次一步：
 
-1. **安装 Git** 并 `git init` / commit（见 `GIT_INIT_GUIDE.md`）
-2. **创建 GitHub Repository**，提供：Repo Name / Public·Private / Repository URL
-3. **Push 到 GitHub**，开启 Settings → Pages → GitHub Actions（首次自动部署）
-4. **腾讯云**：创建 COS Bucket → 配置 coscli → `npm run cos:media` 上传媒体
-5. 配置 `media.jazimprofile.com`（COS 自定义域名 + DNS + HTTPS + CORS）→ `npm run verify:media`
-6. `npm run build:deploy` → 上传 `Jazim-Portfolio-EdgeOne.zip` 到 EdgeOne
-7. 绑定 `jazimprofile.com` / `www` + HTTPS
-8. 线上 QA（桌面多分辨率 + 移动 + 视频专项 + PDF + QR）
+1. ✅ ~~安装 Git / 创建 Repo / Push~~（已通过 GitKraken 完成，仓库 Public）
+2. ✅ ~~GitHub Pages~~（已上线 https://jazimlau.github.io/jazim-portfolio/）
+3. **腾讯云**：创建 COS Bucket → 配置 coscli → `npm run cos:media` 上传媒体
+4. 配置 `media.jazimportfolio.com`（COS 自定义域名 + DNS + HTTPS + CORS）→ `npm run verify:media`
+5. `npm run build:deploy` → 上传 `Jazim-Portfolio-EdgeOne.zip` 到 EdgeOne
+6. 绑定 `jazimportfolio.com` / `www` + HTTPS
+7. 线上 QA（桌面多分辨率 + 移动 + 视频专项 + PDF + QR）
 
 ---
 
@@ -112,12 +110,14 @@
 | 阶段 | 状态 |
 |---|---|
 | LOCAL PREPARATION | **PASS** |
-| GIT | **READY（待安装 Git 执行）** |
-| GITHUB WORKFLOW | **READY** |
+| GIT | **PASS**（GitKraken：Init / Commit / main / Push） |
+| GITHUB REPOSITORY | **PASS**（https://github.com/JazimLau/jazim-portfolio，Public） |
+| GITHUB WORKFLOW | **PASS**（Actions 全绿） |
+| GITHUB PAGES | **PASS**（https://jazimlau.github.io/jazim-portfolio/ 已上线） |
 | TENCENT ARTIFACT | **READY** |
 | COS MANIFEST | **READY** |
-| CLOUD CONFIGURATION | **WAITING FOR USER** |
+| CLOUD CONFIGURATION | **WAITING FOR USER**（COS / EdgeOne / 域名 / HTTPS） |
 
 > 不写「DEPLOYMENT COMPLETE」。只有 GitHub Repo Push / GitHub Pages / COS /
-> media.jazimprofile.com / EdgeOne / jazimprofile.com / HTTPS / CORS / Video 全部 PASS，
+> media.jazimportfolio.com / EdgeOne / jazimportfolio.com / HTTPS / CORS / Video 全部 PASS，
 > 且 0 Broken Routes / 0 Missing Assets / 0 Hardcoded Secrets，才算 DEPLOYMENT COMPLETE。

@@ -25,7 +25,7 @@ import { join, relative, resolve, sep } from 'node:path'
 const VIDEOS_DIR = resolve('public/assets/videos')
 const OUT_CSV = resolve('COS_MEDIA_UPLOAD_MANIFEST.csv')
 const OUT_REPORT = resolve('deploy-output/reports/HLS_INTEGRITY_AUDIT.md')
-const MEDIA_BASE = 'https://media.jazimprofile.com'
+const MEDIA_BASE = 'https://media.jazimportfolio.com'
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {

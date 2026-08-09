@@ -9,7 +9,7 @@
  *   目标：Playlist reachable = 100%，Broken sampled segment = 0。
  *
  * 用法：node scripts/verify-production-media.mjs
- *   在 COS / media.jazimprofile.com 尚未配置时运行，会输出 PENDING（不会误报成功）。
+ *   在 COS / media.jazimportfolio.com 尚未配置时运行，会输出 PENDING（不会误报成功）。
  */
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -69,10 +69,10 @@ const m3u8Rows = rows.filter((r) => r[2] === '.m3u8')
 console.log(`[verify-production-media] 校验 ${m3u8Rows.length} 个 playlist ...`)
 
 // 先探测媒体域名是否可达
-const probe = await httpGet('https://media.jazimprofile.com/')
+const probe = await httpGet('https://media.jazimportfolio.com/')
 const domainReachable = probe.status > 0
 if (!domainReachable) {
-  console.warn('[verify-production-media] media.jazimprofile.com 当前不可达（COS/域名尚未配置）→ 输出 PENDING')
+  console.warn('[verify-production-media] media.jazimportfolio.com 当前不可达（COS/域名尚未配置）→ 输出 PENDING')
 }
 
 const results = await mapLimit(m3u8Rows, CONCURRENCY, async (row) => {
@@ -113,14 +113,14 @@ const lines = []
 lines.push('# PRODUCTION MEDIA QA')
 lines.push('')
 lines.push(`生成时间：${new Date().toISOString()}`)
-lines.push(`媒体域名：https://media.jazimprofile.com`)
+lines.push(`媒体域名：https://media.jazimportfolio.com`)
 lines.push(`Playlist 总数：${m3u8Rows.length}`)
 lines.push(`域名可达：${domainReachable ? 'YES' : 'NO（COS/域名尚未配置）'}`)
 lines.push('')
 if (!domainReachable) {
   lines.push('## 状态：PENDING')
   lines.push('')
-  lines.push('COS Bucket / media.jazimprofile.com 尚未配置完成，无法在线验证。')
+  lines.push('COS Bucket / media.jazimportfolio.com 尚未配置完成，无法在线验证。')
   lines.push('请在完成 COS 上传、自定义域名与 HTTPS 后，重新运行：')
   lines.push('')
   lines.push('```bash')

@@ -19,17 +19,17 @@ npm run cos:media
 
 保持相对结构：`assets/videos/<project>/...`（与 Manifest 的 `expected_cos_path` 一致）。
 
-### STEP 3 · 配置媒体自定义域名 `media.jazimprofile.com`
+### STEP 3 · 配置媒体自定义域名 `media.jazimportfolio.com`
 COS 控制台 → Bucket → 域名管理 → 自定义加速域名 / 自定义源站域名
-- 域名：`media.jazimprofile.com`
+- 域名：`media.jazimportfolio.com`
 - CNAME Target：**以腾讯控制台实际给出的值为准**（不要使用文档里的示例值）
 - 在 DNS 服务商处添加对应 CNAME 记录
 
 ### STEP 4 · HTTPS
-- 在腾讯云为 `media.jazimprofile.com` 申请 / 绑定 SSL 证书并开启 HTTPS
+- 在腾讯云为 `media.jazimportfolio.com` 申请 / 绑定 SSL 证书并开启 HTTPS
 
 ### STEP 5 · CORS
-按 `COS_CORS_GUIDE.md` 配置（允许 jazimprofile.com / www / GitHub Pages Origin）。
+按 `COS_CORS_GUIDE.md` 配置（允许 jazimportfolio.com / www / GitHub Pages Origin）。
 
 ### STEP 6 · 媒体在线验证
 ```bash
@@ -48,14 +48,14 @@ npm run build:deploy
 
 ### STEP 9 · 绑定主站域名
 EdgeOne 站点绑定：
-- `jazimprofile.com`（Primary）
-- `www.jazimprofile.com`（可访问或 301 到裸域，按平台能力）
+- `jazimportfolio.com`（Primary）
+- `www.jazimportfolio.com`（可访问或 301 到裸域，按平台能力）
 
-> 不要将 `jazimprofile.com` 同时绑定到 GitHub Pages，避免两平台 DNS 冲突。
+> 不要将 `jazimportfolio.com` 同时绑定到 GitHub Pages，避免两平台 DNS 冲突。
 > GitHub Pages 保持 github.io 地址，仅作备用 / Mirror。
 
 ### STEP 10 · HTTPS
-为 `jazimprofile.com` / `www.jazimprofile.com` 配置 HTTPS 证书。
+为 `jazimportfolio.com` / `www.jazimportfolio.com` 配置 HTTPS 证书。
 
 ### STEP 11 · Online QA
 按 `FINAL_MULTI_PLATFORM_DEPLOYMENT_REPORT.md` 的 WEBSITE 清单进行线上检查

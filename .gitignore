@@ -20,6 +20,9 @@ public/assets/videos/
 !.env.tencent
 !.env.github
 
+# 本机 COS 上传配置（Bucket/Region/COSCLI 路径，机器相关，不入库）
+deploy-cos-config.env
+
 # ── 日志 / 临时 / OS / IDE ─────────────────────
 *.log
 *.local

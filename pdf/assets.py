@@ -82,7 +82,7 @@ except ImportError:
 if qrcode:
     qrdir = os.path.join(BASE, "pdf", "assets", "qr")
     os.makedirs(qrdir, exist_ok=True)
-    ORIGIN = "http://127.0.0.1:5173"
+    ORIGIN = "https://jazimportfolio.com"
     QRS = {
         "qr-wudao":    f"{ORIGIN}/#/projects/leihuo-external-motion-system/case/hearthstone",
         "qr-jiuzhou":  f"{ORIGIN}/#/projects/leihuo-external-motion-system/case/nsh",

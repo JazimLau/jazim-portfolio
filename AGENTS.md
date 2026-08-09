@@ -76,6 +76,6 @@
 
 ## 6. Canonical / QR / PDF
 
-- Canonical 始终 `https://jazimprofile.com/`（github.io 不作 Canonical）。
-- PDF QR 指向 `https://jazimprofile.com/#/...`，不要改成 GitHub。
+- Canonical 始终 `https://jazimportfolio.com/`（github.io 不作 Canonical）。
+- PDF QR 指向 `https://jazimportfolio.com/#/...`，不要改成 GitHub。
 

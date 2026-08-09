@@ -1,4 +1,4 @@
-# COS CORS GUIDE — media.jazimprofile.com
+# COS CORS GUIDE — media.jazimportfolio.com
 
 > PHASE 36 · 生产媒体域名 CORS 配置（腾讯云 COS 控制台）。
 
@@ -6,12 +6,11 @@
 
 | Origin | 用途 |
 |---|---|
-| `https://jazimprofile.com` | Tencent EdgeOne 正式主站 |
-| `https://www.jazimprofile.com` | 正式主站 www |
-| `https://<你的用户名>.github.io` | GitHub Pages 备用站（**注意：不含 Repo Path**，CORS Origin 不带路径） |
+| `https://jazimportfolio.com` | Tencent EdgeOne 正式主站 |
+| `https://www.jazimportfolio.com` | 正式主站 www |
+| `https://jazimlau.github.io` | GitHub Pages 备用站（**已确认实际 Origin**；CORS Origin 不带 Path，不加 `/jazim-portfolio/`） |
 
-> GitHub Pages 的 Origin 是 `https://USERNAME.github.io`，不是 `https://USERNAME.github.io/REPO/`。
-> 在用户提供 GitHub 用户名 / Pages URL 前，此项先留空占位，不要猜。
+> GitHub Pages 的 Origin 是 `https://jazimlau.github.io`（已确认），不是 `https://jazimlau.github.io/jazim-portfolio/`（CORS Origin 不带 Path）。
 
 ## 推荐配置（COS 控制台 → Bucket → 安全管理 → CORS）
 

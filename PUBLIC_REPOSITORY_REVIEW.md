@@ -25,8 +25,8 @@
 | URL | 位置 | 说明 |
 |---|---|---|
 | http://www.w3.org/2000/svg | src/styles/global.css | SVG 命名空间，无害 |
-| https://jazimprofile.com | src/lib/media.ts | 本项目正式域名 |
-| https://media.jazimprofile.com | src/lib/media.ts | 本项目 COS 媒体域名 |
+| https://jazimportfolio.com | src/lib/media.ts | 本项目正式域名 |
+| https://media.jazimportfolio.com | src/lib/media.ts | 本项目 COS 媒体域名 |
 
 ## 误报说明
 

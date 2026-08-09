@@ -1066,7 +1066,7 @@ def contact_html():
   <div class="contact-qr panel"><span class="panel-tag">QR / 在线作品集</span>
     <img src="assets-optimized/qr/qr-home.png" alt="QR">
     <div class="cap">SCAN TO OPEN<br><b>ONLINE PORTFOLIO</b></div>
-    <div class="site">jazimprofile.com</div>
+    <div class="site">jazimportfolio.com</div>
   </div>
 </div>
 """

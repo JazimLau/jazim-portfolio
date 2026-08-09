@@ -3,13 +3,13 @@
  *
  * 架构：
  *   - GitHub Repository  = 源码（不含大型 HLS）
- *   - Tencent COS        = 大型 HLS 媒体，生产媒体域名 https://media.jazimprofile.com
- *   - Tencent EdgeOne    = 正式主站 https://jazimprofile.com
+ *   - Tencent COS        = 大型 HLS 媒体，生产媒体域名 https://media.jazimportfolio.com
+ *   - Tencent EdgeOne    = 正式主站 https://jazimportfolio.com
  *   - GitHub Pages       = 备用 / Mirror（github.io）
  *
  * 约定：
  *   - siteAsset()：站点自身静态资源（封面图 / 案例图 / PDF 等）。
- *     按 Vite base 解析，兼容 file:// 双击、jazimprofile.com 根路径、
+ *     按 Vite base 解析，兼容 file:// 双击、jazimportfolio.com 根路径、
  *     GitHub Pages 子路径（/repo/）三种环境。
  *   - mediaUrl()：大型视频媒体（HLS .m3u8）。
  *     生产环境（设置了 VITE_MEDIA_BASE_URL）统一指向 Tencent COS；

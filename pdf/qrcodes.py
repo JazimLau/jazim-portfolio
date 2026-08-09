@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """Generate QR codes for the PDF pages.
 
-QR encodes full URLs based on the HashRouter paths. The origin below is the
-current local dev origin (verifiable today); once a production domain is
-configured, only the origin changes — the #/ path stays identical to the site.
+QR encodes full URLs based on the HashRouter paths. ORIGIN is the production
+domain (jazimportfolio.com); the #/ path stays identical to the site routes.
 """
 import os
 import qrcode
@@ -13,9 +12,10 @@ BASE = r"D:\Desktop\jazim-portfolio\jazim-portfolio"
 OUT = os.path.join(BASE, "pdf", "assets", "qr")
 os.makedirs(OUT, exist_ok=True)
 
-ORIGIN = "http://127.0.0.1:5173"
+ORIGIN = "https://jazimportfolio.com"
 
 QR_TARGETS = [
+    ("qr-home",      f"{ORIGIN}/#/"),
     ("qr-wudao",     f"{ORIGIN}/#/projects/leihuo-external-motion-system/case/hearthstone"),
     ("qr-jiuzhou",   f"{ORIGIN}/#/projects/leihuo-external-motion-system/case/nsh"),
     ("qr-gameui",    f"{ORIGIN}/#/projects/game-ui-motion-studies"),
