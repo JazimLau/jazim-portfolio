@@ -176,20 +176,14 @@ export const abilityBlocks: AbilityBlock[] = [
 ]
 
 /** 工具链：文字 + 图标展示。state 为熟练状态（PROFICIENT/WORKING/PRACTICE/LEARNING），不使用百分比。
-    命名统一：Unreal Engine 5（标签可用 UE5）；引擎能力不标 PROFICIENT。 */
+    命名统一：Unreal Engine 5（标签可用 UE5）；引擎能力不标 PROFICIENT。
+    精简版：只展示精选工具（After Effects / Photoshop / Unreal Engine 5 / Unity / Seedance）。 */
 export const tools: { name: string; role: string; state: string }[] = [
   { name: 'After Effects', role: 'MOTION', state: 'PROFICIENT' },
   { name: 'Photoshop', role: 'ASSET', state: 'PROFICIENT' },
-  { name: 'Premiere Pro', role: 'VIDEO', state: 'PROFICIENT' },
-  { name: 'Figma', role: 'UI', state: 'LEARNING' },
-  { name: 'Blender', role: '3D', state: 'PRACTICE' },
   { name: 'Unreal Engine 5', role: 'ENGINE', state: 'PRACTICE' },
   { name: 'Unity', role: 'ENGINE', state: 'PRACTICE' },
   { name: 'Seedance', role: 'AIGC', state: 'PRACTICE' },
-  { name: 'Viggle', role: 'AIGC', state: 'PRACTICE' },
-  { name: 'NanoBanana', role: 'AIGC', state: 'PRACTICE' },
-  { name: 'ComfyUI', role: 'AIGC', state: 'LEARNING' },
-  { name: 'Midjourney', role: 'AIGC', state: 'LEARNING' },
 ]
 
 /** PLAYER DATA 档案面板：字段标签与值均双语 → 显示值（中文模式全中文，英文模式全英文） */
