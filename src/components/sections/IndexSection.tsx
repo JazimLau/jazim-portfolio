@@ -51,7 +51,7 @@ const MODULE_EXTRA: Record<string, { code: string; label: [string, string]; item
       label: ['访问指引', 'Guide'],
       items: [
         ['查看精选项目', 'View featured'],
-        ['浏览履历和能力', 'Timeline & skills'],
+        ['浏览履历与项目', 'Timeline & projects'],
         ['建立联系', 'Get in touch'],
       ],
     },

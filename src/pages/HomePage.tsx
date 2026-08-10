@@ -8,14 +8,13 @@ import { Hero } from '../components/sections/Hero'
 import { IndexSection } from '../components/sections/IndexSection'
 import { Profile } from '../components/sections/Profile'
 import { Timeline } from '../components/sections/Timeline'
-import { Skills } from '../components/sections/Skills'
 import { Projects } from '../components/sections/Projects'
 import { Contact } from '../components/sections/Contact'
 
 /**
  * 首页：单页滚动结构，七个区块顺序排列。
  * 跨区块的状态在这里提升：
- *  - projectFilter：Skills 与 Index(ARCHIVE) 都能改，Projects 消费
+ *  - projectFilter：Index(ARCHIVE) 能改，Projects 消费
  *  - heroReplay：Contact 的 BACK TO TOP 触发 Hero 标题重播
  */
 export function HomePage() {
@@ -61,12 +60,6 @@ export function HomePage() {
     scrollToId(target)
   }
 
-  /** Skills 联动筛选并滚动到作品库 */
-  const handleFilterProjects = (next: ProjectFilterId) => {
-    setFilter(next)
-    scrollToId('projects')
-  }
-
   return (
     <>
       {!ready && <Opening onComplete={() => setReady(true)} />}
@@ -76,7 +69,6 @@ export function HomePage() {
         <IndexSection onNavigate={handleNavigate} />
         <Profile />
         <Timeline />
-        <Skills onFilterProjects={handleFilterProjects} />
         <Projects filter={filter} onFilterChange={setFilter} />
         <Contact onReturnHome={() => setHeroReplay((n) => n + 1)} />
       </main>

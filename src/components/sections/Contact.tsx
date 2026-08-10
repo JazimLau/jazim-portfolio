@@ -194,7 +194,7 @@ export function Contact({ onReturnHome }: ContactProps) {
       <div className={`${styles.content} shell`}>
         <div className={styles.top}>
           <div className={styles.left}>
-            <span className={styles.kicker}>07 / END OF TRANSMISSION</span>
+            <span className={styles.kicker}>06 / END OF TRANSMISSION</span>
 
             <div className={styles.titleWrap}>
               <h2 className={styles.title}>

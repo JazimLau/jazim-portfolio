@@ -19,41 +19,6 @@ interface HeroProps {
   replayKey?: number
 }
 
-/** 监视器与标题之间的轻量系统信息：当前专注 / 正在精进 / 当前状态 */
-const SYSTEM_MODULES: {
-  code: string
-  label: [string, string]
-  items: [string, string][]
-}[] = [
-  {
-    code: 'FOCUS',
-    label: ['当前专注', 'Current Focus'],
-    items: [
-      ['游戏UI动效', 'Game UI motion'],
-      ['端外产品动态设计', 'Off-client product motion'],
-      ['视频视觉表达', 'Video storytelling'],
-    ],
-  },
-  {
-    code: 'LEVELING',
-    label: ['正在精进', 'Leveling Up'],
-    items: [
-      ['UE5 动效实现', 'UE5 motion'],
-      ['Unity UI 动效', 'Unity UI motion'],
-      ['AIGC 动效工作流', 'AIGC workflow'],
-    ],
-  },
-  {
-    code: 'STATUS',
-    label: ['当前状态', 'Current Status'],
-    items: [
-      ['雷火动效实习', 'Leihuo motion intern'],
-      ['设计学硕士在读', 'MA Design student'],
-      ['开放交流与岗位沟通', 'Open to chat & roles'],
-    ],
-  },
-]
-
 /* ══════════════ 监视器实时时钟（独立小组件） ══════════════
    每秒只重渲染自己显示的两个文本节点，不再带动整个 Hero（左侧标题/系统卡/CTA…）
    一起重渲染，避免每秒一次的大范围 React render。 */
@@ -444,28 +409,6 @@ export function Hero({ play, replayKey = 0 }: HeroProps) {
                 <li key={d}>{d}</li>
               ))}
             </ul>
-
-            {/* 轻量系统信息：当前专注 / 正在精进 / 当前状态 —— 填充标题与监视器之间的留白 */}
-            <div className={styles.systemInfo}>
-              {SYSTEM_MODULES.map((mod) => (
-                <div key={mod.code} className={styles.sysCard}>
-                  <span className={styles.sysHead}>
-                    <span className={styles.sysCode}>{mod.code}</span>
-                    <span className={styles.sysLight} aria-hidden="true" />
-                    <span className={styles.sysLabel}>
-                      {t(mod.label[0], mod.label[1])}
-                    </span>
-                  </span>
-                  <ul className={styles.sysList}>
-                    {mod.items.map(([cn, en]) => (
-                      <li key={cn}>
-                        {t(cn, en)}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
 
             <div className={styles.ctaRow}>
               <MagneticButton

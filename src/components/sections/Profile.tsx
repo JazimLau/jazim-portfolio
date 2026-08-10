@@ -1,24 +1,11 @@
 import { useRef } from 'react'
-import {
-  Box,
-  Boxes,
-  Download,
-  Figma,
-  Film,
-  Gamepad2,
-  Image as ImageIcon,
-  Sparkles,
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { Download } from 'lucide-react'
 import {
   abilityBlocks,
   classInfo,
-  education,
   playerData,
   profile,
   profileIntro,
-  researchTags,
-  tools,
 } from '../../data/profile'
 import { gsap } from '../../lib/gsap'
 import { useGsapContext } from '../../hooks/useGsapContext'
@@ -32,32 +19,11 @@ import { PixelSceneBackground } from '../ui/PixelSceneBackground'
 import { SystemDivider } from '../ui/SystemDivider'
 import styles from './Profile.module.css'
 
-const TOOL_ICONS: Record<string, LucideIcon> = {
-  'After Effects': Film,
-  Photoshop: ImageIcon,
-  Figma: Figma,
-  Blender: Box,
-  'Unreal Engine 5': Gamepad2,
-  Unity: Boxes,
-  Noiz: Sparkles,
-}
-
-/**
- * 工具状态中文映射。data-state 仍保留英文值（用于 CSS 状态配色），
- * 仅展示文案中文化：熟练 / 使用中 / 实践中 / 学习中。
- */
-const TOOL_STATE_CN: Record<string, string> = {
-  PROFICIENT: '熟练',
-  WORKING: '使用中',
-  PRACTICE: '实践中',
-  LEARNING: '学习中',
-}
-
 /**
  * Profile —— 角色档案。
  * 上半：左侧正文 / 职业状态 / 能力标签分组，右侧 PLAYER DATA 档案面板。
  * 中部：5 张能力档案卡（两列不对称，MOTION DESIGN 更宽）。
- * 下半：TOOLSET（状态 PROFICIENT/WORKING/PRACTICE/LEARNING）+ DOWNLOAD CV。
+ * 下半：DOWNLOAD CV。
  */
 export function Profile() {
   const rootRef = useRef<HTMLElement>(null)
@@ -147,15 +113,6 @@ export function Profile() {
           )
       })
 
-      /* 工具：依次进入（提速约 25%） */
-      gsap.from(`.${styles.tool}`, {
-        yPercent: 60,
-        opacity: 0,
-        duration: 0.45,
-        ease: EASE.element,
-        stagger: 0.05,
-        scrollTrigger: { trigger: `.${styles.toolsRow}`, start: TRIGGER.start, once: true },
-      })
     },
     [reduced],
     rootRef
@@ -225,7 +182,7 @@ export function Profile() {
 
               <div className={styles.panelHead}>
                 <span className={styles.panelHeadTitle}>PLAYER DATA</span>
-                <span className={styles.panelHeadSeq}>FILE 03/07</span>
+                <span className={styles.panelHeadSeq}>FILE 03/06</span>
               </div>
 
               <dl className={styles.playerList}>
@@ -268,67 +225,8 @@ export function Profile() {
           ))}
         </div>
 
-        {/* ══════════ 下半：EDUCATION + TOOLSET + CV ══════════ */}
+        {/* ══════════ 下半：CV ══════════ */}
         <div className={styles.lower}>
-          {/* 教育背景：硕士 / 本科两段紧凑卡（完整课程与论文由简历承担） */}
-          <div className={styles.eduBlock}>
-            <span className={styles.blockLabel}>
-              EDUCATION / {t('教育背景', 'Education')}
-            </span>
-            <div className={styles.eduGrid}>
-              {education.map((e) => (
-                <article key={e.school.en} className={styles.eduCard}>
-                  <span className={styles.eduHead}>
-                    <b>{t(e.degree.cn, e.degree.en)}</b>
-                    <span className={styles.eduPeriod}>{e.period}</span>
-                  </span>
-                  <span className={styles.eduSchool}>{t(e.school.cn, e.school.en)}</span>
-                  <span className={styles.eduMajor}>{t(e.major.cn, e.major.en)}</span>
-                  <span className={styles.eduMeta}>
-                    <span>GPA {e.gpa}</span>
-                    <i aria-hidden="true" />
-                    <span>{e.top}</span>
-                  </span>
-                  {e.research && (
-                    <span className={styles.eduResearch}>
-                      {t('研究方向', 'RESEARCH')}：{t(e.research.cn, e.research.en)}
-                    </span>
-                  )}
-                </article>
-              ))}
-            </div>
-            <div className={styles.eduTags}>
-              {researchTags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.toolsBlock}>
-            <span className={styles.blockLabel}>
-              TOOLSET / {t('工具链', 'Toolchain')}
-            </span>
-            <ul className={styles.toolsRow}>
-              {tools.map((tool) => {
-                const Icon = TOOL_ICONS[tool.name] ?? Sparkles
-                return (
-                  <li key={tool.name} className={styles.tool}>
-                    <span className={styles.toolIcon}>
-                      <Icon size={16} strokeWidth={1.7} />
-                    </span>
-                    <span className={styles.toolText}>
-                      <span className={styles.toolName}>{tool.name}</span>
-                      <span className={styles.toolRole}>{tool.role}</span>
-                    </span>
-                    <span className={styles.toolState} data-state={tool.state}>
-                      {t(TOOL_STATE_CN[tool.state] ?? tool.state, tool.state)}
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-
           <MagneticButton
             variant="primary"
             size="lg"

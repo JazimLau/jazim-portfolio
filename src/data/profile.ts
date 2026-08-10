@@ -246,39 +246,6 @@ export const playerData: { code: string; label: LT; value: LT }[] = [
   },
 ]
 
-/** 教育背景（最新版简历口径）：硕士 / 本科两段，紧凑展示 */
-export const education: {
-  degree: LT
-  school: LT
-  major: LT
-  period: string
-  gpa: string
-  top: string
-  /** 研究方向（仅硕士段填写） */
-  research?: LT
-}[] = [
-  {
-    degree: lt('硕士', 'MASTER'),
-    school: lt('澳门城市大学', 'City University of Macau'),
-    major: lt('设计学硕士', 'MA Design'),
-    period: '2025.08 — 2027.08',
-    gpa: '3.88',
-    top: 'TOP 5%',
-    research: lt('AIGC 生成式模型', 'AIGC generative models'),
-  },
-  {
-    degree: lt('本科', 'BACHELOR'),
-    school: lt('广州理工学院', 'Guangzhou Institute of Technology'),
-    major: lt('数字媒体艺术', 'Digital Media Art'),
-    period: '2023.09 — 2025.06',
-    gpa: '3.78',
-    top: 'TOP 5%',
-  },
-]
-
-/** 研究方向小标签（紧凑展示，完整论文与课程由简历承担） */
-export const researchTags: string[] = ['AIGC', 'GAME VIDEO', 'GENERATIVE MEDIA']
-
 /** 把手机号做成掩码：+86 138 0000 0000 → +86 138 **** **** */
 export function maskPhone(phone: string): string {
   const parts = phone.trim().split(/\s+/)

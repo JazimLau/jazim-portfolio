@@ -1,7 +1,6 @@
 import { lt } from './i18n'
 import type { IndexNode, IndexStat, NavItem } from './types'
 import { timeline } from './timeline'
-import { skillSystems } from './skills'
 import { projects } from './projects'
 import { profile, maskPhone, maskWechat } from './profile'
 
@@ -9,11 +8,10 @@ import { profile, maskPhone, maskWechat } from './profile'
    而不是写死数字 —— 履历 / 能力 / 项目库的条目数会变，这样永远对得上。 */
 const missionCount = timeline.filter((e) => e.kind === 'MISSION').length
 const trainingCount = timeline.filter((e) => e.kind === 'TRAINING').length
-const skillNodeCount = skillSystems.reduce((sum, s) => sum + s.nodes.length, 0)
 const featuredCount = projects.filter((p) => p.featured).length
 const caseCount = projects.reduce((sum, p) => sum + (p.cases?.length ?? 0), 0)
 
-/** 顶部导航：7 项。导航文字双语 —— CN 下显示中文（附英文小字副标），EN 下保持英文系统语言 */
+/** 顶部导航：6 项。导航文字双语 —— CN 下显示中文（附英文小字副标），EN 下保持英文系统语言 */
 export const navItems: NavItem[] = [
   { id: 'home', index: '01', label: lt('主页', 'HOME'), target: 'home' },
   { id: 'index', index: '02', label: lt('索引', 'INDEX'), target: 'index' },
@@ -24,9 +22,8 @@ export const navItems: NavItem[] = [
     label: lt('角色经历', 'TIMELINE'),
     target: 'timeline',
   },
-  { id: 'skills', index: '05', label: lt('技能', 'SKILLS'), target: 'skills' },
-  { id: 'projects', index: '06', label: lt('项目', 'PROJECTS'), target: 'projects' },
-  { id: 'contact', index: '07', label: lt('联系我', 'CONTACT'), target: 'contact' },
+  { id: 'projects', index: '05', label: lt('项目', 'PROJECTS'), target: 'projects' },
+  { id: 'contact', index: '06', label: lt('联系我', 'CONTACT'), target: 'contact' },
 ]
 
 /**
@@ -78,23 +75,8 @@ export const indexNodes: IndexNode[] = [
     ],
   },
   {
-    id: 'node-skills',
-    index: '04',
-    label: lt('技能', 'SKILLS'),
-    target: 'skills',
-    iconKey: 'skills',
-    brief: lt(
-      '能力矩阵。六个系统，可反向筛选项目数据库。',
-      'Ability matrix. Six systems, filterable against the project database.'
-    ),
-    preview: [
-      lt(`${skillSystems.length} 大能力系统`, `${skillSystems.length} ability systems`),
-      lt(`${skillNodeCount}+ 项能力节点`, `${skillNodeCount}+ skill nodes`),
-    ],
-  },
-  {
     id: 'node-projects',
-    index: '05',
+    index: '04',
     label: lt('项目', 'PROJECTS'),
     target: 'projects',
     iconKey: 'projects',
@@ -109,7 +91,7 @@ export const indexNodes: IndexNode[] = [
   },
   {
     id: 'node-contact',
-    index: '06',
+    index: '05',
     label: lt('联系我', 'CONTACT'),
     target: 'contact',
     iconKey: 'contact',

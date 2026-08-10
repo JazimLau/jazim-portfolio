@@ -426,7 +426,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
 
       <div className={`shell ${styles.shell}`}>
         <SectionHeader
-          index="06"
+          index="05"
           code="SELECTED MISSIONS"
           titleEn="PROJECTS"
           titleZh={t('精选项目', 'Selected projects')}

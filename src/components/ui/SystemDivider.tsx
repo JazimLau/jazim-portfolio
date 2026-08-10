@@ -29,7 +29,7 @@ const CONFIG: Record<DividerVariant, DividerConfig> = {
     code: 'SYS-02',
     upper: [
       ['索引系统在线', 'INDEX ONLINE'],
-      ['06 个模块', '06 MODULES'],
+      ['05 个模块', '05 MODULES'],
       ['数据已载入', 'DATA LOADED'],
     ],
     lower: [
@@ -43,10 +43,10 @@ const CONFIG: Record<DividerVariant, DividerConfig> = {
     upper: [
       ['档案系统在线', 'PROFILE ONLINE'],
       ['角色资料已载入', 'DATA LOADED'],
-      ['工具链已连接', 'TOOLS LINKED'],
+      ['能力档案已载入', 'ABILITIES LOADED'],
     ],
     lower: [
-      ['继续查看能力模块', 'View ability modules'],
+      ['继续查看履历记录', 'View timeline'],
       ['档案扫描系统', 'FILE SCAN'],
       ['向下浏览', 'SCROLL'],
     ],
@@ -78,7 +78,7 @@ const CONFIG: Record<DividerVariant, DividerConfig> = {
     ],
   },
   projects: {
-    code: 'SYS-06',
+    code: 'SYS-05',
     upper: [
       ['项目数据库在线', 'DB ONLINE'],
       ['当前项目已载入', 'PROJECT LOADED'],
@@ -91,7 +91,7 @@ const CONFIG: Record<DividerVariant, DividerConfig> = {
     ],
   },
   contact: {
-    code: 'SYS-07',
+    code: 'SYS-06',
     upper: [
       ['通讯系统在线', 'COMM ONLINE'],
       ['联系通道可用', 'CHANNELS OPEN'],
