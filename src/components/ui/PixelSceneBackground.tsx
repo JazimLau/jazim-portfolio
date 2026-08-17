@@ -119,8 +119,9 @@ const SCENES: Record<SceneVariant, SceneConfig> = {
       { x: 6, y: 6, w: 12, h: 88, c: 'rgba(14,22,18,0.45)', delay: 0 },
       { x: 70, y: 30, w: 30, h: 40, c: 'rgba(16,22,28,0.4)', delay: 1 },
     ],
+    /* MISSION 水印移到右上角，避免与左上角 TIMELINE 主标题重叠 */
     glyphs: [
-      { x: 2, y: 2, text: 'MISSION', size: 90, c: 'rgba(255,255,255,0.05)' },
+      { x: 76, y: 3, text: 'MISSION', size: 92, c: 'rgba(255,255,255,0.05)' },
     ],
     tracks: [
       { x: 10, y: 10, w: 2, h: 86 },
