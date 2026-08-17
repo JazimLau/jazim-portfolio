@@ -33,7 +33,8 @@ interface Burst {
 }
 
 const COLORS = ['lime', 'purple', 'orange', 'blue'] as const
-const SIZES = [6, 8, 10, 12]
+/* 边长稍放大 + 命中区（::after inset -6px）叠加后约 20–26px，更易点中 */
+const SIZES = [8, 10, 12, 14]
 /** 场内粒子数量（保持稳定） */
 const TARGET = 8
 /** 粒子之间的最小间距（px），避免过密 */
@@ -60,9 +61,9 @@ function makeParticle(list: Particle[], w: number, h: number): Particle {
       id: ++uid,
       x: rand(base.size, w - base.size),
       y: rand(base.size, h - base.size),
-      /* 全区域随机漂浮：速度大小随机、方向随机 */
-      vx: rand(-28, 28),
-      vy: rand(-24, 24),
+      /* 全区域随机漂浮：速度大小随机、方向随机（速度略放缓，便于点中） */
+      vx: rand(-22, 22),
+      vy: rand(-18, 18),
     }
     if (list.every((o) => Math.hypot(o.x - cand.x, o.y - cand.y) >= MIN_DIST)) {
       return cand
@@ -73,8 +74,8 @@ function makeParticle(list: Particle[], w: number, h: number): Particle {
     id: ++uid,
     x: rand(base.size, w - base.size),
     y: rand(base.size, h - base.size),
-    vx: rand(-28, 28),
-    vy: rand(-24, 24),
+    vx: rand(-22, 22),
+    vy: rand(-18, 18),
   }
 }
 
@@ -258,7 +259,9 @@ export function PixelPurge() {
               '--pd': `${(p.phase / 2).toFixed(2)}s`,
             } as CSSProperties
           }
-          onClick={() => purge(p.id)}
+          /* 粒子持续漂浮：click 事件要求 pointerdown/up 落在同一元素，
+             粒子在按下到松开之间会移动导致 click 不触发 → 改用 pointerdown 即时消除 */
+          onPointerDown={() => purge(p.id)}
           aria-label="purge signal particle"
         />
       ))}
