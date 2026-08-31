@@ -1007,6 +1007,70 @@ export const projects: Project[] = [
             name: lt('雾海之下首测官网动效', 'Fogsea First-test Site Motion'),
             videos: ['/assets/videos/rd/rd-official-demo.m3u8'],
           },
+          {
+            id: 'rd-l46-tujian',
+            name: lt('诡影藏锋图鉴页', 'Guiying Cangfeng Codex'),
+            description: lt(
+              '在研产品 PC 端图鉴页动效：图鉴条目入场、筛选与翻页反馈的动态表现。',
+              'Motion for an in-development title\'s PC codex page — codex entry reveals, filtering and page-turn feedback.'
+            ),
+            meta: lt('PC 端官网', 'PC official site'),
+            date: lt('2026', '2026'),
+            role: lt('页面动效 / 图鉴反馈', 'Page motion / Codex feedback'),
+            tags: ['WEB MOTION', 'UI MOTION', 'PC'],
+            videos: ['/assets/videos/rd/rd-l46-tujian.m3u8'],
+          },
+        ],
+        gallery: [],
+      },
+      {
+        id: 'overwatch',
+        name: lt('守望先锋', 'Overwatch'),
+        meta: lt('官网 / 活动页', 'Official site / Campaign'),
+        description: lt(
+          '《守望先锋》节日活动与排位赛节点的端外页面动态设计：签到弹窗、通用弹窗与英雄试炼页反馈，以及排位赛禁用流程的 UI 动效表现。',
+          'Off-client motion for Overwatch events and ranked-season nodes — sign-in popups, shared popups and hero-trial feedback, plus UI motion for the ranked ban flow.'
+        ),
+        tags: ['WEB MOTION', 'UI MOTION', 'FEEDBACK'],
+        date: lt('2026', '2026'),
+        role: lt('UI 动效 / 弹窗反馈 / 页面动效', 'UI motion / Popup feedback / Page motion'),
+        projectType: lt('官网 / H5 / 活动页', 'Official site / H5 / Campaign'),
+        responsibility: [lt('UI 动效', 'UI motion'), lt('弹窗反馈', 'Popup feedback'), lt('页面动效', 'Page motion')],
+        mainType: lt('UI / 弹窗', 'UI / POPUP'),
+        works: [
+          {
+            id: 'overwatch-summer-carnival',
+            name: lt('夏日狂欢活动', 'Summer Carnival'),
+            description: lt(
+              '参与《守望先锋》夏日狂欢活动页面动效：主页七日签到弹窗、通用弹窗效果与英雄试炼页新兵打卡等模块的 UI 动效与反馈表现。',
+              'Motion for the Overwatch Summer Carnival pages — 7-day sign-in popup, shared popup effects and hero-trial newbie check-in UI feedback.'
+            ),
+            meta: lt('PC / 移动端 H5', 'PC / Mobile H5'),
+            date: lt('2026', '2026'),
+            role: lt('UI 动效 / 弹窗反馈 / 页面动效', 'UI motion / Popup feedback / Page motion'),
+            tags: ['H5', 'UI MOTION', 'FEEDBACK'],
+            videos: [
+              '/assets/videos/overwatch/overwatch-summer-7day.m3u8',
+              '/assets/videos/overwatch/overwatch-summer-popup.m3u8',
+              '/assets/videos/overwatch/overwatch-summer-newbie.m3u8',
+            ],
+          },
+          {
+            id: 'overwatch-ranked-s2',
+            name: lt('璀璨排位赛 S2', 'Ranked Season 2'),
+            description: lt(
+              '参与《守望先锋》璀璨排位赛 S2 的禁用流程动效：大厅禁用与队伍禁用节点的 UI 反馈表现。',
+              'Motion for the Overwatch Ranked Season 2 ban flow — lobby-ban and team-ban UI feedback.'
+            ),
+            meta: lt('PC / 移动端 H5', 'PC / Mobile H5'),
+            date: lt('2026', '2026'),
+            role: lt('UI 动效 / 禁用流程反馈', 'UI motion / Ban-flow feedback'),
+            tags: ['H5', 'UI MOTION', 'FEEDBACK'],
+            videos: [
+              '/assets/videos/overwatch/overwatch-ranked-lobby.m3u8',
+              '/assets/videos/overwatch/overwatch-ranked-team.m3u8',
+            ],
+          },
         ],
         gallery: [],
       },
@@ -2892,6 +2956,7 @@ export const projectSubFilters: Partial<Record<ProjectFilterId, ProjectSubFilter
     { id: 'hearthstone', label: lt('炉石传说', 'Hearthstone') },
     { id: 'rd', label: lt('在研项目', 'In-development') },
     { id: 'tianyu', label: lt('天谕', 'Revelation') },
+    { id: 'overwatch', label: lt('守望先锋', 'Overwatch') },
   ],
   'game-ui': [
     { id: 'all', label: lt('全部', 'All') },
