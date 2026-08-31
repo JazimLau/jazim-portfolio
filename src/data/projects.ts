@@ -795,6 +795,19 @@ export const projects: Project[] = [
               tools: ['After Effects', 'Photoshop', 'Figma'],
             },
           },
+          {
+            id: 'wow-anniv-landing',
+            name: lt('周年庆landing页更新', 'Anniversary Landing Update'),
+            description: lt(
+              '参与《魔兽世界》周年庆 Landing 页的阶段性更新：围绕主视觉 KV 与页面内容完成动态调整与适配。',
+              'Iterative motion work on the World of Warcraft anniversary landing page — dynamic polish and adaptation around the key visual and page content.'
+            ),
+            meta: lt('PC / 移动端网页', 'PC / Mobile web'),
+            date: lt('2026.08', '2026.08'),
+            role: lt('KV 动效 / 页面适配', 'KV motion / Page adaptation'),
+            tags: ['ANNIVERSARY', 'KV MOTION', 'WEB'],
+            videos: ['/assets/videos/wow/wow-anniv-landing.m3u8'],
+          },
         ],
         gallery: [],
       },
@@ -1072,6 +1085,26 @@ export const projects: Project[] = [
             ],
           },
         ],
+        gallery: [],
+      },
+      {
+        id: 'wuxianda',
+        name: lt('无限大', 'Infinite Frontier'),
+        meta: lt('保密项目', 'Confidential'),
+        description: lt(
+          '保密项目！',
+          'CONFIDENTIAL PROJECT!'
+        ),
+        tags: ['NDA', 'CONFIDENTIAL'],
+        date: lt('2026', '2026'),
+        role: lt('保密项目', 'Confidential'),
+        projectType: lt('保密项目', 'Confidential'),
+        responsibility: [lt('保密项目', 'Confidential')],
+        mainType: lt('保密', 'CONFIDENTIAL'),
+        deliveryStatus: lt('保密项目', 'CONFIDENTIAL'),
+        launchStatus: lt('保密项目', 'CONFIDENTIAL'),
+        /* 无任何作品，只展示保密提示 */
+        works: [],
         gallery: [],
       },
     ],
@@ -2957,6 +2990,7 @@ export const projectSubFilters: Partial<Record<ProjectFilterId, ProjectSubFilter
     { id: 'rd', label: lt('在研项目', 'In-development') },
     { id: 'tianyu', label: lt('天谕', 'Revelation') },
     { id: 'overwatch', label: lt('守望先锋', 'Overwatch') },
+    { id: 'wuxianda', label: lt('无限大', 'Infinite Frontier') },
   ],
   'game-ui': [
     { id: 'all', label: lt('全部', 'All') },
