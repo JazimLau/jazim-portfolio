@@ -89,8 +89,10 @@ export function caseCoverPath(p: Project, c: ProjectCase): string {
   return `/images/cases/${p.slug}/${c.id}/cover.jpg`
 }
 
-/** 一个案例下的作品数：优先活动项目（works）数量，其次视频数，最少为 1 */
+/** 一个案例下的作品数：显式 caseCount 优先（保密产品可指定内部案例数），
+    其次活动项目（works）数量，再其次视频数，最少为 1 */
 export function caseCount(c: ProjectCase): number {
+  if (c.caseCount !== undefined) return c.caseCount
   if (c.works && c.works.length > 0) return c.works.length
   const n = c.videos?.length ?? (c.video ? 1 : 0)
   return n > 0 ? n : 1
@@ -1103,7 +1105,8 @@ export const projects: Project[] = [
         mainType: lt('保密', 'CONFIDENTIAL'),
         deliveryStatus: lt('保密项目', 'CONFIDENTIAL'),
         launchStatus: lt('保密项目', 'CONFIDENTIAL'),
-        /* 无任何作品，只展示保密提示 */
+        /* 内部案例数 3（保密不公开作品），无任何作品展示，只显示保密提示 */
+        caseCount: 3,
         works: [],
         gallery: [],
       },

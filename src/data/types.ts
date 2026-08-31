@@ -67,6 +67,8 @@ export interface ProjectCase {
   works?: CaseWork[]
   /** 案例独立详情（可选）：存在时子项目详情页展示 01—07 完整章节，不再复用父级项目介绍 */
   detail?: CaseDetail
+  /** 案例数（可选）：覆盖动态计算的项目案例数（如保密产品实际有 N 个内部案例但不公开作品） */
+  caseCount?: number
   /** 卡面「类型」（双语，可选）：存在时子案例卡不再复用父级 category */
   projectType?: LT
   /** 卡面「职责」（双语，可选）：存在时子案例卡不再复用父级 role */
