@@ -235,6 +235,46 @@ export function VideoPreview({
   modeRef.current = mode
   /* 全屏状态：跟随浏览器 fullscreenchange 同步（ESC 退出也由该事件驱动） */
   const [isFullscreen, setIsFullscreen] = useState(false)
+  /* 镜像 ref：供 fullscreenchange 回调读取上一帧全屏状态，避免闭包过期 */
+  const isFullscreenRef = useRef(false)
+  /* 退出全屏时间戳：退出瞬间浏览器可能把一次 click 派发到布局恢复后
+     同一屏幕坐标下的页面元素（Navbar 导航等），若不在 400ms 保护窗内吞掉，
+     会误触发返回首页 / 章节跳转。 */
+  const fsExitAtRef = useRef(0)
+
+  /* 全屏状态跟随：点按钮进入 / 点按钮或按 ESC 退出（ESC 为浏览器原生行为） */
+  useEffect(() => {
+    const onFsChange = () => {
+      const fs = document.fullscreenElement === wrapRef.current
+      /* 由全屏 → 非全屏：记录退出时刻，用于吞掉穿透 click */
+      if (!fs && isFullscreenRef.current) fsExitAtRef.current = performance.now()
+      isFullscreenRef.current = fs
+      setIsFullscreen(fs)
+    }
+    document.addEventListener('fullscreenchange', onFsChange)
+    return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
+
+  /* 退出全屏后的短暂窗口内，吞掉落在播放器 wrap 之外的 click：
+     真实浏览器中退出全屏是异步布局切换，mousedown 落在全屏 hud（屏幕顶部，
+     与 Navbar 同坐标区），mouseup/click 可能被派发到恢复后的页面导航元素，
+     导致「退出全屏却闪回首页」。捕获阶段拦截并阻止其到达页面导航 handler。 */
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      /* 仅左键 + 退出全屏后 600ms 内生效；未退出过全屏（时间戳为 0）时永不拦截 */
+      if (e.button !== 0) return
+      if (fsExitAtRef.current === 0) return
+      if (performance.now() - fsExitAtRef.current > 600) return
+      const t = e.target as Node | null
+      const wrap = wrapRef.current
+      if (wrap && t && !wrap.contains(t)) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
+    }
+    document.addEventListener('click', onDocClick, true)
+    return () => document.removeEventListener('click', onDocClick, true)
+  }, [])
 
   /* ---------- 控制栏显隐（首次 3 秒展示，之后按交互淡出） ----------
      startedRef：视频是否已真正开始播放（onPlaying）。
@@ -334,13 +374,6 @@ export function VideoPreview({
     v.volume = effVolume
     v.muted = muted
   }, [effVolume, muted, inView, videoFailed])
-
-  /* 全屏状态跟随：点按钮进入 / 点按钮或按 ESC 退出（ESC 为浏览器原生行为） */
-  useEffect(() => {
-    const onFsChange = () => setIsFullscreen(document.fullscreenElement === wrapRef.current)
-    document.addEventListener('fullscreenchange', onFsChange)
-    return () => document.removeEventListener('fullscreenchange', onFsChange)
-  }, [])
 
   /* 自动播放模式：进入 auto（如卡片从不活动变为活动）时拉起播放。
      元素已存在时 autoPlay 属性不生效，必须显式 play()。

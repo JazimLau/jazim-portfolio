@@ -189,9 +189,12 @@ export function CaseViewerPage() {
   const prevNav = navIndex > 0 ? navList[navIndex - 1] : undefined
   const nextNav = navIndex >= 0 && navIndex < totalNav - 1 ? navList[navIndex + 1] : undefined
 
-  /* 键盘：← → 在同级案例间切换（输入框聚焦时不触发） */
+  /* 键盘：← → 在同级案例间切换（输入框聚焦时不触发）。
+     浏览器全屏（视频全屏播放）期间不响应方向键，避免全屏中按键
+     误切走当前案例/闪退到其它页面。 */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (document.fullscreenElement) return
       const el = e.target as HTMLElement | null
       if (
         el &&
