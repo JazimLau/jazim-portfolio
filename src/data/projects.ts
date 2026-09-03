@@ -2991,9 +2991,9 @@ export const projectSubFilters: Partial<Record<ProjectFilterId, ProjectSubFilter
     { id: 'nsh', label: lt('逆水寒', 'Justice Online') },
     { id: 'qingnv', label: lt('倩女幽魂', 'Qingnv') },
     { id: 'hearthstone', label: lt('炉石传说', 'Hearthstone') },
-    { id: 'rd', label: lt('在研项目', 'In-development') },
     { id: 'tianyu', label: lt('天谕', 'Revelation') },
     { id: 'overwatch', label: lt('守望先锋', 'Overwatch') },
+    { id: 'rd', label: lt('在研项目', 'In-development') },
     { id: 'wuxianda', label: lt('无限大', 'Infinite Frontier') },
   ],
   'game-ui': [

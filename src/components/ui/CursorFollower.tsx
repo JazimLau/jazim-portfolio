@@ -33,29 +33,47 @@ export function CursorFollower() {
   const [state, setState] = useState<CursorState>('default')
   const [label, setLabel] = useState('')
   const [visible, setVisible] = useState(false)
+  /* 是否处于浏览器全屏（视频 requestFullscreen 等）：全屏时自定义光标不可达，
+     必须禁用自定义光标、恢复系统指针，否则全屏内完全看不到光标 */
+  const [inFullscreen, setInFullscreen] = useState(false)
 
   const reduced = useReducedMotion()
   const isTouch = useIsTouch()
   const isCompact = useIsCompact()
   /* 触摸 / 窄屏完全关闭；reduced-motion 保留（仅瞬时切换） */
   const enabled = !isTouch && !isCompact
+  /* 全屏时同样禁用：全屏元素外的 reticle 不可见，系统指针恢复可见 */
+  const active = enabled && !inFullscreen
 
   const stateRef = useRef(state)
   stateRef.current = state
 
+  /* 全屏状态跟随：进入 / 退出（含 Esc）都由此驱动。
+     退出全屏时先强制显示 reticle（自定义光标 DOM 在全屏期间已卸载），
+     再恢复 data-custom-cursor，避免退出后指针消失空窗。 */
+  useEffect(() => {
+    const onFsChange = () => {
+      const fs = !!document.fullscreenElement
+      if (!fs) setVisible(true)
+      setInFullscreen(fs)
+    }
+    document.addEventListener('fullscreenchange', onFsChange)
+    return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
+
   /* 启用/停用时同步 body 标记，驱动全局 cursor 显隐 */
   useEffect(() => {
-    document.body.dataset.customCursor = enabled ? 'on' : 'off'
-    if (!enabled) document.body.dataset.cursorText = 'off'
+    document.body.dataset.customCursor = active ? 'on' : 'off'
+    if (!active) document.body.dataset.cursorText = 'off'
     return () => {
       document.body.dataset.customCursor = 'off'
       document.body.dataset.cursorText = 'off'
     }
-  }, [enabled])
+  }, [active])
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root || !enabled) return
+    if (!root || !active) return
 
     /* 极轻微 delayed follow；reduced-motion 下瞬时跟随 */
     const dur = reduced ? 0 : 0.1
@@ -211,9 +229,9 @@ export function CursorFollower() {
       if (rightTimer) clearTimeout(rightTimer)
       if (dblTimer) clearTimeout(dblTimer)
     }
-  }, [enabled, reduced, visible])
+  }, [active, reduced, visible])
 
-  if (!enabled) return null
+  if (!active) return null
 
   const showLabel =
     state === 'select' || state === 'open' || state === 'video' || state === 'disabled' || state === 'label'
