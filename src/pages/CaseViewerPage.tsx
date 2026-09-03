@@ -179,11 +179,13 @@ export function CaseViewerPage() {
     rootRef
   )
 
-  /* 同级案例导航：当前产品有多个作品时，在其内部按作品切换（不改 URL，仅切 workIdx）；
-     否则在父模块的「同级案例」间切换（改 URL）。顺序跟随二级筛选。
+  /* 同级案例导航：只要当前产品有作品（1 个或多个），一律在「当前产品内部的作品」间
+     切换（不改 URL，仅切 workIdx）——与预览视频上的项目切换保持一致，绝不跳到
+     rail 顺序中的其它产品。仅当产品完全没有作品（如保密/占位案例）时，
+     才退回到父模块的「同级案例」顺序导航（改 URL）。顺序跟随二级筛选。
      第一个「上一个」与最后一个「下一个」禁用，不做无限循环。 */
-  const navList = works.length > 1 ? works : orderedCases
-  const navIsWork = works.length > 1
+  const navList = works.length > 0 ? works : orderedCases
+  const navIsWork = works.length > 0
   const navIndex = navIsWork ? workIdx : caseIndex
   const totalNav = navList.length
   const prevNav = navIndex > 0 ? navList[navIndex - 1] : undefined
@@ -770,7 +772,7 @@ export function CaseViewerPage() {
       </div>
 
       {/* ══════════════ PREV / NEXT CASE（同级切换，首尾禁用不循环） ══════════════ */}
-      {totalNav > 1 && (prevNav || nextNav) && (
+      {(navIsWork ? totalNav > 0 : totalNav > 1 && (prevNav || nextNav)) && (
         <section className={styles.nextNav}>
           <div className="shell">
             <div className={styles.nextGrid}>
