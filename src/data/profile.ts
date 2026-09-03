@@ -3,16 +3,15 @@ import type { LT } from './i18n'
 import type { AbilityBlock } from './types'
 
 /**
- * 私密联系方式（邮箱 / 手机 / 微信）通过构建环境变量注入，源码只保留占位符：
+ * 联系方式（邮箱 / 手机 / 微信）：默认使用真实值，保证任何环境（含未注入构建）显示正确。
  *   VITE_CONTACT_EMAIL / VITE_CONTACT_PHONE / VITE_CONTACT_WECHAT
- * - 本地真实值放 .env.local 与 .env.github.local（均被 .gitignore 忽略，不入库）；
- * - GitHub Actions 从仓库 Secrets（CONTACT_EMAIL / CONTACT_PHONE / CONTACT_WECHAT）注入；
- * - 未注入时回落为占位，保证页面结构正常且不泄露真实信息。
+ * - 仍支持构建环境变量覆盖（.env*local 或平台 Secrets），未注入时回落为下方真实值；
+ * - 简历 PDF（public/assets/files/Jazim-Lau-CV.pdf）亦含相同信息，不构成额外泄露。
  */
 const CONTACT = {
-  email: import.meta.env.VITE_CONTACT_EMAIL || 'your-email@example.com',
-  phone: import.meta.env.VITE_CONTACT_PHONE || '+86 138 **** ****',
-  wechat: import.meta.env.VITE_CONTACT_WECHAT || 'AVAILABLE ON REQUEST',
+  email: import.meta.env.VITE_CONTACT_EMAIL || 'jazimlau@yeah.net',
+  phone: import.meta.env.VITE_CONTACT_PHONE || '+86 180 2451 6913',
+  wechat: import.meta.env.VITE_CONTACT_WECHAT || 'wxid_a8c05c196d3b22',
 }
 
 /** 个人基础信息。修改姓名、职位、文案、联系方式都在这里。 */
