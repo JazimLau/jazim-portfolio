@@ -1094,8 +1094,8 @@ export const projects: Project[] = [
         name: lt('无限大', 'Infinite Frontier'),
         meta: lt('保密项目', 'Confidential'),
         description: lt(
-          '保密项目！',
-          'CONFIDENTIAL PROJECT!'
+          '保密项目，暂无公开作品与视频。',
+          'Confidential project — no public works or videos yet.'
         ),
         tags: ['NDA', 'CONFIDENTIAL'],
         date: lt('2026', '2026'),
@@ -1105,7 +1105,8 @@ export const projects: Project[] = [
         mainType: lt('保密', 'CONFIDENTIAL'),
         deliveryStatus: lt('保密项目', 'CONFIDENTIAL'),
         launchStatus: lt('保密项目', 'CONFIDENTIAL'),
-        /* 内部案例数 3（保密不公开作品），无任何作品展示，只显示保密提示 */
+        /* 保密项目：无任何公开视频/图集，详情页只渲染保密占位，不显示媒体播放器 */
+        confidential: true,
         caseCount: 3,
         works: [],
         gallery: [],

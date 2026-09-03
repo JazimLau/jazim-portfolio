@@ -289,6 +289,10 @@ export function CaseViewerPage() {
      每个子项目拥有自己的 01—07 章节，不继承父级项目介绍；缺少 detail 时正文留空。 */
   const detail = (hasWorks && currentWork?.detail) || projectCase?.detail
 
+  /* 保密项目（如无限大）：无任何公开视频/图集，详情页媒体区只渲染保密占位，
+     不渲染 VideoPreview（避免 fallback 到父级项目视频）。 */
+  const isConfidential = !!projectCase?.confidential
+
   return (
     <main ref={rootRef} className={styles.root} style={{ ['--accent' as string]: project.accent }}>
       <div className={`grid-bg ${styles.grid}`} aria-hidden="true" />
@@ -492,7 +496,18 @@ export function CaseViewerPage() {
               )}
             </nav>
 
-            {hasWorks ? (
+            {isConfidential ? (
+              /* 保密项目：无任何公开媒体，只渲染保密占位，不显示媒体播放器 */
+              <div
+                className={styles.secretPanel}
+                role="img"
+                aria-label={t('保密项目', 'Confidential project')}
+              >
+                <span className={styles.secretTag}>{t('保密项目', 'CONFIDENTIAL')}</span>
+                <span className={styles.secretTitle}>{tx(projectCase.name)}</span>
+                <span className={styles.secretDesc}>{tx(heroDesc)}</span>
+              </div>
+            ) : hasWorks ? (
               <VideoPreview
                 key={projectCase.id}
                 videos={currentVideos}
