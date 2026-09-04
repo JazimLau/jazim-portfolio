@@ -179,10 +179,9 @@ export function CaseViewerPage() {
     rootRef
   )
 
-  /* 同级案例导航：只要当前产品有作品（1 个或多个），一律在「当前产品内部的作品」间
-     切换（不改 URL，仅切 workIdx）——与预览视频上的项目切换保持一致，绝不跳到
-     rail 顺序中的其它产品。仅当产品完全没有作品（如保密/占位案例）时，
-     才退回到父模块的「同级案例」顺序导航（改 URL）。顺序跟随二级筛选。
+  /* 顶部 / 预览区导航（案例导航 + workBar + 预览切换共用）：在有作品的产品内，
+     一律在「当前产品内部的作品」间切换（不改 URL，仅切 workIdx），与预览视频上的
+     项目切换一致；仅无任何作品的产品（如保密/占位案例）才回退到 rail 产品顺序。
      第一个「上一个」与最后一个「下一个」禁用，不做无限循环。 */
   const navList = works.length > 0 ? works : orderedCases
   const navIsWork = works.length > 0
@@ -191,7 +190,18 @@ export function CaseViewerPage() {
   const prevNav = navIndex > 0 ? navList[navIndex - 1] : undefined
   const nextNav = navIndex >= 0 && navIndex < totalNav - 1 ? navList[navIndex + 1] : undefined
 
-  /* 键盘：← → 在同级案例间切换（输入框聚焦时不触发）。
+  /* 底部 PREV / NEXT：产品级导航 —— 在 rail 顺序（orderedCases，即二级筛选的产品 /
+     模块 / 案例序列）的「相邻产品」之间切换（改 URL），用于浏览上一个 / 下一个产品；
+     与顶部 / 预览的产品内作品切换分工不同，二者不重复。
+     第一个产品无上一个、最后一个产品无下一个，均禁用不循环。 */
+  const totalCases = orderedCases.length
+  const prevCase = caseIndex > 0 ? orderedCases[caseIndex - 1] : undefined
+  const nextCase =
+    caseIndex >= 0 && caseIndex < totalCases - 1 ? orderedCases[caseIndex + 1] : undefined
+
+  /* 键盘：← → 在作品间 / 产品间切换（输入框聚焦时不触发）。
+     多作品产品按 ← → 在「当前产品内部的作品」间切换（与预览视频一致）；
+     单作品 / 无作品产品按 ← → 在 rail 顺序的「相邻产品」间切换（与底部一致）。
      浏览器全屏（视频全屏播放）期间不响应方向键，避免全屏中按键
      误切走当前案例/闪退到其它页面。 */
   useEffect(() => {
@@ -206,27 +216,31 @@ export function CaseViewerPage() {
           el.isContentEditable)
       )
         return
-      if (e.key === 'ArrowRight' && nextNav) {
-        e.preventDefault()
-        if (navIsWork) {
+      if (navIsWork && works.length > 1) {
+        /* 产品内有多个作品：← → 切作品 */
+        if (e.key === 'ArrowRight' && nextNav) {
+          e.preventDefault()
           selectWork(navIndex + 1)
           scrollToTop(true)
-        } else {
-          navigate(`/projects/${slug}/case/${nextNav.id}`, { replace: true })
-        }
-      } else if (e.key === 'ArrowLeft' && prevNav) {
-        e.preventDefault()
-        if (navIsWork) {
+        } else if (e.key === 'ArrowLeft' && prevNav) {
+          e.preventDefault()
           selectWork(navIndex - 1)
           scrollToTop(true)
-        } else {
-          navigate(`/projects/${slug}/case/${prevNav.id}`, { replace: true })
+        }
+      } else {
+        /* 单作品 / 无作品产品：← → 切相邻产品（rail 顺序） */
+        if (e.key === 'ArrowRight' && nextCase) {
+          e.preventDefault()
+          navigate(`/projects/${slug}/case/${nextCase.id}`, { replace: true })
+        } else if (e.key === 'ArrowLeft' && prevCase) {
+          e.preventDefault()
+          navigate(`/projects/${slug}/case/${prevCase.id}`, { replace: true })
         }
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [prevNav, nextNav, navIsWork, navIndex, selectWork, slug, navigate])
+  }, [prevNav, nextNav, navIsWork, navIndex, prevCase, nextCase, works.length, selectWork, slug, navigate])
 
   /* 返回：有应用内进入历史 → 回上一层（恢复原 filter / product / video / 滚动）；
      直接 URL 打开（React Router 初始 location.key 为 'default'，无应用内导航）
@@ -771,58 +785,42 @@ export function CaseViewerPage() {
         )}
       </div>
 
-      {/* ══════════════ PREV / NEXT CASE（同级切换，首尾禁用不循环） ══════════════ */}
-      {(navIsWork ? totalNav > 0 : totalNav > 1 && (prevNav || nextNav)) && (
+      {/* ══════════════ PREV / NEXT PRODUCT（产品级切换，首尾禁用不循环） ══════════════
+          底部按钮与顶部/预览不同：此处跳转到 rail 顺序中的相邻「产品」
+          （如 魔兽世界 → 永劫无间 → 逆水寒…），而非当前产品内部的项目。 */}
+      {totalCases > 1 && (prevCase || nextCase) && (
         <section className={styles.nextNav}>
           <div className="shell">
             <div className={styles.nextGrid}>
-              {prevNav ? (
-                navIsWork ? (
-                  <button
-                    type="button"
-                    className={`${styles.nextInner} ${styles.nextInnerPrev} ${styles.nextAction}`}
-                    onClick={() => {
-                      selectWork(navIndex - 1)
-                      scrollToTop(true)
-                    }}
-                    data-cursor="label"
-                    data-cursor-label="PREV"
-                  >
-                    <span className={styles.nextLabel}>
-                      {t('PREVIOUS CASE', 'PREVIOUS CASE')}
+              {prevCase ? (
+                <Link
+                  replace
+                  to={`/projects/${slug}/case/${prevCase.id}`}
+                  className={`${styles.nextInner} ${styles.nextInnerPrev}`}
+                  data-cursor="label"
+                  data-cursor-label="PREV"
+                >
+                  <span className={styles.nextLabel}>
+                    {t('PREVIOUS CASE', 'PREVIOUS CASE')}
+                  </span>
+                  <div className={styles.nextRow}>
+                    <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
+                    <span className={styles.nextIndex}>
+                      {String(caseIndex).padStart(2, '0')}
                     </span>
-                    <div className={styles.nextRow}>
-                      <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
-                      <span className={styles.nextIndex}>{String(navIndex).padStart(2, '0')}</span>
-                      <span className={styles.nextText}>
-                        <span className={styles.nextTitle}>{prevNav.name.en}</span>
-                        <span className={styles.nextZh}>{tx(prevNav.name)}</span>
+                    <span className={styles.nextText}>
+                      <span className={styles.nextTitle}>
+                        {caseDisplayName(prevCase).en}
                       </span>
-                    </div>
-                  </button>
-                ) : (
-                  <Link
-                    replace
-                    to={`/projects/${slug}/case/${prevNav.id}`}
-                    className={`${styles.nextInner} ${styles.nextInnerPrev}`}
-                    data-cursor="label"
-                    data-cursor-label="PREV"
-                  >
-                    <span className={styles.nextLabel}>
-                      {t('PREVIOUS CASE', 'PREVIOUS CASE')}
+                      <span className={styles.nextZh}>{tx(caseDisplayName(prevCase))}</span>
                     </span>
-                    <div className={styles.nextRow}>
-                      <ArrowLeft className={styles.nextArrow} size={30} strokeWidth={1.6} />
-                      <span className={styles.nextIndex}>{String(navIndex).padStart(2, '0')}</span>
-                      <span className={styles.nextText}>
-                        <span className={styles.nextTitle}>{prevNav.name.en}</span>
-                        <span className={styles.nextZh}>{tx(prevNav.name)}</span>
-                      </span>
-                    </div>
-                  </Link>
-                )
+                  </div>
+                </Link>
               ) : (
-                <span className={`${styles.nextInner} ${styles.nextInnerPrev} ${styles.nextInnerDisabled}`} aria-disabled="true">
+                <span
+                  className={`${styles.nextInner} ${styles.nextInnerPrev} ${styles.nextInnerDisabled}`}
+                  aria-disabled="true"
+                >
                   <span className={styles.nextLabel}>
                     {t('FIRST CASE', 'FIRST CASE')}
                   </span>
@@ -831,59 +829,43 @@ export function CaseViewerPage() {
                     <span className={styles.nextIndex}>—</span>
                     <span className={styles.nextText}>
                       <span className={styles.nextTitle}>{t('NO PREVIOUS', 'NO PREVIOUS')}</span>
-                      <span className={styles.nextZh}>{t('当前产品内的第一个案例', 'FIRST CASE IN THIS PRODUCT')}</span>
+                      <span className={styles.nextZh}>
+                        {t('已到当前方向的起点', 'START OF THIS DIRECTION')}
+                      </span>
                     </span>
                   </div>
                 </span>
               )}
 
-              {nextNav ? (
-                navIsWork ? (
-                  <button
-                    type="button"
-                    className={`${styles.nextInner} ${styles.nextAction}`}
-                    onClick={() => {
-                      selectWork(navIndex + 1)
-                      scrollToTop(true)
-                    }}
-                    data-cursor="label"
-                    data-cursor-label="NEXT"
-                  >
-                    <span className={styles.nextLabel}>
-                      {t('NEXT CASE', 'NEXT CASE')}
+              {nextCase ? (
+                <Link
+                  replace
+                  to={`/projects/${slug}/case/${nextCase.id}`}
+                  className={styles.nextInner}
+                  data-cursor="label"
+                  data-cursor-label="NEXT"
+                >
+                  <span className={styles.nextLabel}>
+                    {t('NEXT CASE', 'NEXT CASE')}
+                  </span>
+                  <div className={styles.nextRow}>
+                    <span className={styles.nextIndex}>
+                      {String(caseIndex + 2).padStart(2, '0')}
                     </span>
-                    <div className={styles.nextRow}>
-                      <span className={styles.nextIndex}>{String(navIndex + 2).padStart(2, '0')}</span>
-                      <span className={styles.nextText}>
-                        <span className={styles.nextTitle}>{nextNav.name.en}</span>
-                        <span className={styles.nextZh}>{tx(nextNav.name)}</span>
+                    <span className={styles.nextText}>
+                      <span className={styles.nextTitle}>
+                        {caseDisplayName(nextCase).en}
                       </span>
-                      <ArrowRight className={styles.nextArrow} size={30} strokeWidth={1.6} />
-                    </div>
-                  </button>
-                ) : (
-                  <Link
-                    replace
-                    to={`/projects/${slug}/case/${nextNav.id}`}
-                    className={styles.nextInner}
-                    data-cursor="label"
-                    data-cursor-label="NEXT"
-                  >
-                    <span className={styles.nextLabel}>
-                      {t('NEXT CASE', 'NEXT CASE')}
+                      <span className={styles.nextZh}>{tx(caseDisplayName(nextCase))}</span>
                     </span>
-                    <div className={styles.nextRow}>
-                      <span className={styles.nextIndex}>{String(navIndex + 2).padStart(2, '0')}</span>
-                      <span className={styles.nextText}>
-                        <span className={styles.nextTitle}>{nextNav.name.en}</span>
-                        <span className={styles.nextZh}>{tx(nextNav.name)}</span>
-                      </span>
-                      <ArrowRight className={styles.nextArrow} size={30} strokeWidth={1.6} />
-                    </div>
-                  </Link>
-                )
+                    <ArrowRight className={styles.nextArrow} size={30} strokeWidth={1.6} />
+                  </div>
+                </Link>
               ) : (
-                <span className={`${styles.nextInner} ${styles.nextInnerDisabled}`} aria-disabled="true">
+                <span
+                  className={`${styles.nextInner} ${styles.nextInnerDisabled}`}
+                  aria-disabled="true"
+                >
                   <span className={styles.nextLabel}>
                     {t('LAST CASE', 'LAST CASE')}
                   </span>
@@ -891,7 +873,9 @@ export function CaseViewerPage() {
                     <span className={styles.nextIndex}>—</span>
                     <span className={styles.nextText}>
                       <span className={styles.nextTitle}>{t('NO NEXT', 'NO NEXT')}</span>
-                      <span className={styles.nextZh}>{t('当前产品内的最后一个案例', 'LAST CASE IN THIS PRODUCT')}</span>
+                      <span className={styles.nextZh}>
+                        {t('已到当前方向的终点', 'END OF THIS DIRECTION')}
+                      </span>
                     </span>
                     <ArrowRight className={styles.nextArrow} size={30} strokeWidth={1.6} />
                   </div>
