@@ -1359,6 +1359,48 @@ export const projects: Project[] = [
           },
 
           {
+            id: 'dialogue-wheel-previs',
+            name: lt('二次元写实都市题材对话轮盘交互', 'Anime-Realistic Urban Dialogue Wheel'),
+            videos: ['/assets/videos/game-ui/dialogue-wheel-previs.m3u8'],
+            description: lt(
+              '二次元写实都市题材的对话轮盘交互动效预演：以「潜意识／思绪线」为主要视觉语言，完成角色对话、六项选项选择、思绪收束进入角色、轮盘生成与结果反馈的完整交互演出。',
+              'A motion previs for an anime-realistic urban dialogue-wheel interaction — using a subconscious / thought-line visual language to build the full flow from character dialogue, six option states, thought convergence into the character, wheel formation to result feedback.'
+            ),
+            meta: lt('动效预演', 'Motion previs'),
+            date: lt('2026.08', '2026.08'),
+            role: lt('动效预演 / 视觉设计', 'Motion previs / Visual design'),
+            tags: ['AE', 'UI MOTION', 'PREVIS', 'DIALOGUE WHEEL'],
+            detail: {
+              background: lt(
+                '项目设定为风格化写实都市题材，并结合恋爱养成与开放世界玩法。视觉关键词为「潜意识」「思绪线条」，强调二次元内核与写实风格化表现，避免整体视觉过于厚重。界面以灰黑、灰白为基底，大量使用圆形结构、细线、思绪纹理与半透明层级。因此我没有将它理解为传统意义上的功能菜单，而是理解为角色心理活动被 UI 视觉化后形成的一套「意识空间」。',
+                'A stylised realistic urban setting combined with dating-sim and open-world gameplay. Visual keywords are "subconscious" and "thought lines", prioritising an anime core with realistic stylisation and avoiding a heavy look. The UI is built on grey/white tones with circular structures, thin lines, thought textures and translucent layers — read not as a conventional functional menu but as a "space of consciousness" formed by visualising the character\'s inner mental activity.'
+              ),
+              objectives: [
+                lt('以「思绪线」为主要视觉语言，串联选项、角色与轮盘', 'Use "thought lines" as the core visual language to connect options, characters and the wheel'),
+                lt('让每次操作都承担部分叙事，表达角色潜意识中形成思路', 'Let each interaction carry part of the narrative, expressing a thought forming in the character\'s subconscious'),
+                lt('用金色承接关键交互与确认，不破坏原有亮白选中逻辑', 'Use gold for key interaction and confirmation without breaking the original bright-white selection logic'),
+              ],
+              role: lt(
+                '从世界观与设计稿出发拆解视觉层级与交互逻辑，完成角色对话、六项选项状态、思绪进入角色、轮盘生成、旋转与结果反馈的完整 AE 动效预演，并输出节奏、缓动与层级参数供引擎复现。',
+                'Broke down the visual hierarchy and interaction logic from the world-view and design sheets, then produced a full AE motion previs covering character dialogue, six option states, thought convergence into the character, wheel formation, spin and result feedback — with pacing, easing and hierarchy parameters for engine rebuild.'
+              ),
+              process: [
+                lt('需求与视觉分析', 'Brief & visual analysis'),
+                lt('Option 视觉探索（AI 辅助）', 'Option visual exploration (AI-assisted)'),
+                lt('节奏草案', 'Pacing draft'),
+                lt('动效制作', 'Animation'),
+                lt('思绪线/光效叠加', 'Thought-line & light effects'),
+                lt('效果打磨', 'Polish'),
+              ],
+              result: lt(
+                '完成一套覆盖对话—选项—轮盘—结果的完整动效预演，将潜意识与思绪线的视觉语言贯穿始终，并沉淀了节奏、层级与缓动参数。',
+                'Completed a full previs covering dialogue—option—wheel—result, carrying the subconscious / thought-line language throughout, and consolidated pacing, hierarchy and easing parameters.'
+              ),
+              tools: ['After Effects', 'Photoshop', 'AI Tools'],
+            },
+          },
+
+          {
             id: 'ae-7day-signin',
             name: lt('二次元-七日签到', 'Anime 7-day Sign-in'),
             videos: ['/assets/videos/game-ui/erciyuan-7day-signin.m3u8'],
@@ -1441,48 +1483,6 @@ export const projects: Project[] = [
                 'Completed a motion previs covering lobby entrance, buttons, cards and sign-in, forming a reference for pacing, hierarchy and easing.'
               ),
               tools: ['After Effects', 'Photoshop'],
-            },
-          },
-
-          {
-            id: 'dialogue-wheel-previs',
-            name: lt('二次元写实都市题材对话轮盘交互', 'Anime-Realistic Urban Dialogue Wheel'),
-            videos: ['/assets/videos/game-ui/dialogue-wheel-previs.m3u8'],
-            description: lt(
-              '二次元写实都市题材的对话轮盘交互动效预演：以「潜意识／思绪线」为主要视觉语言，完成角色对话、六项选项选择、思绪收束进入角色、轮盘生成与结果反馈的完整交互演出。',
-              'A motion previs for an anime-realistic urban dialogue-wheel interaction — using a subconscious / thought-line visual language to build the full flow from character dialogue, six option states, thought convergence into the character, wheel formation to result feedback.'
-            ),
-            meta: lt('动效预演', 'Motion previs'),
-            date: lt('2026.08', '2026.08'),
-            role: lt('动效预演 / 视觉设计', 'Motion previs / Visual design'),
-            tags: ['AE', 'UI MOTION', 'PREVIS', 'DIALOGUE WHEEL'],
-            detail: {
-              background: lt(
-                '项目设定为风格化写实都市题材，并结合恋爱养成与开放世界玩法。视觉关键词为「潜意识」「思绪线条」，强调二次元内核与写实风格化表现，避免整体视觉过于厚重。界面以灰黑、灰白为基底，大量使用圆形结构、细线、思绪纹理与半透明层级。因此我没有将它理解为传统意义上的功能菜单，而是理解为角色心理活动被 UI 视觉化后形成的一套「意识空间」。',
-                'A stylised realistic urban setting combined with dating-sim and open-world gameplay. Visual keywords are "subconscious" and "thought lines", prioritising an anime core with realistic stylisation and avoiding a heavy look. The UI is built on grey/white tones with circular structures, thin lines, thought textures and translucent layers — read not as a conventional functional menu but as a "space of consciousness" formed by visualising the character\'s inner mental activity.'
-              ),
-              objectives: [
-                lt('以「思绪线」为主要视觉语言，串联选项、角色与轮盘', 'Use "thought lines" as the core visual language to connect options, characters and the wheel'),
-                lt('让每次操作都承担部分叙事，表达角色潜意识中形成思路', 'Let each interaction carry part of the narrative, expressing a thought forming in the character\'s subconscious'),
-                lt('用金色承接关键交互与确认，不破坏原有亮白选中逻辑', 'Use gold for key interaction and confirmation without breaking the original bright-white selection logic'),
-              ],
-              role: lt(
-                '从世界观与设计稿出发拆解视觉层级与交互逻辑，完成角色对话、六项选项状态、思绪进入角色、轮盘生成、旋转与结果反馈的完整 AE 动效预演，并输出节奏、缓动与层级参数供引擎复现。',
-                'Broke down the visual hierarchy and interaction logic from the world-view and design sheets, then produced a full AE motion previs covering character dialogue, six option states, thought convergence into the character, wheel formation, spin and result feedback — with pacing, easing and hierarchy parameters for engine rebuild.'
-              ),
-              process: [
-                lt('需求与视觉分析', 'Brief & visual analysis'),
-                lt('Option 视觉探索（AI 辅助）', 'Option visual exploration (AI-assisted)'),
-                lt('节奏草案', 'Pacing draft'),
-                lt('动效制作', 'Animation'),
-                lt('思绪线/光效叠加', 'Thought-line & light effects'),
-                lt('效果打磨', 'Polish'),
-              ],
-              result: lt(
-                '完成一套覆盖对话—选项—轮盘—结果的完整动效预演，将潜意识与思绪线的视觉语言贯穿始终，并沉淀了节奏、层级与缓动参数。',
-                'Completed a full previs covering dialogue—option—wheel—result, carrying the subconscious / thought-line language throughout, and consolidated pacing, hierarchy and easing parameters.'
-              ),
-              tools: ['After Effects', 'Photoshop', 'AI Tools'],
             },
           },
         ],
