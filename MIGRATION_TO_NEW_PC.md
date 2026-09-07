@@ -1,7 +1,7 @@
 # JAZIM Portfolio — 迁移到新电脑 操作手册
 
 > 目标：把「Jazim Lau 游戏动效作品集」工程完整、正确地搬到另一台电脑，并让新环境可开发 / 构建 / 部署 / 生成 PDF。
-> 整理时间：2026-09-07　|　当前提交：`048ea6f`（本地与 GitHub origin/main 一致）
+> 整理时间：2026-09-08　|　当前提交：`0d3204b`（本地与 GitHub origin/main 一致）
 > 仓库：`https://github.com/JazimLau/jazim-portfolio.git`（分支 `main`）
 
 ---
@@ -35,6 +35,15 @@ npm ci
   - 大型 HLS 媒体统一放 **腾讯 COS**（`jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com`）
 - **媒体策略**（很重要）：大型 `.m3u8/.ts` **不进 Git**；线上由 `VITE_MEDIA_BASE_URL` 指向 COS；本地 dev 读 `public/assets/videos/`（缺失也不报错，组件会回落成 CSS 占位）
 - **PDF 生成链**（独立子工程，被 Git 忽略）：`pdf/parse_data.py`(src/data→json) → `pdf/build_html.py`(→portfolio-pdf.html) → `scripts/build-pdf.py`(Chrome 导出成品 PDF)
+
+---
+
+## 1.5 字体说明（重要：换电脑字体不会丢）
+
+- **网站字体已自托管**：`public/assets/fonts/`（Barlow Condensed / Inter / IBM Plex Mono 的 woff2 + fonts.css）**全部入库（git tracked）**，clone 即可用，`npm run dev` / 构建后字体正常，**不依赖电脑安装字体**。
+- **PDF 字体已自托管（2026-09-08 修复）**：`pdf/build_html.py` 的 CSS 现在内置 12 条 `@font-face`，指向 `pdf/assets-optimized/fonts/*.woff2`（同一批 woff2，已复制到 `pdf/assets/` 与 `pdf/assets-optimized/`）。导出 PDF 不再依赖 Chrome 所在系统的 Barlow / Inter / IBM Plex 字体，**新电脑直接重新导出字体也一致**。
+- 中文字体仍走系统（微软雅黑等 Windows 自带），无需安装；如需 macOS/Linux 导出更接近的中文，可装 Noto Sans SC。
+- 若想换字体：往 `public/assets/fonts/` 放新 woff2 → 更新 `fonts.css` 与 `pdf/build_html.py` 顶部 `@font-face` 块 → 同步把 woff2 复制到 `pdf/assets/fonts/` 与 `pdf/assets-optimized/fonts/`。
 
 ---
 
