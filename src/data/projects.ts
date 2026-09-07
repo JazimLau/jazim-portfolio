@@ -1443,12 +1443,54 @@ export const projects: Project[] = [
               tools: ['After Effects', 'Photoshop'],
             },
           },
+
+          {
+            id: 'dialogue-wheel-previs',
+            name: lt('二次元写实都市题材对话轮盘交互', 'Anime-Realistic Urban Dialogue Wheel'),
+            videos: ['/assets/videos/game-ui/dialogue-wheel-previs.m3u8'],
+            description: lt(
+              '二次元写实都市题材的对话轮盘交互动效预演：以「潜意识／思绪线」为主要视觉语言，完成角色对话、六项选项选择、思绪收束进入角色、轮盘生成与结果反馈的完整交互演出。',
+              'A motion previs for an anime-realistic urban dialogue-wheel interaction — using a subconscious / thought-line visual language to build the full flow from character dialogue, six option states, thought convergence into the character, wheel formation to result feedback.'
+            ),
+            meta: lt('动效预演', 'Motion previs'),
+            date: lt('2026.08', '2026.08'),
+            role: lt('动效预演 / 视觉设计', 'Motion previs / Visual design'),
+            tags: ['AE', 'UI MOTION', 'PREVIS', 'DIALOGUE WHEEL'],
+            detail: {
+              background: lt(
+                '项目设定为风格化写实都市题材，并结合恋爱养成与开放世界玩法。视觉关键词为「潜意识」「思绪线条」，强调二次元内核与写实风格化表现，避免整体视觉过于厚重。界面以灰黑、灰白为基底，大量使用圆形结构、细线、思绪纹理与半透明层级。因此我没有将它理解为传统意义上的功能菜单，而是理解为角色心理活动被 UI 视觉化后形成的一套「意识空间」。',
+                'A stylised realistic urban setting combined with dating-sim and open-world gameplay. Visual keywords are "subconscious" and "thought lines", prioritising an anime core with realistic stylisation and avoiding a heavy look. The UI is built on grey/white tones with circular structures, thin lines, thought textures and translucent layers — read not as a conventional functional menu but as a "space of consciousness" formed by visualising the character\'s inner mental activity.'
+              ),
+              objectives: [
+                lt('以「思绪线」为主要视觉语言，串联选项、角色与轮盘', 'Use "thought lines" as the core visual language to connect options, characters and the wheel'),
+                lt('让每次操作都承担部分叙事，表达角色潜意识中形成思路', 'Let each interaction carry part of the narrative, expressing a thought forming in the character\'s subconscious'),
+                lt('用金色承接关键交互与确认，不破坏原有亮白选中逻辑', 'Use gold for key interaction and confirmation without breaking the original bright-white selection logic'),
+              ],
+              role: lt(
+                '从世界观与设计稿出发拆解视觉层级与交互逻辑，完成角色对话、六项选项状态、思绪进入角色、轮盘生成、旋转与结果反馈的完整 AE 动效预演，并输出节奏、缓动与层级参数供引擎复现。',
+                'Broke down the visual hierarchy and interaction logic from the world-view and design sheets, then produced a full AE motion previs covering character dialogue, six option states, thought convergence into the character, wheel formation, spin and result feedback — with pacing, easing and hierarchy parameters for engine rebuild.'
+              ),
+              process: [
+                lt('需求与视觉分析', 'Brief & visual analysis'),
+                lt('Option 视觉探索（AI 辅助）', 'Option visual exploration (AI-assisted)'),
+                lt('节奏草案', 'Pacing draft'),
+                lt('动效制作', 'Animation'),
+                lt('思绪线/光效叠加', 'Thought-line & light effects'),
+                lt('效果打磨', 'Polish'),
+              ],
+              result: lt(
+                '完成一套覆盖对话—选项—轮盘—结果的完整动效预演，将潜意识与思绪线的视觉语言贯穿始终，并沉淀了节奏、层级与缓动参数。',
+                'Completed a full previs covering dialogue—option—wheel—result, carrying the subconscious / thought-line language throughout, and consolidated pacing, hierarchy and easing parameters.'
+              ),
+              tools: ['After Effects', 'Photoshop', 'AI Tools'],
+            },
+          },
         ],
         gallery: [],
       },
       {
         id: 'ue5',
-        name: lt('UE5 UI 动效实践', 'UE5 UI Motion Practice'),
+        name: lt('UE5 UMG系统动效实践', 'UE5 UMG Motion Practice'),
         meta: lt('Unreal Engine 5', 'Unreal Engine 5'),
         description: lt(
           '围绕 Unreal Engine 5 的游戏 UI 动效与实时特效进行持续学习，目前已完成图标动效类实践，并逐步扩展至界面动画、交互反馈、材质、粒子特效与页面转场等方向，重点建立从视觉设计到实时引擎实现的基础能力。',
@@ -1464,6 +1506,52 @@ export const projects: Project[] = [
         launchStatus: lt('进行中', 'IN PROGRESS'),
         statusLabel: lt('持续学习', 'CONTINUING LEARNING'),
         works: [
+          {
+            id: 'dialogue-wheel-whitebox',
+            name: lt(
+              '二次元写实都市题材对话轮盘交互白盒（无特效仅UI实装测试）',
+              'Anime-Realistic Urban Dialogue Wheel Whitebox (UI-only)'
+            ),
+            videos: ['/assets/videos/game-ui/dialogue-wheel-whitebox.m3u8'],
+            description: lt(
+              '将前述对话轮盘交互方案在 Unreal Engine 5 中做白盒实装：以单个 UMG 界面配合 Blueprint 事件驱动，验证对话、Check、六项选项、轮盘入场、随机旋转、结果高亮到加成区的完整交互闭环（未接入粒子与复杂材质特效）。',
+              'A whitebox implementation of the dialogue-wheel interaction in Unreal Engine 5 — a single UMG screen driven by Blueprint events validates the full interaction loop from dialogue, Check, six options, wheel entry, random spin, result highlight to bonus area, without particles or complex material effects.'
+            ),
+            meta: lt('Unreal Engine 5', 'Unreal Engine 5'),
+            date: lt('2026.08', '2026.08'),
+            role: lt('UE UMG / 蓝图 / 白盒实装', 'UE UMG / Blueprint / Whitebox'),
+            tags: ['UE5', 'UMG', 'BLUEPRINT', 'WHITEBOX'],
+            detail: {
+              background: lt(
+                '在完成 AE 视觉预演后，用 UE5 验证这套设计能否成为一个真实可运行的交互系统。UE 中动画不能单纯依赖线性时间轴，而需由玩家输入触发，因此需要在蓝图中为对话结束、Check 可点击、Option 悬停/确认、轮盘是否允许启动等建立对应状态。',
+                'After the AE previs, UE5 was used to verify whether the design could become a genuinely runnable interaction system. In UE the animation cannot rely on a linear timeline but must be triggered by player input, so states for dialogue end, Check availability, option hover/confirm and wheel start had to be built in Blueprint.'
+              ),
+              objectives: [
+                lt('验证交互链路能够完整跑通', 'Validate the interaction loop runs end-to-end'),
+                lt('将一个 AE 动画拆解为多个事件驱动的 UMG 动画与蓝图逻辑', 'Break one AE animation into event-driven UMG animations and Blueprint logic'),
+                lt('确保同一属性在单一阶段有唯一控制来源', 'Ensure a property has a single source of control at a time'),
+                lt('暂不接入粒子/材质特效，优先保证逻辑成立', 'Skip particles/materials for now, prioritising the logic'),
+              ],
+              role: lt(
+                '在 UE5 中用 UMG 搭建界面结构，用 Blueprint 实现玩家输入、界面状态切换、动画调用、轮盘随机逻辑与结果反馈，把 AE 时间轴方案转换为事件驱动的交互实现。',
+                'Built the UI structure in UMG and used Blueprint for player input, state switching, animation calls, wheel random logic and result feedback — converting the AE timeline design into an event-driven interaction implementation.'
+              ),
+              process: [
+                lt('界面与状态梳理', 'UI & state mapping'),
+                lt('UMG 结构与控件搭建', 'UMG structure & widgets'),
+                lt('打字机与 Check 逻辑', 'Typewriter & Check logic'),
+                lt('Option 状态与输入', 'Option states & input'),
+                lt('轮盘随机与结果高亮', 'Wheel random & result highlight'),
+                lt('链路联调', 'Loop integration'),
+              ],
+              result: lt(
+                '完成了从对话、Check、Option 选择、轮盘入场、随机旋转、结果高亮到加成区的白盒交互闭环，验证了 AE 视觉方案在真实引擎交互中的可落地性，也形成了「时间轴动画」到「事件驱动交互」的转换认识。',
+                'Completed the whitebox interaction loop from dialogue, Check, option selection, wheel entry, random spin, result highlight to bonus area, validating the AE visual design\'s feasibility in a real engine and building an understanding of converting timeline animation to event-driven interaction.'
+              ),
+              tools: ['Unreal Engine 5', 'After Effects', 'Photoshop'],
+            },
+          },
+
           {
             id: 'ue5-icon-motion',
             name: lt('图标动效实践', 'Icon Motion Practice'),
