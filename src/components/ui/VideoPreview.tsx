@@ -637,38 +637,9 @@ export function VideoPreview({
     prevModeRef.current = mode
   }, [mode])
 
-  /* 离屏暂停：预览滚出视口后暂停视频，避免后台继续解码占资源；
-     回到视口不自动恢复（由 hover/点击/auto 模式接管），保证不会多卡同时出声。
-     注意：IntersectionObserver 的 isIntersecting 在页面转场动画期间会被
-     clip-path 揭示（PageTransition 对内容裁切）误判为「不可见」，
-     因此 pause 前必须用 getBoundingClientRect 二次确认元素真的滚出了视口，
-     否则刚自动播放的视频会在转场中被立刻暂停（SPA 进入子模块时 autoplay 失效的根因）。 */
-  useEffect(() => {
-    const el = wrapRef.current
-    if (!el) return
-    let io: IntersectionObserver | undefined
-    if (typeof IntersectionObserver !== 'undefined') {
-      io = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((e) => e.isIntersecting)) return
-          /* 二次确认：clip-path/transform 动画期间 IO 会误报，用真实几何位置判断 */
-          const rect = el.getBoundingClientRect()
-          const vh = window.innerHeight || document.documentElement.clientHeight
-          const margin = 200
-          if (rect.bottom > -margin && rect.top < vh + margin) return
-          const v = videoRef.current
-          if (v && !v.paused) {
-            v.pause()
-            releasePlayback(v)
-            setPlaying(false)
-          }
-        },
-        { rootMargin: '200px' }
-      )
-      io.observe(el)
-    }
-    return () => io?.disconnect()
-  }, [])
+  /* 视频滚动离开视口时【不再自动暂停】——产品要求往下滑时持续播放。
+     全局播放互斥（videoMutex，claimPlayback / releasePlayback）仍保留：
+     切换作品、进入新页面时由对应组件停止旧视频，避免多视频叠声。 */
 
   /* 浏览器标签页切到后台：暂停非必要媒体，避免后台持续解码 */
   useEffect(() => {
