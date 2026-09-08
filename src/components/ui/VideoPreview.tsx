@@ -225,6 +225,10 @@ export function VideoPreview({
   const [videoLoading, setVideoLoading] = useState(() => sources.length > 0)
   const [coverFailed, setCoverFailed] = useState(!cover)
   const [playing, setPlaying] = useState(false)
+  /* 当前视频是否已真正开始播放（已有画面帧）。
+     已开播后暂停（离屏暂停 / 手动暂停）时显示视频当前帧而不是通用封面，
+     避免多作品案例暂停时露出「其他作品」的案例级封面。 */
+  const [hasPlayed, setHasPlayed] = useState(false)
   /* 播放意图：等待数据就绪（canplay）后自动开始播放。
      覆盖两种场景：①播放中切换视频 → 切换后自动续播；②加载中点播放 → 就绪后自动开始。
      否则线上 COS 加载需数秒，切换/点播后还得再手动按一次播放。 */
@@ -329,6 +333,7 @@ export function VideoPreview({
   const handlePlaying = useCallback(() => {
     startedRef.current = true
     setPlaying(true)
+    setHasPlayed(true)
     showControlsTemporarily()
   }, [showControlsTemporarily])
   /* 组件卸载：清理隐藏计时器 */
@@ -362,6 +367,7 @@ export function VideoPreview({
   useEffect(() => {
     const wasPlaying = playingRef.current
     setPlaying(false)
+    setHasPlayed(false)
     setVideoFailed(false)
     setVideoLoading(true)
     pendingPlayRef.current = pendingPlayRef.current || wasPlaying || modeRef.current === 'auto'
@@ -507,6 +513,7 @@ export function VideoPreview({
     releasePlayback(v)
     v.currentTime = 0
     setPlaying(false)
+    setHasPlayed(false)
   }
 
   /** 暂停 / 播放切换：暂停时不重置进度，恢复播放从原位置继续 */
@@ -679,9 +686,10 @@ export function VideoPreview({
   }, [])
 
   const showVideo = inView && !videoFailed && !!currentSrc
-  /* auto 模式加载中：隐藏封面露出黑底；hover 模式封面常显 */
+  /* auto 模式加载中：隐藏封面露出黑底；hover 模式封面常显。
+     已开播（hasPlayed）后暂停时不再覆盖通用封面，让视频显示当前作品画面帧。 */
   const showCover =
-    !coverFailed && !(mode === 'auto' && videoLoading) && (!playing || mode === 'hover')
+    !coverFailed && !(mode === 'auto' && videoLoading) && (!hasPlayed || mode === 'hover')
   const showFallback = videoFailed && coverFailed
 
   return (
