@@ -130,10 +130,10 @@ export function Profile() {
 
       <div className="shell">
         <SectionHeader
-          index="03"
-          code="CHARACTER PROFILE"
-          titleEn="PLAYER PROFILE"
-          titleZh={t('角色档案', 'Character file')}
+          index="04"
+          code="ABOUT & CAPABILITIES"
+          titleEn="ABOUT ME"
+          titleZh={t('关于我与能力', 'About & capabilities')}
           size="compact"
         />
 

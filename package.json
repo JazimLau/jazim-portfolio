@@ -12,12 +12,13 @@
     "portfolio:images": "python scripts/optimize-pdf-images.py",
     "portfolio:pdf": "python scripts/build-pdf.py",
     "build:deploy": "npm run typecheck && vite build --mode tencent --outDir deploy-output/tencent-site --emptyOutDir && node scripts/prepare-deploy-build.mjs deploy-output/tencent-site",
-    "build:github": "npm run typecheck && vite build --mode github --outDir deploy-output/github-site --emptyOutDir && node scripts/prepare-deploy-build.mjs deploy-output/github-site",
+    "build:github": "npm run typecheck && vite build --mode github --outDir deploy-output/github-site --emptyOutDir && node scripts/prepare-deploy-build.mjs deploy-output/github-site --same-origin",
     "prepare:deploy": "node scripts/prepare-deploy-build.mjs",
     "package:deploy": "python scripts/package-tencent-deploy.py",
     "manifest:media": "node scripts/generate-cos-manifest.mjs",
     "verify:media": "node scripts/verify-production-media.mjs",
-    "cos:media": "powershell -NoProfile -ExecutionPolicy Bypass -File deploy-cos-media.ps1"
+    "cos:media": "powershell -NoProfile -ExecutionPolicy Bypass -File deploy-cos-media.ps1",
+    "build:vercel": "npm run typecheck && vite build --mode vercel && node scripts/prepare-deploy-build.mjs dist --same-origin"
   },
   "dependencies": {
     "gsap": "^3.13.0",

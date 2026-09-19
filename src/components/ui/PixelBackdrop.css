@@ -1,0 +1,17 @@
+.pixel-backdrop { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; contain:strict; background:radial-gradient(ellipse at 3% 32%,#7850ff0d,transparent 42%),radial-gradient(ellipse at 97% 70%,#bcff390a,transparent 38%); }
+.pixel-backdrop-grid { position:absolute; inset:0; background-image:linear-gradient(#95b69b08 1px,transparent 1px),linear-gradient(90deg,#95b69b08 1px,transparent 1px); background-size:64px 64px; mask-image:linear-gradient(90deg,#000,transparent 35%,transparent 65%,#000); }
+.pixel-mote { position:absolute; width:3px; height:3px; background:var(--tint); opacity:.2; animation:pixel-drift var(--duration) steps(18,end) var(--delay) infinite alternate; }
+.pixel-mote-cross { width:4px; height:4px; box-shadow:-4px 0 var(--tint),4px 0 var(--tint),0 -4px var(--tint),0 4px var(--tint); }
+@keyframes pixel-drift { 0% { transform:translate(0,0); opacity:.12; } 45% { opacity:.3; } 100% { transform:translate(12px,-32px); opacity:.16; } }
+.pixel-hud { position:absolute; width:48px; height:48px; opacity:.2; border:1px solid #8b6bff; clip-path:polygon(0 0,70% 0,70% 8%,8% 8%,8% 70%,0 70%); animation:pixel-hud-shift 22s steps(12,end) infinite alternate; }
+.pixel-hud-left { left:2%; top:27%; }.pixel-hud-right { right:2%; top:72%; transform:rotate(180deg); animation-delay:-9s; }
+.pixel-hud i { position:absolute; width:5px; height:5px; background:#bcff65; left:16px; top:16px; }
+.pixel-hud i:nth-child(2) { left:25px; }.pixel-hud i:nth-child(3) { top:25px; }
+@keyframes pixel-hud-shift { to { translate:0 -20px; opacity:.35; } }
+.pixel-trace { position:absolute; height:100px; width:1px; background:linear-gradient(transparent,#bcff3930,transparent); animation:pixel-trace-flow 24s steps(36,end) infinite; }
+.pixel-trace::after { content:''; position:absolute; top:50%; left:-2px; width:5px; height:5px; background:#bcff3955; }
+.pixel-trace-left { left:5%; }.pixel-trace-right { right:5%; animation-delay:-12s; }
+@keyframes pixel-trace-flow { from { transform:translateY(-120px); } to { transform:translateY(110vh); } }
+main { position:relative; z-index:1; }
+@media(max-width:767px) { .pixel-mote:nth-of-type(n+13) { display:none; }.pixel-hud { display:none; }.pixel-backdrop-grid { background-size:48px 48px; }.pixel-mote { opacity:.14; } }
+@media(prefers-reduced-motion:reduce) { .pixel-backdrop * { animation:none !important; }.pixel-trace { display:none; } }

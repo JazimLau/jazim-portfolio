@@ -46,3 +46,6 @@ optimized-test/
 ACTUAL_MEDIA_HOST_AUDIT.md
 SOURCE_AUDIO_AUDIT.md
 VERCEL_VIDEO_AUDIO_PERFORMANCE_ROOT_CAUSE.md
+
+# Public Vercel media routing configuration
+!.env.vercel

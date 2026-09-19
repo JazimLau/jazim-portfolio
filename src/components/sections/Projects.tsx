@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, GripHorizontal } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   filterProjects,
   getDisplayItems,
@@ -275,6 +275,8 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
     if (!stage) return
 
     const onWheel = (e: WheelEvent) => {
+      // Vertical scrolling remains page navigation; only horizontal gestures switch projects.
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
       // ── 安全区判断：鼠标必须在活动项目卡显示区域内 ──
       const track = trackRef.current
       const slot = track?.querySelectorAll<HTMLElement>(`.${styles.slot}`)[active]
@@ -319,7 +321,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
     // 按下目标为可交互元素（按钮 / 链接 / 标签等）时不启动拖拽，
     // 避免 setPointerCapture 与轨道位移吞掉按钮的 click 事件
     const target = e.target as HTMLElement
-    if (target.closest('button, a, input, select, textarea, [role="tab"], [data-cursor="link"]')) return
+    if (target.closest('button, a, input, select, textarea, summary, label, [role="tab"], [data-cursor="link"]')) return
     dragStart.current = e.clientX
     dragDelta.current = 0
     setDragging(true)
@@ -357,6 +359,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
 
   /* ---------- 键盘 ---------- */
   const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return
     if (e.key === 'ArrowRight') {
       e.preventDefault()
       go(1)
@@ -414,7 +417,7 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
       id="projects"
       ref={rootRef}
       className={`section ${styles.root}`}
-      aria-label={t('精选项目', 'Selected projects')}
+      aria-label={t('全部作品', 'All work')}
     >
       <div className={`grid-bg ${styles.grid}`} aria-hidden="true" />
       <PixelSceneBackground variant="projects" />
@@ -426,13 +429,13 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
 
       <div className={`shell ${styles.shell}`}>
         <SectionHeader
-          index="05"
-          code="SELECTED MISSIONS"
+          index="03"
+          code="ALL WORK"
           titleEn="PROJECTS"
-          titleZh={t('精选项目', 'Selected projects')}
+          titleZh={t('全部作品', 'All work')}
           description={t(
-            '按内容方向组织：雷火产品动效与游戏UI动效练习各自独立成块，视频设计下设游戏广告视频、游戏宣发视频、游戏社媒视频三个模块。点击 VIEW CASE 可展开各方向下的子层级案例或视频占位。',
-            'Organized by content direction: Leihuo motion and game UI motion studies each stand as their own block, while video design splits into three modules — game ad films, game promotion films and game social videos. Select VIEW CASE to expand sub-level cases or video placeholders.'
+            '按方向筛选，直接查看具体作品与个人贡献。',
+            'Filter by discipline to explore individual projects and my contribution.'
           )}
         />
 
@@ -712,24 +715,6 @@ export function Projects({ filter, onFilterChange }: ProjectsProps) {
           >
             <ChevronLeft size={17} />
           </button>
-
-          <div className={styles.progress}>
-            {list.map((p, i) => (
-              <button
-                key={p.id}
-                type="button"
-                className={`${styles.pip} ${i === active ? styles.pipOn : ''}`}
-                onClick={() => setActive(i)}
-                aria-label={t(`切换到 ${tx(p.titleZh)}`, `Go to ${p.title}`)}
-                aria-current={i === active ? 'true' : undefined}
-              />
-            ))}
-          </div>
-
-          <span className={styles.dragHint}>
-            <GripHorizontal size={13} />
-            {t('DRAG / SCROLL / ← → 切换项目', 'DRAG / SCROLL / ← → TO SWITCH')}
-          </span>
 
           <button
             type="button"

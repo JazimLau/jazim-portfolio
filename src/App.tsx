@@ -9,12 +9,13 @@ import { Navbar } from './components/layout/Navbar'
 import { PageTransition } from './components/layout/PageTransition'
 import { ScrollManager } from './components/layout/ScrollManager'
 import { LangTransition } from './components/layout/LangTransition'
-import { CursorFollower } from './components/ui/CursorFollower'
-import { PixelField } from './components/ui/PixelField'
 import { HomePage } from './pages/HomePage'
 import { ProjectDetailPage } from './pages/ProjectDetailPage'
 import { CaseViewerPage } from './pages/CaseViewerPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+
+import { PixelBackdrop } from './components/ui/PixelBackdrop'
+import { PixelPlay } from './components/ui/PixelPlay'
 
 const SECTION_IDS = navItems.map((n) => n.target)
 
@@ -38,17 +39,17 @@ export default function App() {
 
   return (
     <>
-      <a href="#home" className="sr-only">
+      <a href="#main-content" className="skip-link" onClick={(e) => { e.preventDefault(); const main = document.querySelector<HTMLElement>('main'); if (main) { main.tabIndex = -1; main.focus(); main.scrollIntoView(); } }}>
         {t('跳到主内容', 'Skip to main content')}
       </a>
 
-      <CursorFollower />
-      <PixelField />
+      <PixelBackdrop />
+      <PixelPlay />
       <Navbar active={active} />
       <LangTransition />
       <ScrollManager />
 
-      <PageTransition>
+      <PageTransition skip>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects/:slug" element={<ProjectDetailPage />} />

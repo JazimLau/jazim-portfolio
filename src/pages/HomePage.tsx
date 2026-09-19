@@ -1,11 +1,8 @@
 import { useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 import type { ProjectFilterId } from '../data/types'
-import { scrollToId } from '../lib/smoothScroll'
 import { useUI } from '../context/UIContext'
-import { Opening } from '../components/sections/Opening'
-import { Hero } from '../components/sections/Hero'
-import { IndexSection } from '../components/sections/IndexSection'
+import { WorkFirst } from '../components/sections/WorkFirst'
 import { Profile } from '../components/sections/Profile'
 import { Timeline } from '../components/sections/Timeline'
 import { Projects } from '../components/sections/Projects'
@@ -18,12 +15,11 @@ import { Contact } from '../components/sections/Contact'
  *  - heroReplay：Contact 的 BACK TO TOP 触发 Hero 标题重播
  */
 export function HomePage() {
-  const { ready, setReady, projectsState } = useUI()
+  const { ready, projectsState } = useUI()
   const location = useLocation()
   const navigationType = useNavigationType()
   /* 从详情页返回时恢复进入前的筛选状态 */
   const [filter, setFilter] = useState<ProjectFilterId | 'all'>(projectsState.filter)
-  const [heroReplay, setHeroReplay] = useState(0)
 
   /* 首页滚动（统一入口，其他页面交给 ScrollManager）：
    * - location.state.scrollTo（如「返回项目库」）：直接定位到目标区块（不先回顶部再滚下来）；
@@ -54,23 +50,14 @@ export function HomePage() {
     window.scrollTo({ top: Math.min(y, maxY), behavior: 'auto' })
   }, [location.state, ready, projectsState.scrollY, navigationType])
 
-  /** Index 节点跳转（ARCHIVE 会带上筛选） */
-  const handleNavigate = (target: string, nodeFilter?: ProjectFilterId) => {
-    if (nodeFilter) setFilter(nodeFilter)
-    scrollToId(target)
-  }
-
   return (
     <>
-      {!ready && <Opening onComplete={() => setReady(true)} />}
-
       <main>
-        <Hero play={ready} replayKey={heroReplay} />
-        <IndexSection onNavigate={handleNavigate} />
+        <WorkFirst />
+        <Projects filter={filter} onFilterChange={setFilter} />
         <Profile />
         <Timeline />
-        <Projects filter={filter} onFilterChange={setFilter} />
-        <Contact onReturnHome={() => setHeroReplay((n) => n + 1)} />
+        <Contact onReturnHome={() => window.scrollTo({ top: 0, behavior: 'auto' })} />
       </main>
     </>
   )

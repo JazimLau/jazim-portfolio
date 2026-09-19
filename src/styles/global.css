@@ -531,3 +531,15 @@ a:focus-visible,
     --shell-gutter: 12px;
   }
 }
+
+/* Work-first navigation and shared project summaries. */
+:where(button, a, [role="slider"]):focus-visible { outline: 2px solid var(--accent-lime); outline-offset: 4px; }
+section[id] { scroll-margin-top: 92px; }
+.skip-link { position: fixed; left:16px; top:-100px; z-index:99999; background:var(--accent-lime); color:#101713; padding:16px; }
+.skip-link:focus { top:16px; }
+.project-brief { margin: 20px 0; font-size: 13px; line-height: 1.7; }
+.project-brief > div { display:grid; grid-template-columns:76px minmax(0,1fr); gap:12px; padding:12px 0; border-top:1px solid var(--border-primary); }
+.project-brief dt { color:var(--accent-lime); font-size:11px; }.project-brief dd { color:var(--text-secondary); margin:0; }
+.design-rationale { padding:28px 0 40px; }.design-rationale h2 { font-size:24px; margin-bottom:24px; }.design-rationale h2 span { font:11px var(--font-mono); color:var(--text-secondary); margin-left:12px; }
+.design-rationale > div { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }.design-rationale article { border-top:2px solid var(--accent-lime); padding-top:16px; }.design-rationale h3 { font-size:14px; margin-bottom:12px; }.design-rationale p { font-size:13px; line-height:1.8; color:var(--text-secondary); }
+@media(max-width:760px) { .design-rationale > div { grid-template-columns:1fr 1fr; }.project-brief > div { grid-template-columns:64px minmax(0,1fr); }.design-rationale h2 span { display:block; margin:8px 0; } }

@@ -13,16 +13,16 @@ const caseCount = projects.reduce((sum, p) => sum + (p.cases?.length ?? 0), 0)
 
 /** 顶部导航：6 项。导航文字双语 —— CN 下显示中文（附英文小字副标），EN 下保持英文系统语言 */
 export const navItems: NavItem[] = [
-  { id: 'home', index: '01', label: lt('主页', 'HOME'), target: 'home' },
-  { id: 'index', index: '02', label: lt('索引', 'INDEX'), target: 'index' },
-  { id: 'profile', index: '03', label: lt('角色档案', 'PROFILE'), target: 'profile' },
+  { id: 'home', index: '01', label: lt('动效预览', 'MOTION'), target: 'home' },
+  { id: 'selected', index: '02', label: lt('精选作品', 'SELECTED'), target: 'selected' },
+  { id: 'projects', index: '03', label: lt('全部作品', 'PROJECTS'), target: 'projects' },
+  { id: 'profile', index: '04', label: lt('关于我', 'ABOUT'), target: 'profile' },
   {
     id: 'timeline',
-    index: '04',
-    label: lt('角色经历', 'TIMELINE'),
+    index: '05',
+    label: lt('经历', 'EXPERIENCE'),
     target: 'timeline',
   },
-  { id: 'projects', index: '05', label: lt('项目', 'PROJECTS'), target: 'projects' },
   { id: 'contact', index: '06', label: lt('联系我', 'CONTACT'), target: 'contact' },
 ]
 

@@ -31,6 +31,8 @@ const MEDIA_BASE_URL: string | undefined = import.meta.env.VITE_MEDIA_BASE_URL a
 /** 站点静态资源解析：根绝对路径 -> 生产走 COS（国内 CDN 秒开）；本地/无媒体域 -> Vite base。 */
 export function siteAsset(path: string | undefined): string | undefined {
   if (!path) return path
+  // New per-video stills ship with the site, not the existing media bucket.
+  if (path.startsWith('/assets/stills/') || path === '/assets/files/Jazim-Lau-Portfolio.pdf') return `${import.meta.env.BASE_URL || './'}${path.slice(1)}`
   // 已是绝对 URL 或 data/blob 协议：原样返回
   if (/^(https?:)?\/\//i.test(path) || /^(data|blob):/i.test(path)) return path
   if (path.startsWith('/')) {

@@ -11,16 +11,18 @@ import {
   trackFilterOf,
 } from '../data/projects'
 import { PROJECT_STATUS_CN } from '../data/labels'
-import { gsap } from '../lib/gsap'
-import { useGsapContext } from '../hooks/useGsapContext'
-import { useReducedMotion } from '../hooks/useReducedMotion'
-import { DUR, EASE, STAGGER } from '../lib/motion'
+
+
+
+
 import { useUI } from '../context/UIContext'
 import { scrollToTop } from '../lib/smoothScroll'
 import { VideoPreview } from '../components/ui/VideoPreview'
 import { VideoNavButton } from '../components/ui/VideoNav'
 import { MagneticButton } from '../components/ui/MagneticButton'
 import { PixelSceneBackground } from '../components/ui/PixelSceneBackground'
+import { ProjectBrief } from '../components/ui/ProjectBrief'
+import { DesignRationale } from '../components/ui/DesignRationale'
 import styles from './CaseViewerPage.module.css'
 
 /** 案例媒体轮播中的一项：优先视频，否则用图集单张作封面 */
@@ -36,12 +38,14 @@ interface MediaItem {
  * 以及该案例内的不同活动作品图集 / 视频，左右按钮循环切换。
  */
 export function CaseViewerPage() {
+  const location = useLocation()
+  const requestedWork = new URLSearchParams(location.search).get('work')
   const { slug, caseId } = useParams<{ slug: string; caseId: string }>()
   const { t, tx, txList, lang, setProjectsState } = useUI()
   const cn = lang === 'CN'
   const navigate = useNavigate()
   const rootRef = useRef<HTMLElement>(null)
-  const reduced = useReducedMotion()
+
 
   const project = getProjectBySlug(slug)
   /* 案例顺序跟随二级筛选顺序，保证「上一个/下一个案例」与筛选页顺序一致 */
@@ -54,7 +58,7 @@ export function CaseViewerPage() {
   const hasWorks = works.length > 0
 
   /* ---------- works 模式：当前活动 + 当前活动内视频 ---------- */
-  const [workIdx, setWorkIdx] = useState(0)
+  const [workIdx, setWorkIdx] = useState(() => Math.max(0, works.findIndex(w => w.id === requestedWork)))
   const [videoIdx, setVideoIdx] = useState(0)
   const totalVideos = hasWorks ? works.reduce((s, w) => s + w.videos.length, 0) : 0
   const workOffsets = useMemo(() => {
@@ -128,56 +132,9 @@ export function CaseViewerPage() {
      这里不再各自写 scrollTo，避免与返回恢复逻辑抢滚动。 */
   useEffect(() => {
     setItemIndex(0)
-    setWorkIdx(0)
+    setWorkIdx(Math.max(0, works.findIndex(w => w.id === requestedWork)))
     setVideoIdx(0)
-  }, [slug, caseId])
-
-  /* Hero 入场动画：标题、meta、视频预览依次揭示（与详情页一致） */
-  useGsapContext(
-    () => {
-      if (reduced || !project) return
-      const tl = gsap.timeline({ delay: 0.1 })
-      tl.from(`.${styles.heroIndex}`, {
-        xPercent: -40,
-        opacity: 0,
-        duration: DUR.element,
-        ease: EASE.title,
-      })
-        .from(
-          `.${styles.heroTitle}`,
-          {
-            xPercent: -16,
-            scaleX: 0.76,
-            clipPath: 'inset(0% 100% 0% 0%)',
-            duration: DUR.titleInSlow,
-            ease: EASE.title,
-          },
-          0.05
-        )
-        .from(
-          `.${styles.heroZh}`,
-          { yPercent: 120, duration: DUR.element, ease: EASE.element },
-          0.3
-        )
-        .from(
-          `.${styles.metaItem}`,
-          { yPercent: 110, opacity: 0, duration: 0.6, stagger: STAGGER.tags, ease: EASE.element },
-          0.4
-        )
-        .from(
-          `.${styles.heroMedia}`,
-          {
-            clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-            scale: 1.06,
-            duration: DUR.media,
-            ease: EASE.media,
-          },
-          0.24
-        )
-    },
-    [reduced, slug, caseId],
-    rootRef
-  )
+  }, [slug, caseId, requestedWork])
 
   /* 顶部 / 预览区导航（案例导航 + workBar + 预览切换共用）：在有作品的产品内，
      一律在「当前产品内部的作品」间切换（不改 URL，仅切 workIdx），与预览视频上的
@@ -245,7 +202,6 @@ export function CaseViewerPage() {
   /* 返回：有应用内进入历史 → 回上一层（恢复原 filter / product / video / 滚动）；
      直接 URL 打开（React Router 初始 location.key 为 'default'，无应用内导航）
      → 回退到所属 PRODUCT / TRACK（仍然不回首页顶部）。 */
-  const location = useLocation()
   const [canGoBack] = useState(() => location.key !== 'default')
   const goBack = useCallback(() => {
     if (canGoBack) {
@@ -411,7 +367,8 @@ export function CaseViewerPage() {
               <span className={styles.heroZh}>{workNameZh}</span>
             </span>
 
-            <p className={styles.heroDesc}>{tx(heroDesc)}</p>
+            <p className={styles.heroDesc}>{tx(heroMeta)}{project.slug === 'game-ui-motion-studies' ? t(' · 个人练习 / 自学实践', ' · Personal practice / Self-study') : ''}</p>
+            <ProjectBrief project={project} detail={detail || undefined} role={heroRole} caseLevel />
 
             <ul className={styles.meta}>
               <li className={styles.metaItem}>
@@ -637,7 +594,7 @@ export function CaseViewerPage() {
                   <span className={styles.workIndex}>{String(wi + 1).padStart(2, '0')}</span>
                   <span>{tx(w.name)}</span>
                   {/* 数量 = 本项目视频总数（新增视频后自动同步） */}
-                  <span className={styles.workCount}>{String(totalVideos).padStart(2, '0')}</span>
+                  <span className={styles.workCount}>{String(w.videos.length).padStart(2, '0')}</span>
                 </button>
               ))}
             </div>
@@ -647,6 +604,7 @@ export function CaseViewerPage() {
 
       {/* ══════════════ 章节：子项目独立详情（编号动态，按数据决定展示） ══════════════ */}
       <div className={`${styles.body} shell`}>
+        <DesignRationale id={currentWork?.id} />
         {detail ? (
           (() => {
             /* 收集实际要渲染的章节块；缺失章节（如 delivery）自动跳过，编号动态递增 */

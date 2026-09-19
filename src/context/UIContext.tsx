@@ -85,7 +85,7 @@ function readStoredLang(): Lang {
 export function UIProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>(readStoredLang)
   const [pendingLang, setPendingLang] = useState<Lang | null>(null)
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(true)
   const [projectsState, setProjectsState] = useState<{
     filter: ProjectFilterId | 'all'
     subFilter: string

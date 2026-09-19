@@ -580,3 +580,21 @@
     transition: none;
   }
 }
+
+/* Visible, reachable controls across pointer, touch and keyboard input. */
+.fsBtn { display: flex; justify-content: center; gap: 8px; width: auto; min-width: 88px; min-height: 44px; padding: 0 12px; background: #101713e8; font-size: 12px; }
+.playBtn, .volumeBtn { min-width: 44px; min-height: 44px; }
+.pickBtn { min-width: 44px; min-height: 44px; }
+.hudTop, .hudControls { opacity: 1; visibility: visible; transform: none; }
+.progressTrack, .volumeTrack { min-height: 28px; background: linear-gradient(transparent 12px, #ffffff38 12px, #ffffff38 16px, transparent 16px); }
+.progressFill, .volumeFill { top: 12px; bottom: auto; height: 4px; }
+.scan, .grain, .veil { display: none; }
+.retryBtn { position:absolute; z-index:10; inset: 44% auto auto 50%; transform:translateX(-50%); min-height:48px; padding: 10px 20px; background:var(--accent-lime); color:#101713; }
+.wrap:focus-within .hudTop, .wrap:focus-within .hudControls { opacity: 1; visibility: visible; }
+@media(max-width:600px) { .hud { padding:8px; }.hudTag { max-width:45%; overflow:hidden; font-size:9px; }.hudStatus { display:none; }.volumeTrack { display:none; }.hudBottom { column-gap:6px; }.fsBtn { min-width:76px; } }
+.pickerRow { flex-wrap: nowrap; gap: 8px; background: #0b100de8; padding: 6px; }
+.pickerList { flex-wrap: nowrap; gap: 4px; flex: none; }
+.pickBtn:disabled { opacity: .3; cursor: default; }
+.pickerLabel { display: none; }
+.pickerExtra { padding: 4px; letter-spacing: .04em; }
+@media(max-width:768px) { .pickerRow { gap:4px; padding:4px; }.pickBtn { min-width:44px; }.pickerExtra { font-size:9px; } }

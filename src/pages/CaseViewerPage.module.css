@@ -879,3 +879,8 @@ button.nextInner {
     transition: none;
   }
 }
+
+.heroGrid { align-items:start; grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr); }
+.heroTitle { font-size:clamp(26px,3vw,44px); line-height:1.05; }
+.back, .subModuleChip, .workChip { min-height:44px; }
+@media(max-width:900px) { .heroGrid { grid-template-columns:1fr; }.heroTitle { font-size:30px; } }

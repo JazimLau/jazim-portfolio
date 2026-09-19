@@ -630,3 +630,5 @@
     border-color: rgba(184, 255, 61, 0.45);
   }
 }
+
+.link, .langBtn, .soundBtn, .menuBtn { min-height:44px; }.langBtn, .menuBtn { min-width:44px; }

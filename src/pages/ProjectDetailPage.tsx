@@ -17,11 +17,13 @@ import { useGsapContext } from '../hooks/useGsapContext'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useUI } from '../context/UIContext'
 import { scrollToTop } from '../lib/smoothScroll'
-import { DUR, EASE, STAGGER } from '../lib/motion'
+import { EASE } from '../lib/motion'
 import { MagneticButton } from '../components/ui/MagneticButton'
 import { VideoNavButton } from '../components/ui/VideoNav'
 import { VideoPreview } from '../components/ui/VideoPreview'
 import { PixelSceneBackground } from '../components/ui/PixelSceneBackground'
+import { ProjectBrief } from '../components/ui/ProjectBrief'
+import { DesignRationale } from '../components/ui/DesignRationale'
 import styles from './ProjectDetailPage.module.css'
 
 /** 服务列表代码 → 中文名（中文模式下展示） */
@@ -113,48 +115,9 @@ export function ProjectDetailPage() {
 
   useGsapContext(
     () => {
-      if (reduced || !project) return
+      if (!project) return
 
-      /* Hero */
-      const tl = gsap.timeline({ delay: 0.1 })
-      tl.from(`.${styles.heroIndex}`, {
-        xPercent: -40,
-        opacity: 0,
-        duration: DUR.element,
-        ease: EASE.title,
-      })
-        .from(
-          `.${styles.heroTitle}`,
-          {
-            xPercent: -16,
-            scaleX: 0.76,
-            clipPath: 'inset(0% 100% 0% 0%)',
-            duration: DUR.titleInSlow,
-            ease: EASE.title,
-          },
-          0.05
-        )
-        .from(
-          `.${styles.heroZh}`,
-          { yPercent: 120, duration: DUR.element, ease: EASE.element },
-          0.3
-        )
-        .from(
-          `.${styles.metaItem}`,
-          { yPercent: 110, opacity: 0, duration: 0.6, stagger: STAGGER.tags, ease: EASE.element },
-          0.4
-        )
-        .from(
-          `.${styles.heroMedia}`,
-          {
-            clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-            scale: 1.06,
-            duration: DUR.media,
-            ease: EASE.media,
-          },
-          0.24
-        )
-
+      if (reduced) return
       /* 各章节 */
       gsap.utils.toArray<HTMLElement>(`.${styles.block}`).forEach((block) => {
         const inner = gsap.timeline({
@@ -274,7 +237,8 @@ export function ProjectDetailPage() {
               <span className={styles.heroZh}>{titleZh}</span>
             </span>
 
-            <p className={styles.heroDesc}>{tx(project.description)}</p>
+            <p className={styles.heroDesc}>{categoryText}</p>
+            <ProjectBrief project={project} />
 
             <ul className={styles.meta}>
               <li className={styles.metaItem}>
@@ -379,6 +343,7 @@ export function ProjectDetailPage() {
 
       {/* ══════════════ 章节 ══════════════ */}
       <div className={`${styles.body} shell`}>
+        <DesignRationale id={project.slug} />
         {project.sections.map((section, i) => (
           <section key={section.id} className={styles.block}>
             <span className={styles.blockRule} aria-hidden="true" />

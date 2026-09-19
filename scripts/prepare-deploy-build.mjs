@@ -16,6 +16,8 @@ import { join, relative, resolve } from 'node:path'
 
 const targetDir = resolve(process.argv[2] || 'deploy-output/tencent-site')
 const MEDIA_DOMAIN = 'jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com'
+const sameOrigin = process.argv.includes('--same-origin')
+const expectedMedia = sameOrigin ? '/media-proxy' : MEDIA_DOMAIN
 const reportsDir = resolve('deploy-output/reports')
 
 function walk(dir, out = []) {
@@ -47,7 +49,7 @@ let sample = ''
 for (const f of jsFiles) {
   try {
     const txt = readFileSync(f, 'utf8')
-    if (txt.includes(MEDIA_DOMAIN)) {
+    if (txt.includes(MEDIA_DOMAIN) || (sameOrigin && txt.includes('/media-proxy'))) {
       mediaBaseConfirmed = true
       sample = relative(process.cwd(), f)
       break
@@ -63,7 +65,7 @@ for (const f of jsFiles) {
 // （COS 默认域名对 script/link/img/XHR 资源加载不受强制下载头影响。）
 const siteOrigin = `https://${MEDIA_DOMAIN}`
 const indexPath = join(targetDir, 'index.html')
-{
+if (!sameOrigin) {
   let html = readFileSync(indexPath, 'utf8')
   const before = html
   html = html

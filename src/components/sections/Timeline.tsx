@@ -356,8 +356,8 @@ export function Timeline() {
 
       <div className={`shell ${styles.shell}`}>
         <SectionHeader
-          index="04"
-          code="MISSION LOG"
+          index="05"
+          code="EXPERIENCE"
           titleEn="TIMELINE"
           titleZh={t('履历记录', 'Mission log')}
         />

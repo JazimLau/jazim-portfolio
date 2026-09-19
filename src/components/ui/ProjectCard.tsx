@@ -13,7 +13,8 @@ import {
 import { METRIC_CN, PROJECT_STATUS_CN } from '../../data/labels'
 import { useUI } from '../../context/UIContext'
 import { MagneticButton } from './MagneticButton'
-import { VideoNavButton } from './VideoNav'
+import { useIsCompact } from '../../hooks/useReducedMotion'
+import { videoStill } from '../../data/videoStills'
 import { VideoPreview } from './VideoPreview'
 import styles from './ProjectCard.module.css'
 
@@ -58,9 +59,9 @@ export function ProjectCard({
   onOpenCase,
   videoIndex,
   onVideoChange,
-  onPrevVideo,
-  onNextVideo,
 }: ProjectCardProps) {
+  const [continuous, setContinuous] = useState(true)
+  const compact = useIsCompact()
   const isActive = position === 'active'
   /* 点击反馈：短暂显示 SELECTED（border→紫 / marker→lime / 一条扫描线） */
   const [flash, setFlash] = useState(false)
@@ -79,6 +80,12 @@ export function ProjectCard({
 
   /* 受控视频序号：活动卡由 Projects 统一管理（切换产品时归零、从案例返回时恢复） */
   const activeVideoIndex = videoIndex ?? 0
+  const videoCount = project.videos?.length ?? 0
+  const windowSize = compact ? 3 : 5
+  const windowStart = Math.max(0, Math.min(activeVideoIndex - Math.floor(windowSize / 2), videoCount - windowSize))
+  const visibleVideos = Array.from({ length: Math.min(windowSize, videoCount) }, (_, i) => windowStart + i)
+  const currentCase = project.cases?.find(c => c.works?.some(w => w.videos.includes(project.videos?.[activeVideoIndex] ?? '')))
+  const currentWork = currentCase?.works?.find(w => w.videos.includes(project.videos?.[activeVideoIndex] ?? ''))
   /* 视频源 → 所属子模块案例 id */
   const videoOwner = useMemo(() => videoOwnerMap(project), [project])
   /* 视频源 → 活动项目名（work name）：预览 HUD 显示当前视频名称，随 activeVideoIndex 更新 */
@@ -143,7 +150,7 @@ export function ProjectCard({
         <i />
       </span>
 
-      <div className={styles.grid}>
+      <div className={styles.grid} {...(!isActive ? { inert: '' } : {})}>
         {/* ─────────── 左：信息 ─────────── */}
         <div className={styles.info}>
           <header className={styles.head}>
@@ -187,6 +194,8 @@ export function ProjectCard({
               <dd>{txList(project.role).slice(0, 3).join(' · ')}</dd>
             </div>
           </dl>
+
+          {isActive && <div className={styles.contribution}><h4>{t('当前作品 · 我的贡献', 'Current work · My contribution')}</h4><p>{currentWork?.role || currentWork?.detail?.role ? tx(currentWork.role ?? currentWork.detail!.role) : currentCase?.role ? t('该产品范围：', 'Product-level role: ') + tx(currentCase.role) : t('本片的独立职责说明待补充。', 'A separate role description for this clip is not yet available.')}</p></div>}
 
           <div className={styles.cta}>
             <MagneticButton
@@ -262,7 +271,7 @@ export function ProjectCard({
             onVideoChange={
               isActive && project.videos && project.videos.length > 0 ? onVideoChange : undefined
             }
-            cover={project.cover}
+            cover={isActive ? videoStill(project.videos?.[activeVideoIndex] ?? project.video) : project.cover}
             alt={t(`${titleZh} 项目预览`, `${project.title} project preview`)}
             indexLabel={project.index}
             /* 预览标签显示当前视频的活动项目名（如 上博联动第四期），随 activeVideoIndex 更新 */
@@ -271,98 +280,28 @@ export function ProjectCard({
             mode={isActive ? 'auto' : 'hover'}
             /* 首页卡片：视频播完自动切下一条（浏览全部视频），不循环；
                进入详情/案例页后才单条循环。非活动卡悬停预览保持单条循环。 */
-            loopVideo={isActive ? false : true}
+            loopVideo={isActive ? !continuous : true}
             lazy
             aspect="16 / 9"
-            className={`${styles.videoBox} hidePickerOnMobile`}
-          >
-            {/* 视频预览旁的左右箭头：仅活动卡且当前卡片有多条视频时显示。
-                只切换 activeVideoIndex（当前产品内部的视频），绝不切换 PRODUCT。 */}
-            {isActive &&
-              project.videos &&
-              project.videos.length > 1 &&
-              onPrevVideo &&
-              onNextVideo && (
-                <div className={styles.videoNav}>
-                  <VideoNavButton
-                    direction="prev"
-                    onClick={onPrevVideo}
-                    aria-label={t('上一个视频', 'Previous video')}
-                  >
-                    <ChevronLeft size={13} />
-                  </VideoNavButton>
-                  <VideoNavButton
-                    direction="next"
-                    onClick={onNextVideo}
-                    aria-label={t('下一个视频', 'Next video')}
-                  >
-                    <ChevronRight size={13} />
-                  </VideoNavButton>
-                </div>
-              )}
-          </VideoPreview>
-
-          {/* 移动端视频导航行（仅手机显示；桌面保持画面内箭头 + 底部 VIDEO 选择条）：
-              第一层：‹ 上一个 | VIDEO 01 / 07 | 下一个 ›
-              第二层：横向滚动 [01] [02] [03] ...
-              与 Playback（播放/进度/音量）完全独立，位于 Video Frame 下方。 */}
-          {isActive &&
-            project.videos &&
-            project.videos.length > 1 &&
-            onPrevVideo &&
-            onNextVideo && (
-              <div
-                className={styles.mobileVideoNav}
-                aria-label={t('视频导航', 'Video navigation')}
-              >
-                <div className={styles.mobileNavRow}>
-                  <button
-                    type="button"
-                    className={styles.mobileNavBtn}
-                    onClick={onPrevVideo}
-                    aria-label={t('上一个视频', 'Previous video')}
-                    data-cursor="link"
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <span className={styles.mobileVideoCounter}>
-                    {t('视频', 'VIDEO')}{' '}
-                    {String(activeVideoIndex + 1).padStart(2, '0')} /{' '}
-                    {String(project.videos.length).padStart(2, '0')}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.mobileNavBtn}
-                    onClick={onNextVideo}
-                    aria-label={t('下一个视频', 'Next video')}
-                    data-cursor="link"
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-                <div className={styles.mobilePickerRail} role="group" aria-label={t('视频列表', 'Video list')}>
-                  {project.videos.map((_v, vi) => (
-                    <button
-                      key={vi}
-                      type="button"
-                      className={`${styles.mobilePickBtn} ${
-                        vi === activeVideoIndex ? styles.mobilePickBtnOn : ''
-                      }`}
-                      onClick={() => onVideoChange?.(vi)}
-                      aria-current={vi === activeVideoIndex ? 'true' : undefined}
-                      aria-label={`${t('视频', 'Video')} ${vi + 1}`}
-                      data-cursor="link"
-                    >
-                      {String(vi + 1).padStart(2, '0')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            className={styles.videoBox}
+            showPicker={false}
+          />
 
           {/* 侧边信息面板：项目数据（各产品独立，数量动态计算） */}
           <aside className={styles.sidePanel}>
             <span className={styles.sideTitle}>{t('项目数据', 'PROJECT DATA')}</span>
+            {isActive && videoCount > 1 && <nav className={styles.dataVideoNav} aria-label={t('项目视频选择', 'Project video selection')}>
+              <div className={styles.dataVideoHeading}><strong>{tx(currentVideoLabel ?? project.titleZh)}</strong><span>{activeVideoIndex + 1} / {videoCount}</span></div>
+              <label className={styles.playMode}><input type="checkbox" checked={continuous} onChange={e => setContinuous(e.target.checked)} />{t('连续播放', 'Continuous playback')}</label>
+              <div className={styles.dataVideoButtons}>
+                <button type="button" disabled={activeVideoIndex === 0} onClick={() => onVideoChange?.(activeVideoIndex - 1)} aria-label={t('上一条视频', 'Previous video')}><ChevronLeft size={18}/></button>
+                {visibleVideos.map(i => <button type="button" key={i} aria-label={t('视频', 'Video') + ' ' + (i + 1)} aria-current={i === activeVideoIndex ? 'true' : undefined} onClick={() => onVideoChange?.(i)}>{String(i + 1).padStart(2, '0')}</button>)}
+                <button type="button" disabled={activeVideoIndex === videoCount - 1} onClick={() => onVideoChange?.(activeVideoIndex + 1)} aria-label={t('下一条视频', 'Next video')}><ChevronRight size={18}/></button>
+              </div>
+              {currentCase && currentWork && <Link className={styles.currentWorkLink} to={`/projects/${project.slug}/case/${currentCase.id}?work=${currentWork.id}`} onClick={() => onOpenCase?.(currentCase.id)}>{t('查看当前视频的案例详情', 'View this video’s case study')} ↗</Link>}
+            </nav>}
+            <span className={styles.sideTitle}>{project.slug === 'leihuo-external-motion-system' ? t('雷火实习累计', 'LEIHUO INTERNSHIP TOTALS') : t('本方向累计数据', 'DISCIPLINE TOTALS')}</span>
+            <p className={styles.scopeNote}>{t('以下为整个方向的统计，不是当前单个作品的成果。', 'These figures cover the discipline, not the individual work above.')}</p>
             <ul className={styles.metrics}>
               {project.metrics.map((m) => (
                 <li key={m.label} className={styles.metric}>

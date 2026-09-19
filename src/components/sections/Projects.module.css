@@ -886,3 +886,8 @@
     animation: none;
   }
 }
+
+.selectPanel { position:relative; padding-bottom:12px; }
+.controls { position:absolute; inset:50% 8px auto; z-index:5; margin:0; transform:translateY(-50%); pointer-events:none; flex-wrap:nowrap; }
+.controls .navBtn { pointer-events:auto; width:44px; height:52px; background:#101713ed; box-shadow:0 2px 12px #0006; }
+@media(max-width:767px) { .selectPanel { padding-left:0; padding-right:0; }.controls { left:-10px; right:-10px; }.controls .navBtn { width:44px; height:44px; } }

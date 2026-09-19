@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { RefObject } from 'react'
-import { Maximize, Minimize, Pause, Play, Volume2, VolumeX } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Maximize, Minimize, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { usePlayback } from '../../context/PlaybackContext'
 import { useUI } from '../../context/UIContext'
 import { useHlsVideo } from '../../hooks/useHlsVideo'
 import { claimPlayback, releasePlayback } from '../../lib/videoMutex'
+import { useReducedMotion, useIsCompact } from '../../hooks/useReducedMotion'
 import { siteAsset } from '../../lib/media'
 import styles from './VideoPreview.module.css'
 
 type PlayMode = 'hover' | 'auto' | 'manual'
 
 interface VideoPreviewProps {
+  showPicker?: boolean
   /** 单条视频（与 videos 二选一，优先 videos） */
   video?: string
   /** 视频播放列表：多条时在底部显示视频选择条 */
@@ -142,6 +144,15 @@ function PlaybackStatus({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          const v = videoRef.current
+          if (!v || !Number.isFinite(v.duration)) return
+          if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return
+          e.preventDefault()
+          e.stopPropagation()
+          v.currentTime = e.key === 'Home' ? 0 : e.key === 'End' ? v.duration : Math.max(0, Math.min(v.duration, v.currentTime + (e.key === 'ArrowRight' ? 5 : -5)))
+        }}
         onPointerDown={onSeekDown}
         onPointerMove={onSeekMove}
         onPointerUp={onSeekUp}
@@ -177,7 +188,7 @@ export function VideoPreview({
   indexLabel,
   category,
   status,
-  mode = 'hover',
+  mode: requestedMode = 'hover',
   loopVideo = true,
   showMeta = true,
   lazy = true,
@@ -185,7 +196,11 @@ export function VideoPreview({
   className = '',
   children,
   selectorExtra,
+  showPicker = true,
 }: VideoPreviewProps) {
+  const reduced = useReducedMotion()
+  const compact = useIsCompact()
+  const mode = reduced && requestedMode === 'auto' ? 'manual' : requestedMode
   const wrapRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   /* 记录按下位置：点按视频本体切换播放/暂停，拖拽切项目时不误触 */
@@ -218,12 +233,16 @@ export function VideoPreview({
   )
 
   const currentSrc = sources.length > 0 ? sources[index] : undefined
+  const visibleCount = compact ? 3 : 5
+  const pickerStart = Math.max(0, Math.min(index - Math.floor(visibleCount / 2), sources.length - visibleCount))
+  const pickerIndices = Array.from({ length: Math.min(visibleCount, sources.length) }, (_, i) => pickerStart + i)
 
   const [inView, setInView] = useState(!lazy)
   const [videoFailed, setVideoFailed] = useState(() => sources.length === 0)
   /* 视频加载中（HLS 拉流/解码未就绪）：auto 模式加载时隐藏封面露出黑底 */
   const [videoLoading, setVideoLoading] = useState(() => sources.length > 0)
   const [coverFailed, setCoverFailed] = useState(!cover)
+  useEffect(() => setCoverFailed(!cover), [cover])
   const [playing, setPlaying] = useState(false)
   /* 当前视频是否已真正开始播放（已有画面帧）。
      已开播后暂停（离屏暂停 / 手动暂停）时显示视频当前帧而不是通用封面，
@@ -403,7 +422,8 @@ export function VideoPreview({
     if (!v) return
     const onReady = () => setVideoLoading(false)
     const onCanPlay = () => {
-      if (!pendingPlayRef.current && modeRef.current !== 'auto') return
+      // Seeking after a user pause must not restart playback.
+      if (!pendingPlayRef.current) return
       pendingPlayRef.current = false
       if (v.paused) {
         claimPlayback(v)
@@ -521,12 +541,6 @@ export function VideoPreview({
     const v = videoRef.current
     if (!v || videoFailed || !currentSrc) return
     if (v.paused) {
-      /* 用户显式点击播放：默认开启声音（用户手势内带声播放不受浏览器限制）。
-         自动播放（auto / 悬停）仍保持静音，兼容浏览器自动播放策略并避免叠声。 */
-      if (muted) {
-        setSoundOn(true)
-        setLocalMuted(false)
-      }
       play()
     } else {
       v.pause()
@@ -546,9 +560,12 @@ export function VideoPreview({
         /* 退出全屏被拒绝时静默处理 */
       })
     } else {
-      el.requestFullscreen().catch(() => {
-        /* 全屏被拒绝（如不在用户手势内）时静默处理 */
-      })
+      const nativeVideo = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => nativeVideo?.webkitEnterFullscreen?.())
+      } else {
+        nativeVideo?.webkitEnterFullscreen?.()
+      }
     }
   }
 
@@ -660,7 +677,7 @@ export function VideoPreview({
   /* auto 模式加载中：隐藏封面露出黑底；hover 模式封面常显。
      已开播（hasPlayed）后暂停时不再覆盖通用封面，让视频显示当前作品画面帧。 */
   const showCover =
-    !coverFailed && !(mode === 'auto' && videoLoading) && (!hasPlayed || mode === 'hover')
+    !coverFailed && (!hasPlayed || mode === 'hover')
   const showFallback = videoFailed && coverFailed
 
   return (
@@ -695,7 +712,7 @@ export function VideoPreview({
         {showVideo && (
           <video
             ref={videoRef}
-            className={`${styles.video} ${mode === 'auto' && !playing ? styles.videoIdle : ''}`}
+            className={`${styles.video} ${mode === 'auto' && !hasPlayed ? styles.videoIdle : ''}`}
             poster={coverFailed ? undefined : siteAsset(cover)}
             muted={muted}
             loop={loopVideo}
@@ -729,11 +746,12 @@ export function VideoPreview({
             {indexLabel && <span className={styles.fallbackIndex}>{indexLabel}</span>}
             <span className={styles.fallbackNote}>
               <i className={styles.fallbackDot} />
-              {t('MEDIA PENDING / 待替换素材', 'MEDIA PENDING / PLACEHOLDER')}
+              {t('视频暂时无法加载，请稍后重试', 'Video unavailable. Please try again.')}
             </span>
           </div>
         )}
 
+        {videoFailed && currentSrc && <button type="button" className={styles.retryBtn} onClick={(e) => { e.stopPropagation(); setVideoFailed(false); setVideoLoading(true); }}>{t('重新加载视频', 'Retry video')}</button>}
         {/* 压暗与颗粒，保证叠加文字可读 */}
         <div className={styles.veil} aria-hidden="true" />
         <div className={`scanlines ${styles.scan}`} aria-hidden="true" />
@@ -774,10 +792,11 @@ export function VideoPreview({
                   data-cursor="link"
                 >
                   {isFullscreen ? (
-                    <Minimize size={11} strokeWidth={2.2} />
+                    <Minimize size={20} strokeWidth={2.2} />
                   ) : (
-                    <Maximize size={11} strokeWidth={2.2} />
+                    <Maximize size={20} strokeWidth={2.2} />
                   )}
+                  <span>{isFullscreen ? t('退出', 'Exit') : t('全屏', 'Fullscreen')}</span>
                 </button>
               </div>
             </div>
@@ -838,6 +857,13 @@ export function VideoPreview({
                       aria-valuemin={0}
                       aria-valuemax={100}
                       aria-valuenow={Math.round(effVolume * 100)}
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setLocalVolume(Math.max(0, Math.min(1, effVolume + (['ArrowRight', 'ArrowUp'].includes(e.key) ? .1 : -.1))))
+                      }}
                       onPointerDown={onVolumeDown}
                       onPointerMove={onVolumeMove}
                       onPointerUp={onVolumeUp}
@@ -855,14 +881,15 @@ export function VideoPreview({
               {/* 视频选择条（Video Index 层）：多条视频时显示 VIDEO 序号按钮；
                   有 selectorExtra（如跨作品扁平计数）时即使单条也渲染该行。
                   始终可见、独立于 Playback Controls 行，Progress/Volume 永不与之重叠。 */}
-              {(sources.length > 1 || selectorExtra != null) && (
+              {showPicker && (sources.length > 1 || selectorExtra != null) && (
                 <div className={styles.pickerRow}>
                   {sources.length > 1 && (
                     <span className={styles.pickerLabel}>{t('视频 / VIDEO', 'VIDEO')}</span>
                   )}
                   {sources.length > 1 && (
                     <div className={styles.pickerList}>
-                      {sources.map((_src, i) => (
+                      <button type="button" className={styles.pickBtn} disabled={index === 0} aria-label={t('上一条视频', 'Previous video')} onClick={() => { changeIndex(index - 1); showControlsTemporarily() }}><ChevronLeft size={16} /></button>
+                      {pickerIndices.map((i) => (
                         <button
                           key={i}
                           type="button"
@@ -878,11 +905,13 @@ export function VideoPreview({
                           {String(i + 1).padStart(2, '0')}
                         </button>
                       ))}
+                      <button type="button" className={styles.pickBtn} disabled={index >= sources.length - 1} aria-label={t('下一条视频', 'Next video')} onClick={() => { changeIndex(index + 1); showControlsTemporarily() }}><ChevronRight size={16} /></button>
                     </div>
                   )}
                   {selectorExtra != null && (
                     <span className={styles.pickerExtra}>{selectorExtra}</span>
                   )}
+                  {selectorExtra == null && sources.length > 1 && <span className={styles.pickerExtra}>{String(index + 1).padStart(2, '0')} / {String(sources.length).padStart(2, '0')}</span>}
                 </div>
               )}
             </div>

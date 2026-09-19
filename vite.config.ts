@@ -47,6 +47,9 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       open: true,
     },
+    preview: {
+      proxy: { '/media-proxy': { target: 'https://jazimprofile-media-1465643833.cos.ap-guangzhou.myqcloud.com', changeOrigin: true, rewrite: (path) => path.replace(/^\/media-proxy/, '') } },
+    },
     build: {
       target: 'es2020',
       cssCodeSplit: true,
