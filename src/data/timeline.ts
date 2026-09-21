@@ -10,7 +10,7 @@ export const timeline: TimelineEntry[] = [
   {
     id: 'leihuo',
     index: '01',
-    period: '2026.06 — PRESENT',
+    period: '2026.07 — PRESENT',
     org: lt('杭州网易雷火科技有限公司', 'Hangzhou NetEase Leihuo Technology Co., Ltd.'),
     role: lt('动效实习生（精英实习）', 'Motion Design Intern (Elite Internship)'),
     dept: lt('平台创新中心 - 媒体创意部', 'Platform Innovation Center · Media Creative Dept.'),
@@ -59,20 +59,20 @@ export const timeline: TimelineEntry[] = [
     ],
     /* 数据结果卡：主指标（最新版简历口径，数字在上方、远大于职责文字） */
     resultStats: [
-      { value: '14', label: lt('项目', 'PROJECTS'), numeric: 14 },
-      { value: '83', label: lt('动态模块', 'MOTION MODULES'), numeric: 83 },
-      { value: '65', label: lt('动效资源', 'MOTION ASSETS'), numeric: 65 },
-      { value: '10', label: lt('上线项目', 'LAUNCHED'), numeric: 10 },
-      { value: '06', label: lt('UI 预演', 'UI PREVIEWS'), numeric: 6 },
+      { value: '21', label: lt('项目', 'PROJECTS'), numeric: 21 },
+      { value: '105', label: lt('动态模块', 'MOTION MODULES'), numeric: 105 },
+      { value: '97', label: lt('动效资源', 'MOTION ASSETS'), numeric: 97 },
+      { value: '21', label: lt('上线项目', 'LAUNCHED'), numeric: 21 },
+      { value: '07', label: lt('UI 预演', 'UI PREVIEWS'), numeric: 7 },
     ],
     results: [
-      lt('支持 14 个项目推进', 'Supported 14 projects'),
-      lt('拆解 83 个动态需求模块', 'Broke down 83 motion requirement modules'),
-      lt('输出 65 组动效及动态视觉资源', 'Delivered 65 sets of motion & dynamic-visual assets'),
-      lt('完成 6 组游戏内 UI 动效预演', 'Completed 6 in-game UI motion previs sets'),
-      lt('10 个项目正式上线', '10 projects went live'),
-      lt('完成 7 个 AIGC 相关正式项目', 'Delivered 7 AIGC-related official projects'),
-      lt('常规需求按期交付率 100%，一稿过率约 95%', '100% on-time delivery, roughly 95% first-draft pass'),
+      lt('截至2026年9月，参与21个官网／活动等动效项目', 'As of September 2026: contributed to 21 motion projects for official websites, events and related formats'),
+      lt('拆解 105 个动态需求模块', 'Broke down 105 motion requirement modules'),
+      lt('输出 97 组动效及动态视觉资源', 'Delivered 97 sets of motion & dynamic-visual assets'),
+      lt('完成7组游戏UI动效预演', 'Completed 7 game UI motion previs sets'),
+      lt('21个项目全部正式上线', 'All 21 projects officially launched'),
+      lt('将AIGC应用于10个正式项目', 'Applied AIGC to 10 official projects'),
+      lt('项目一稿过率95%，常规需求按期交付率100%', '95% project first-draft pass rate; 100% on-time delivery for routine requests'),
     ],
     /* 项目数量与 AIGC 落地最能体现这段经历的分量 */
     highlight: [lt('项目', 'projects'), lt('交付率', 'delivery')],
@@ -128,7 +128,7 @@ export const timeline: TimelineEntry[] = [
       { value: '13', label: lt('高传播内容', 'HIGH-REACH CONTENT'), numeric: 13, suffix: '+' },
     ],
     results: [
-      lt('累计创作 30+ 条内容', '30+ pieces produced'),
+      lt('累计参与制作30+条内容', 'Contributed to 30+ pieces'),
       lt('累计播放量 2200W+', '22M+ total views'),
       lt('累计点赞量 210W+', '2.1M+ total likes'),
       lt('13+ 条高传播内容', '13+ high-reach pieces'),
@@ -187,12 +187,12 @@ export const timeline: TimelineEntry[] = [
     ],
     /* 数据结果卡：数字在上方、远大于职责文字，核心数据统一 lime */
     resultStats: [
-      { value: '41', label: lt('内容数', 'CONTENT PIECES'), numeric: 41 },
-      { value: '54', label: lt('完播率', 'COMPLETION RATE'), numeric: 54, suffix: '%' },
+      { value: '41', label: lt('投放视频素材', 'VIDEO AD ASSETS'), numeric: 41 },
+      { value: '54', label: lt('平均完播率', 'AVG. COMPLETION RATE'), numeric: 54, suffix: '%' },
     ],
     results: [
       lt('累计制作41条内容', '41 pieces produced'),
-      lt('内容完播率54%', '54% completion rate'),
+      lt('内容平均完播率54%', '54% average completion rate'),
     ],
     /* 完播率是广告视频最直接的效果指标 */
     highlight: [lt('完播率', 'completion')],

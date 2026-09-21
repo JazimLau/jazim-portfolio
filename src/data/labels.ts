@@ -16,7 +16,7 @@ export const PROJECT_STATUS_CN: Record<string, string> = {
 export const METRIC_CN: Record<string, string> = {
   PROJECTS: '项目数',
   'MOTION ASSETS': '动效资源',
-  'ON-TIME': '按期交付',
+  'ON-TIME': '常规需求按期交付率',
   FIDELITY: '还原度',
   STUDIES: '练习数',
   FOCUS: '专注方向',
@@ -30,7 +30,7 @@ export const METRIC_CN: Record<string, string> = {
   LAUNCHED: '已上线',
   'UI PREVIEWS': 'UI 预演',
   'AIGC PROJECTS': 'AIGC 项目',
-  'FIRST-DRAFT PASS': '一稿过率',
+  'FIRST-DRAFT PASS': '项目一稿过率',
   /* 社媒 / 宣发一级指标 */
   'SELECTED CASES': '精选案例',
   'CONTENT PRODUCED': '参与内容',

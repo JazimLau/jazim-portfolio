@@ -200,14 +200,14 @@ export const projects: Project[] = [
     video: '/assets/videos/naraka/naraka-shangbo-demo.m3u8',
     videos: [],
     gallery: [],
-    /* 任务数据（最新版简历口径）：主指标 14 / 83 / 65 / 10，辅助 06 / 07 / 95% / 100% */
+    /* 任务数据（最新版简历口径）：主指标 21 / 105 / 97 / 21，辅助 07 / 10 / 95% / 100% */
     metrics: [
-      { label: 'PROJECTS', value: lt('14', '14') },
-      { label: 'MOTION MODULES', value: lt('83', '83') },
-      { label: 'MOTION ASSETS', value: lt('65', '65') },
-      { label: 'LAUNCHED', value: lt('10', '10') },
-      { label: 'UI PREVIEWS', value: lt('06', '06') },
-      { label: 'AIGC PROJECTS', value: lt('07', '07') },
+      { label: 'PROJECTS', value: lt('21', '21') },
+      { label: 'MOTION MODULES', value: lt('105', '105') },
+      { label: 'MOTION ASSETS', value: lt('97', '97') },
+      { label: 'LAUNCHED', value: lt('21', '21') },
+      { label: 'UI PREVIEWS', value: lt('07', '07') },
+      { label: 'AIGC PROJECTS', value: lt('10', '10') },
       { label: 'FIRST-DRAFT PASS', value: lt('95%', '95%') },
       { label: 'ON-TIME', value: lt('100%', '100%') },
     ],
@@ -336,8 +336,8 @@ export const projects: Project[] = [
         labelZh: lt('最终呈现', 'Final result'),
         body: [
           lt(
-            '截至目前累计参与 14 个项目推进，拆解 83 个动态需求模块，输出 65 组动效及动态视觉资源，完成 6 组游戏内 UI 动效预演，其中 10 个项目正式上线，并完成 7 个 AIGC 相关正式项目；常规需求按期交付率保持 100%，一稿过率约 95%。在项目实践中逐步建立了从需求理解、方案设计、动效制作到资源交付与上线走查的完整工作闭环。',
-            'So far: 14 projects supported, 83 motion requirement modules broken down, 65 sets of motion & dynamic-visual assets delivered, 6 in-game UI motion previs sets completed, 10 projects officially launched and 7 AIGC-related official projects delivered; 100% on-time delivery for routine requests with roughly 95% first-draft pass rate. Through these projects I built a complete working loop from brief understanding, design and production to asset delivery and post-launch QA.'
+            '截至2026年9月，累计参与21个官网／活动等动效项目，全部项目已正式上线；拆解105项动态需求模块，输出97组动效及动态视觉资源，完成7组游戏UI动效预演，将AIGC应用于10个正式项目；项目一稿过率95%，常规需求按期交付率100%。在项目实践中逐步建立了从需求理解、方案设计、动效制作到资源交付与上线走查的完整工作闭环。',
+            'As of September 2026: contributed to 21 motion projects for official websites, events and related formats, all officially launched; 105 motion requirement modules, 97 sets of motion and dynamic-visual assets, 7 game UI previs sets, and AIGC applied to 10 official projects. Project first-draft pass rate: 95%; on-time delivery for routine requests: 100%. Through these projects I built a complete working loop from brief understanding, design and production to asset delivery and post-launch QA.'
           ),
         ],
       },
@@ -2461,7 +2461,7 @@ export const projects: Project[] = [
     metrics: [
       { label: 'CONTENTS', value: lt('30+', '30+') },
       { label: 'VIEWS', value: lt('2200W+', '22M+') },
-      { label: 'LIKES', value: lt('210W+', '2.1M') },
+      { label: 'LIKES', value: lt('210W+', '2.1M+') },
     ],
     sections: [
       {
@@ -2508,8 +2508,8 @@ export const projects: Project[] = [
         labelZh: lt('最终呈现', 'Final result'),
         body: [
           lt(
-            '累计创作25条内容，累计播放量2200万，累计点赞量212万，协助账号粉丝增长32万。',
-            '25 pieces produced, 22M total views, 2.12M total likes, and 320K follower growth across the accounts.'
+            '品牌公关实习整体成果：累计参与制作30+条内容，相关内容累计播放2200万+、点赞210万+，其中13+条为高传播内容；数据不单指本分类展示的宣发案例。',
+            'Overall Brand & PR internship results: contributed to 30+ pieces, with 22M+ views, 2.1M+ likes and 13+ high-reach pieces. These totals are not limited to the promotional cases shown here.'
           ),
         ],
       },
@@ -2651,7 +2651,7 @@ export const projects: Project[] = [
       { label: 'SELECTED CASES', value: lt('17', '17') },
       { label: 'CONTENT PRODUCED', value: lt('30+', '30+') },
       { label: 'TOTAL VIEWS', value: lt('2200W+', '22M+') },
-      { label: 'TOTAL LIKES', value: lt('210W+', '2.1M') },
+      { label: 'TOTAL LIKES', value: lt('210W+', '2.1M+') },
     ],
     sections: [
       {
@@ -2698,8 +2698,8 @@ export const projects: Project[] = [
         labelZh: lt('最终呈现', 'Final result'),
         body: [
           lt(
-            '累计参与制作 30+ 条社媒内容，累计播放量 2200W+，累计点赞量 210W+，其中 13+ 条高传播内容；单条最高播放 467W、单条最高点赞 43W。',
-            '30+ social videos produced, 22M+ total views and 2.1M+ total likes, including 13+ high-reach pieces; 4.67M max views and 430K max likes on a single piece.'
+            '品牌公关实习整体成果（非本分类单独统计）：累计参与制作 30+ 条内容，累计播放量 2200W+，累计点赞量 210W+，其中 13+ 条高传播内容；单条最高播放 467W、单条最高点赞 43W。',
+            'Overall Brand & PR internship results (not limited to this category): contributed to 30+ pieces, with 22M+ total views and 2.1M+ total likes, including 13+ high-reach pieces; 4.67M max views and 430K max likes on a single piece.'
           ),
         ],
       },

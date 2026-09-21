@@ -49,6 +49,7 @@ export const profile = {
     lt('游戏动效设计师 / 视频设计师', 'Game Motion Designer / Video Designer'),
     lt('网易雷火动效实习生', 'Motion Design Intern at NetEase Leihuo'),
     lt('澳门城市大学设计学硕士在读', 'MA Design candidate, City University of Macau'),
+    lt('设计学院研究助理（兼职）', 'Part-time Research Assistant, School of Design'),
     lt('2027届学生', 'Class of 2027'),
   ],
 
@@ -89,8 +90,8 @@ export const profile = {
 /** Profile 区块简介（两段） */
 export const profileIntro = [
   lt(
-    '我是刘俊熙，一名专注游戏UI动效、端外页面动态设计与视频视觉表达的学生设计师。目前在网易雷火参与官网、H5、小程序及游戏UI动效相关项目。',
-    'I am Jazim Lau, a student designer focused on game UI motion, off-client page motion design and video visual storytelling. I currently work at NetEase Leihuo on official sites, H5 campaigns, mini-programs and in-game UI motion.'
+    '我是刘俊熙，一名专注游戏UI动效、端外页面动态设计与视频视觉表达的学生设计师。目前在网易雷火参与官网、H5、小程序及游戏UI动效相关项目，同时担任澳门城市大学设计学院研究助理（兼职）。',
+    'I am Jazim Lau, a student designer focused on game UI motion, off-client page motion design and video visual storytelling. I currently work at NetEase Leihuo on official sites, H5 campaigns, mini-programs and in-game UI motion, and serve as a part-time Research Assistant at the School of Design, City University of Macau.'
   ),
   lt(
     '我擅长从需求和静态设计稿出发，拆解动态表现、梳理动画节奏、补充及拆分视觉素材，并将最终动效整理为可供前端或引擎接入的资源。',

@@ -124,11 +124,11 @@ export const indexStats: IndexStat[] = [
   {
     id: 'stat-projects',
     index: 'D-02',
-    value: lt('14', '14'),
+    value: lt('21', '21'),
     label: lt('雷火项目', 'LEIHUO PROJECTS'),
     note: lt(
-      '端内及端外游戏动效项目',
-      'In-game and off-client game motion projects'
+      '官网／活动等动效项目，全部已上线',
+      'Motion projects for official websites, events and related formats; all launched'
     ),
     accent: 'purple',
   },
@@ -138,8 +138,8 @@ export const indexStats: IndexStat[] = [
     value: lt('95%', '95%'),
     label: lt('一稿过率', 'FIRST-DRAFT PASS'),
     note: lt(
-      '项目常规需求一稿通过率',
-      'First-draft pass rate for routine project requests'
+      '项目一稿通过率',
+      'Project first-draft pass rate'
     ),
     accent: 'blue',
   },
@@ -154,7 +154,7 @@ export const indexStats: IndexStat[] = [
   {
     id: 'stat-motion',
     index: 'D-05',
-    value: lt('65+', '65+'),
+    value: lt('97', '97'),
     label: lt('动效资源', 'MOTION ASSETS'),
     note: lt(
       '雷火期间累计输出动效及动态视觉资源',
@@ -165,7 +165,7 @@ export const indexStats: IndexStat[] = [
   {
     id: 'stat-preview',
     index: 'D-06',
-    value: lt('06', '06'),
+    value: lt('07', '07'),
     label: lt('UI 动效预演', 'UI MOTION PREVIEWS'),
     note: lt('游戏内 UI 动效预演', 'In-game UI motion previews'),
     accent: 'purple',
