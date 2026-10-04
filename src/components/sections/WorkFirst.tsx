@@ -34,7 +34,7 @@ const featuredWorks = [
     const work = c.works!.find(w => w.id === workId)!
     return (workId === 'wow-midsummer' ? work.videos.slice(0, 1) : work.videos).map((video, i) => ({ video, name: work.name, part: work.videos.length > 1 ? ` · ${i + 1}/${work.videos.length}` : '', to: `/projects/${commercial.slug}/case/${caseId}?work=${workId}` }))
   }),
-  uiClips(ae, ['sichuan-opera-event', 'medieval-magic-character', 'ae-sci-fi-win', 'gongxi-gacha', 'dialogue-wheel-previs', 'ae-7day-signin']),
+  uiClips(ae, ['ae-sci-fi-win', 'gongxi-gacha', 'ae-7day-signin', 'sichuan-opera-event', 'dialogue-wheel-previs', 'medieval-magic-character']),
   uiClips(ue, ['anime-battle-entry', 'dialogue-wheel-whitebox']),
   uiClips(unity, ['unity-7day-signin', 'anime-wish', 'unity-chest-open']),
 ]

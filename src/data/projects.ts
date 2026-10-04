@@ -1149,7 +1149,7 @@ export const projects: Project[] = [
     video: '/assets/videos/game-ui/lobby-main-menu.m3u8',
     gallery: [],
     metrics: [
-      { label: 'STUDIES', value: '8' },
+      { label: 'STUDIES', value: '0' },
       { label: 'FOCUS', value: 'UI MOTION' },
       { label: 'ENGINE', value: 'UE5 / UNITY' },
     ],
@@ -1278,18 +1278,79 @@ export const projects: Project[] = [
         mainType: lt('预演', 'PREVIS'),
         works: [
           {
-            id: 'sichuan-opera-event',
-            name: lt('川剧主题活动界面动效', 'Sichuan Opera Event UI Motion'),
-            videos: ['/assets/videos/game-ui/sichuan-opera-event.m3u8'],
-            description: lt('川剧主题活动界面动效作品展示。', 'Sichuan Opera Event UI Motion showcase.'),
-            meta: lt('After Effects', 'After Effects'),
+            id: "sichuan-opera-event",
+            date: lt("08.25—08.28", "Aug 25–28"),
+            name: lt("川剧主题活动界面动效", "Sichuan Opera Event UI Motion"),
+            videos: [
+              "/assets/videos/game-ui/sichuan-opera-event.m3u8"
+            ],
+            description: lt("以春节戏台后台为氛围，通过镜面能量汇聚、角色显影和按钮提示建立清晰的观看与操作顺序。", "A festive backstage atmosphere guides attention through gathering mirror energy, character revelation and a confirmation cue."),
+            meta: lt("After Effects", "After Effects"),
+            role: lt("界面动效 / 镜面特效 / 合成", "UI animation / Mirror effects / Compositing"),
+            tags: [
+              "AE",
+              "UI MOTION",
+              "COMPOSITING"
+            ],
+            detail: {
+              background: lt("围绕川剧主题活动界面中的脸谱、镜台、红布和金色纹样展开设计，以红、橙、暖金建立春节戏台后台的氛围。镜面承担主要叙事，角色和确认按钮依次承接视觉重点。", "The opera-themed screen combines masks, a dressing mirror, red fabric and gold ornament. Red, orange and warm gold establish a festive backstage scene, with the mirror leading attention to the character and confirmation button."),
+              objectives: [
+                lt("让镜面变化、角色内容和操作提示形成明确的先后关系。", "Establish a clear order between mirror effects, character content and the action cue."),
+                lt("保留暗部和轮廓对比，控制辉光，避免角色与文字被光效覆盖。", "Preserve dark areas and silhouette contrast so glow does not obscure the character or text."),
+                lt("脸谱流光和按钮呼吸保持克制，辅助状态识别。", "Keep mask reflections and button pulses restrained to support state recognition.")
+              ],
+              role: lt("整理并拆分 PSD 图层，在 AE 中完成场景入场、镜面能量、角色显影遮罩、脸谱流光、按钮反馈及整体合成。AI 用于前期预演、氛围素材和角色轻微动作，最终节奏、遮罩与合成由 AE 调整。", "Separated PSD layers and built the entrance, mirror energy, character-reveal matte, mask reflections, button cues and final composite in AE. AI assisted early previs, atmosphere assets and subtle character motion; timing, mattes and compositing were refined in AE."),
+              process: [
+                lt("拆分场景与角色图层，确定镜面、角色、按钮的视觉层级。", "Separate scene and character layers and define the mirror-character-button hierarchy."),
+                lt("以轻微缩放、位置变化和模糊恢复配合顶部暖光，完成场景入场。", "Use subtle scale, position and blur transitions with overhead warm light for the entrance."),
+                lt("结合分形杂色、湍流置换与 Element 3D 流线，先汇聚暗红能量，再以暖金能量斜向扫过。", "Combine fractal noise, turbulent displacement and Element 3D streams: gather dark-red energy before a diagonal gold sweep."),
+                lt("用能量亮度遮罩带出角色，主体稳定后再出现名称与按钮提示。", "Reveal the character through an energy luminance matte, then introduce the name and button cue."),
+                lt("调整脸谱局部反光、按钮呼吸和整体亮度，统一节奏。", "Refine local mask reflections, button pulses and overall brightness to unify pacing.")
+              ],
+              result: lt("完成以镜面为中心的界面动效预演，角色显影与能量运动形成因果关系。UE5 的材质、Niagara 与蓝图方案属于后续实现思路。", "Completed a mirror-centered UI previs with a causal relationship between energy motion and character revelation. The UE5 material, Niagara and Blueprint approach remains a proposed implementation."),
+              tools: [
+                "After Effects",
+                "Photoshop",
+                "Element 3D",
+                "AI 辅助素材"
+              ]
+            }
           },
           {
-            id: 'medieval-magic-character',
-            name: lt('中世纪魔法题材角色属性界面动效', 'Medieval Magic Character Attributes UI Motion'),
-            videos: ['/assets/videos/game-ui/medieval-magic-character.m3u8'],
-            description: lt('中世纪魔法题材角色属性界面动效作品展示。', 'Medieval Magic Character Attributes UI Motion showcase.'),
-            meta: lt('After Effects', 'After Effects'),
+            id: "medieval-magic-character",
+            name: lt("中世纪魔法题材角色属性界面动效", "Medieval Magic Character Attributes UI Motion"),
+            videos: [
+              "/assets/videos/game-ui/medieval-magic-character.m3u8"
+            ],
+            description: lt("通过角色先行、属性递进和魔法升级反馈，建立中世纪角色属性界面的阅读顺序与成长感。", "Character-first staging, progressive attribute reveals and magical upgrade feedback establish reading order and a sense of growth."),
+            meta: lt("After Effects", "After Effects"),
+            role: lt("界面动效 / 升级反馈 / 合成", "UI animation / Upgrade feedback / Compositing"),
+            tags: [
+              "AE",
+              "CHARACTER",
+              "UI MOTION"
+            ],
+            detail: {
+              background: lt("角色属性界面服务于信息查看与养成升级。原画面信息密集，需要平衡角色氛围、属性阅读与经验增长的过程表达。", "The character attributes screen supports information review and progression. Its dense layout calls for a balance between character atmosphere, readable attributes and a clear experience-growth sequence."),
+              objectives: [
+                lt("先关注角色，再阅读核心属性与详细信息。", "Lead attention from the character to core attributes and then supporting information."),
+                lt("以银币、经验条与施法动作衔接升级过程和结果。", "Connect coins, the experience bar and casting motion to explain upgrade progress and results."),
+                lt("待机保留细微动态，让文字与操作区域稳定。", "Retain subtle idle motion while keeping text and controls stable.")
+              ],
+              role: lt("使用 AE 完成界面编排与合成，结合 AI 生成角色动态，制作分阶段入场、数值增长、施法升级与四秒待机循环。", "Created the UI sequence and composite in AE, using AI-assisted character motion for staged entry, number changes, magical upgrade feedback and a four-second idle loop."),
+              process: [
+                lt("镜头缓慢拉远，逐步露出拱门，建立角色与场景的空间层次。", "Pull the camera back slowly to reveal the arch and establish scene depth."),
+                lt("右侧信息自上而下进入，总属性数字滚动，Wisdom 短暂高亮后恢复稳定。", "Reveal information top to bottom, roll total attributes and briefly highlight Wisdom."),
+                lt("经验书出现时加入银币，引导经验条增长；填满后角色抬杖向书本传输魔法。", "Introduce coins with the experience book, fill the progress bar and lift the staff to channel magic into the book."),
+                lt("衔接翻页与 Power 提示，落杖后回到呼吸、衣袍微动和书本流光循环。", "Follow with page turns and a Power cue, then return to breathing, robe movement and book highlights.")
+              ],
+              result: lt("完成沉稳入场、连贯升级与低强度待机的动效展示。重复进入时缩短入场、连续升级时简化演出属于实际落地建议。", "Completed a composed entrance, coherent upgrade sequence and restrained idle display. Shorter repeat entrances and simplified consecutive upgrades are recommendations for production use."),
+              tools: [
+                "After Effects",
+                "Photoshop",
+                "AI 辅助角色动态"
+              ]
+            }
           },
           {
             id: 'ae-sci-fi-win',
@@ -1415,43 +1476,41 @@ export const projects: Project[] = [
           },
 
           {
-            id: 'ae-7day-signin',
-            name: lt('二次元-七日签到', 'Anime 7-day Sign-in'),
-            videos: ['/assets/videos/game-ui/ae-7day-signin.m3u8'],
-            description: lt(
-              '二次元题材七日签到的动效预演：奖励弹窗、进度反馈与领取状态的节奏与层级设计。',
-              'A motion previs for an anime-style 7-day sign-in — reward popups, progress feedback and claim states, paced and layered.'
-            ),
-            meta: lt('动效预演', 'Motion previs'),
-            date: lt('2026.05', '2026.05'),
-            role: lt('动效预演 / 节奏设计', 'Motion previs / Pacing design'),
-            tags: ['AE', 'REWARD', 'UI MOTION'],
+            id: "ae-7day-signin",
+            name: lt("二次元-七日签到", "Anime 7-day Sign-in"),
+            videos: [
+              "/assets/videos/game-ui/ae-7day-signin.m3u8"
+            ],
+            description: lt("以递进入场建立奖励期待，用不同强度的光效区分品质，待机持续突出当前可领取奖励。", "Progressive reveals build reward anticipation, tiered effects distinguish quality, and idle cues identify the currently claimable reward."),
+            meta: lt("AE 动效预演", "AE Motion Previs"),
+            role: lt("动效预演 / 品质层级 / 节奏设计", "Motion previs / Reward hierarchy / Pacing"),
+            tags: [
+              "AE",
+              "REWARD",
+              "UI MOTION"
+            ],
             detail: {
-              background: lt(
-                '七日签到是常见的活动型界面，需要兼顾每日打卡的重复感与奖励获得的期待感。预演重点处理签到进度、奖励弹窗与领取反馈之间的节奏关系。',
-                'A 7-day sign-in is a recurring event screen balancing repetition with the anticipation of rewards. The previs focuses on the rhythm between sign-in progress, reward popups and claim feedback.'
-              ),
+              background: lt("七日签到活动页需要同时表达奖励品质与领取状态。入场建立奖励期待，待机持续提示当前可领取内容，并保持文字和操作入口清晰。", "The seven-day sign-in page communicates both reward quality and claim state. The entrance builds anticipation; idle motion identifies the current reward while preserving readable text and controls."),
               objectives: [
-                lt('让奖励弹窗与领取反馈有明确的获得情绪', 'Give reward popups and claim feedback a clear sense of gain'),
-                lt('通过进度动效降低每日打卡的重复感', 'Use progress motion to reduce the repetitiveness of daily sign-in'),
-                lt('区分未领取、已领取与可领取三种状态', 'Distinguish unclaimed, claimed and claimable states'),
+                lt("通过光效层次与运动强度区分蓝、紫、金三种品质，而非只改变颜色。", "Differentiate blue, purple and gold tiers through effect layers and motion intensity, beyond color alone."),
+                lt("突出第五天可领取奖励，同时让第七天最终奖励形成期待。", "Emphasize the claimable fifth-day reward while building anticipation for day seven."),
+                lt("强反馈集中于入场，待机降低幅度，适合每日重复查看。", "Concentrate strong feedback in the entrance and restrain idle motion for daily viewing.")
               ],
-              role: lt(
-                '完成签到进度、奖励弹窗与领取状态的整体动效预演，输出节奏与层级参数。',
-                'Produced the full sign-in motion previs — progress, reward popup and claim states — with pacing and hierarchy parameters.'
-              ),
+              role: lt("在 AE 中制作入场与待机预演，确定卡片递进节奏、三种奖励品质的动态差异和可领取状态的视觉重点，为 Unity 分层实现提供依据。背景和角色采用 AI 生成素材。", "Created the AE entrance and idle previs, defining card timing, motion differences across three reward tiers and emphasis for the claimable state as a reference for Unity implementation. Background and character assets were AI-generated."),
               process: [
-                lt('状态梳理', 'State mapping'),
-                lt('节奏草案', 'Pacing draft'),
-                lt('动效制作', 'Animation'),
-                lt('反馈打磨', 'Feedback polish'),
+                lt("建立背景与主题信息，奖励按第 1/4 天、第 2/5 天、第 3/6 天、第 7 天递进进入。", "Establish the background and theme, then reveal days 1/4, 2/5, 3/6 and finally day 7."),
+                lt("蓝色采用简洁揭示，紫色增加局部辉光与粒子，金色叠加光圈、刀面流光及边框光晕。", "Use a simple blue reveal, add glow and particles for purple, and rings, blade highlights and border glow for gold."),
+                lt("第七天延迟揭晓，以短促闪光和扩散粒子形成峰值，随后收束强度。", "Delay day seven, peak with a brief flash and expanding particles, then reduce intensity."),
+                lt("第四、第五天保留底部呼吸光，第五天补充上升光粒和白色流光，突出可领取状态。", "Keep bottom pulses on days four and five, adding rising particles and a white highlight on day five to mark availability."),
+                lt("Unity 中以 UGUI 分层，Animation / Animator 衔接入场与待机，粒子和 Shader 补充奖励氛围。", "Layer the screen in UGUI, connect entrance and idle with Animation / Animator, and add reward effects through particles and shaders.")
               ],
-              result: lt(
-                '完成七日签到的奖励与状态动效预演，让每日打卡在重复中保持一定的获得体验。',
-                'Completed the reward and state motion previs for the 7-day sign-in, keeping the daily routine rewarding.'
-              ),
-              tools: ['After Effects', 'Photoshop'],
-            },
+              result: lt("完成入场与待机展示，区分奖励品质与可领取状态；领取交互、跳过演出及重复进入的简化流程尚未实现。", "Completed entrance and idle presentations with distinct reward tiers and claim states. Claim interaction, skipping and simplified repeat-entry flows are not implemented."),
+              tools: [
+                "After Effects",
+                "Photoshop",
+                "AI 辅助素材"
+              ]
+            }
           },
 
           {
@@ -1521,16 +1580,48 @@ export const projects: Project[] = [
         statusLabel: lt('持续学习', 'CONTINUING LEARNING'),
         works: [
           {
-            id: 'anime-battle-entry',
-            name: lt('二次元战斗入口界面动效', 'Anime Battle Entry UI Motion'),
-            videos: ['/assets/videos/game-ui/anime-battle-entry.m3u8'],
-            description: lt('二次元战斗入口界面动效作品展示。', 'Anime Battle Entry UI Motion showcase.'),
-            meta: lt('Unreal Engine 5 / UMG', 'Unreal Engine 5 / UMG'),
+            id: "anime-battle-entry",
+            name: lt("二次元战斗入口界面动效", "Anime Battle Entry UI Motion"),
+            videos: [
+              "/assets/videos/game-ui/anime-battle-entry.m3u8"
+            ],
+            description: lt("以错峰卡片入场和局部 RGB 扰动建立战斗入口的阅读节奏，保持状态、进度与导航清晰。", "Staggered card entrances and local RGB offsets establish rhythm while keeping state, progress and navigation readable."),
+            meta: lt("Unreal Engine 5 / UMG", "Unreal Engine 5 / UMG"),
+            role: lt("UMG 动画 / 材质 / Niagara", "UMG animation / Materials / Niagara"),
+            tags: [
+              "UMG",
+              "MATERIAL",
+              "NIAGARA"
+            ],
+            detail: {
+              background: lt("界面包含周常副本、章节档案、活动入口与底部导航，服务于日常浏览和战斗内容选择。角色与功能卡片需要保持清晰的层次关系。", "The screen contains weekly challenges, chapter archives, an event entrance and bottom navigation for daily browsing and battle selection. The character and functional cards need a clear hierarchy."),
+              objectives: [
+                lt("通过卡片错峰入场建立从左向右的阅读顺序。", "Establish left-to-right reading through staggered card entrances."),
+                lt("用局部扫光与短促扰动增加科技感，保持文字和卡片外框稳定。", "Add a technological feel with local sweeps and brief distortion while preserving stable text and card borders."),
+                lt("将尘雾与光粒放在背景层，避免遮挡角色与功能内容。", "Keep mist and light particles behind the character and functional content.")
+              ],
+              role: lt("在 Unreal Engine 中用 UMG 分层并编排入场动画，以材质实现 RGB 错位、斜向扫光、交错细线和红条流光，通过 Niagara 制作光粒与尘雾。AI 辅助角色动态作为氛围补充。", "Layered the interface and entrance animations in UMG; built RGB offsets, diagonal sweeps, crossing lines and red-strip highlights with materials; added particles and mist in Niagara. AI-assisted character animation supports the atmosphere."),
+              process: [
+                lt("四张卡片小间隔进入，线框纵向展开，再衔接图案、标题、状态和底部信息。", "Stagger four cards, expand their frames vertically, then reveal imagery, titles, state and bottom information."),
+                lt("斜向扫光从左上至右下移动，并限制在每张卡片内部。", "Move each diagonal sweep from upper left to lower right, clipped within its card."),
+                lt("待机让图案错时产生短促 RGB 扰动，标题、进度与外框保持稳定。", "Apply brief, offset RGB disturbances to card imagery during idle while keeping titles, progress and frames stable."),
+                lt("活动入口细线缓慢交错，红条低强度呼吸，尘雾收束在下半部背景。", "Animate slow crossing event lines and restrained red-strip pulses, with mist confined to the lower background."),
+                lt("以 1080p 预览检查适配、边界与遮挡，缩小扰动幅度并降低粒子数量和亮度。", "Review layout, boundaries and occlusion at 1080p; reduce distortion amplitude, particle count and brightness.")
+              ],
+              result: lt("完成 UMG 入场与循环展示；副本跳转和状态更新等业务交互不在当前实现范围内。", "Completed the UMG entrance and idle presentation. Challenge navigation and live state updates are outside the implemented scope."),
+              tools: [
+                "Unreal Engine",
+                "UMG",
+                "Material",
+                "Niagara",
+                "AI 辅助角色动态"
+              ]
+            }
           },
           {
             id: 'dialogue-wheel-whitebox',
             name: lt(
-              '二次元写实都市题材对话轮盘交互白盒（无特效仅UI实装测试）',
+              '二次元写实都市题材对话轮盘交互白盒（无特效，仅 UI 交互实现）',
               'Anime-Realistic Urban Dialogue Wheel Whitebox (UI-only)'
             ),
             videos: ['/assets/videos/game-ui/dialogue-wheel-whitebox.m3u8'],
@@ -1642,7 +1733,7 @@ export const projects: Project[] = [
       },
       {
         id: 'unity',
-        name: lt('游戏U动效(Unity)', 'Game UI Motion (Unity)'),
+        name: lt('游戏UI动效(Unity)', 'Game UI Motion (Unity)'),
         meta: lt('Unity', 'Unity'),
         description: lt(
           '围绕游戏 UI 动效与实时特效完成 Unity 专项实践，将界面动画、Shader 与 Particle System 结合用于动态表现，重点训练视觉预演向实时引擎效果转换时的节奏、层级与特效组织能力。',
@@ -1656,11 +1747,82 @@ export const projects: Project[] = [
         mainType: lt('UI / SHADER', 'UI / SHADER'),
         works: [
           {
-            id: 'anime-wish',
-            name: lt('二次元祈愿界面动效', 'Anime Wish UI Motion'),
-            videos: ['/assets/videos/game-ui/anime-wish.m3u8'],
-            description: lt('二次元祈愿界面动效作品展示。', 'Anime Wish UI Motion showcase.'),
-            meta: lt('Unity', 'Unity'),
+            id: "unity-7day-signin",
+            name: lt("二次元-七日签到", "Anime 7-day Sign-in"),
+            videos: [
+              "/assets/videos/game-ui/unity-7day-signin.m3u8"
+            ],
+            description: lt("以递进入场建立奖励期待，用不同强度的光效区分品质，待机持续突出当前可领取奖励。", "Progressive reveals build reward anticipation, tiered effects distinguish quality, and idle cues identify the currently claimable reward."),
+            meta: lt("Unity", "Unity"),
+            role: lt("UGUI / 动画编排 / 材质与粒子", "UGUI / Animation / Materials and particles"),
+            tags: [
+              "UNITY",
+              "REWARD",
+              "UI MOTION"
+            ],
+            detail: {
+              background: lt("七日签到活动页需要同时表达奖励品质与领取状态。入场建立奖励期待，待机持续提示当前可领取内容，并保持文字和操作入口清晰。", "The seven-day sign-in page communicates both reward quality and claim state. The entrance builds anticipation; idle motion identifies the current reward while preserving readable text and controls."),
+              objectives: [
+                lt("通过光效层次与运动强度区分蓝、紫、金三种品质，而非只改变颜色。", "Differentiate blue, purple and gold tiers through effect layers and motion intensity, beyond color alone."),
+                lt("突出第五天可领取奖励，同时让第七天最终奖励形成期待。", "Emphasize the claimable fifth-day reward while building anticipation for day seven."),
+                lt("强反馈集中于入场，待机降低幅度，适合每日重复查看。", "Concentrate strong feedback in the entrance and restrain idle motion for daily viewing.")
+              ],
+              role: lt("基于 AE 预演，在 Unity 中用 UGUI 还原界面层级，以 Animation / Animator 衔接入场与待机，使用粒子系统与 Shader 制作奖励氛围、刀面流光、光圈扰动及局部光影。", "Implemented the AE previs in Unity with UGUI layers and Animation / Animator transitions, using particles and shaders for reward atmosphere, blade highlights, ring distortion and local lighting."),
+              process: [
+                lt("建立背景与主题信息，奖励按第 1/4 天、第 2/5 天、第 3/6 天、第 7 天递进进入。", "Establish the background and theme, then reveal days 1/4, 2/5, 3/6 and finally day 7."),
+                lt("蓝色采用简洁揭示，紫色增加局部辉光与粒子，金色叠加光圈、刀面流光及边框光晕。", "Use a simple blue reveal, add glow and particles for purple, and rings, blade highlights and border glow for gold."),
+                lt("第七天延迟揭晓，以短促闪光和扩散粒子形成峰值，随后收束强度。", "Delay day seven, peak with a brief flash and expanding particles, then reduce intensity."),
+                lt("第四、第五天保留底部呼吸光，第五天补充上升光粒和白色流光，突出可领取状态。", "Keep bottom pulses on days four and five, adding rising particles and a white highlight on day five to mark availability."),
+                lt("Unity 中以 UGUI 分层，Animation / Animator 衔接入场与待机，粒子和 Shader 补充奖励氛围。", "Layer the screen in UGUI, connect entrance and idle with Animation / Animator, and add reward effects through particles and shaders.")
+              ],
+              result: lt("完成入场与待机展示，区分奖励品质与可领取状态；领取交互、跳过演出及重复进入的简化流程尚未实现。", "Completed entrance and idle presentations with distinct reward tiers and claim states. Claim interaction, skipping and simplified repeat-entry flows are not implemented."),
+              tools: [
+                "After Effects",
+                "Unity",
+                "UGUI",
+                "Animation / Animator",
+                "Shader",
+                "Particle System"
+              ]
+            }
+          },
+          {
+            id: "anime-wish",
+            name: lt("二次元祈愿界面动效", "Anime Wish UI Motion"),
+            videos: [
+              "/assets/videos/game-ui/anime-wish.m3u8"
+            ],
+            description: lt("用角色坠落、镜片悬浮与局部时空扰动营造宇宙祈愿氛围，入场后收束为清晰、稳定的循环界面。", "A falling character, floating glass and local space-time distortion create a cosmic wish scene that settles into a readable idle loop."),
+            meta: lt("Unity", "Unity"),
+            role: lt("UI 动画 / Shader Graph / 粒子", "UI animation / Shader Graph / Particles"),
+            tags: [
+              "UNITY",
+              "SHADER GRAPH",
+              "UI MOTION"
+            ],
+            detail: {
+              background: lt("以坠落角色、悬浮镜片和宇宙背景组成祈愿界面，在穿越空间的入场演出后保留稳定信息。作品在 Unity 中实现，展示规格为 1080p、30fps。", "The wish screen combines a falling character, floating glass and a cosmic background. A spatial entrance settles into stable information. Implemented in Unity at 1080p and 30fps."),
+              objectives: [
+                lt("视线依次落到角色、活动标题与四周功能入口。", "Guide attention from the character to the event title and surrounding controls."),
+                lt("镜面高光限制在玻璃轮廓内，避免遮住倒影和界面文字。", "Confine reflections to the glass outline to preserve mirror imagery and text."),
+                lt("强速度变化集中于入场，循环保持低幅度悬浮和局部流动。", "Concentrate strong speed changes in the entrance; keep idle floating and local flow restrained.")
+              ],
+              role: lt("拆分 PSD 并在 Unity 中还原构图，使用 Rect Transform 与 Raw Image alpha 关键帧编排动画，由 Animation / Animator 衔接入场和循环；以 Shader Graph 制作镜面裁切、黑洞流动与标题扰动，使用原生粒子系统补充氛围。", "Split the PSD and recreated its composition in Unity. Animated Rect Transform and Raw Image alpha, connected entrance and idle with Animation / Animator, built glass clipping, black-hole flow and title distortion in Shader Graph, and added atmosphere with native particles."),
+              process: [
+                lt("背景曲线拉镜与角色快速下落交叠，随后减速回弹，释放惯性。", "Overlap the background camera move with a fast character descent, then decelerate and rebound."),
+                lt("角色回弹时接入黑洞与标题，以短促 RGB 分离强调标题，再出现四周 UI。", "Introduce the black hole and title during the rebound, briefly emphasize the title with RGB separation, then reveal surrounding UI."),
+                lt("待机让角色轻微漂浮、镜片错时移动，两个镜面各自保留扫光宽度与边界。", "Use subtle character floating and offset glass movement; preserve separate sweep widths and boundaries for both mirrors."),
+                lt("扫光完成后间隔约三秒重复，配合低强度标题杂色、黑洞流动和左右柔光粒子。", "Repeat sweeps after roughly three seconds, with restrained title noise, black-hole flow and soft side particles.")
+              ],
+              result: lt("完成约 4.8 秒入场与 6.1 秒循环的展示，画面约 10.9 秒。当前未接入鼠标、陀螺仪或按钮业务交互；空间感来自不同层级的小幅偏移。", "Completed an approximately 4.8-second entrance and 6.1-second loop, totaling 10.9 seconds. Mouse, gyroscope and button business interactions are not connected; depth comes from small offsets across layers."),
+              tools: [
+                "Unity 2022.3.62f1c1",
+                "Animation / Animator",
+                "Shader Graph 14.0.12",
+                "Particle System",
+                "Built-in Render Pipeline"
+              ]
+            }
           },
           {
             id: 'unity-chest-open',
@@ -3061,17 +3223,6 @@ export const projects: Project[] = [
   },
 ]
 
-// The Unity entry shares the original sign-in introduction and detail.
-const uiCases = projects.find(p => p.id === 'game-ui-motion-studies')!.cases!
-const signInWork = uiCases.find(c => c.id === 'ae-previs')!.works!.find(w => w.id === 'ae-7day-signin')!
-uiCases.find(c => c.id === 'unity')!.works!.unshift({
-  ...signInWork,
-  id: 'unity-7day-signin',
-  videos: ['/assets/videos/game-ui/unity-7day-signin.m3u8'],
-  meta: lt('Unity', 'Unity'),
-  tags: ['UNITY', 'REWARD', 'UI MOTION'],
-})
-
 /** 一级项目视频总数：优先 videos（已由底部 sync 同步为全部作品视频），否则单条 video */
 export function projectVideoCount(p: Project): number {
   return p.videos?.length ?? (p.video ? 1 : 0)
@@ -3127,7 +3278,7 @@ export const projectSubFilters: Partial<Record<ProjectFilterId, ProjectSubFilter
     { id: 'all', label: lt('全部', 'All') },
     { id: 'ae-previs', label: lt('游戏UI动效(AE预演)', 'Game UI Motion (AE Previs)') },
     { id: 'ue5', label: lt('游戏UI动效(UMG)', 'Game UI Motion (UMG)') },
-    { id: 'unity', label: lt('游戏U动效(Unity)', 'Game UI Motion (Unity)') },
+    { id: 'unity', label: lt('游戏UI动效(Unity)', 'Game UI Motion (Unity)') },
   ],
   ad: [
     { id: 'all', label: lt('全部', 'All') },
