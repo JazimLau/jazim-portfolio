@@ -1,3 +1,4 @@
+import { videoStill } from '../data/videoStills'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, ArrowUp, ChevronLeft, ChevronRight, Wrench } from 'lucide-react'
@@ -489,7 +490,7 @@ export function CaseViewerPage() {
                 videos={currentVideos}
                 videoIndex={videoIdx}
                 onVideoChange={setVideoIdx}
-                cover={caseCoverPath(project, projectCase)}
+                cover={videoStill(currentVideos[videoIdx]) ?? caseCoverPath(project, projectCase)}
                 alt={t(
                   `${workNameZh} 视频 ${videoIdx + 1}`,
                   `${workNameEn} video ${videoIdx + 1}`

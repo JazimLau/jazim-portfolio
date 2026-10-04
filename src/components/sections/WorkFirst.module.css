@@ -43,3 +43,13 @@
   .choice:active { box-shadow:inset 3px 0 var(--accent-purple); }
   @keyframes pixel-screen-in { from { opacity:.8; filter:brightness(1.12); } to { opacity:1; filter:brightness(1); } }
 }
+
+/* Four categories; individual videos use the player selection row. */
+.choices { width:100%; }
+@media(max-width:760px) {
+  .choices { grid-column: 1/-1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+}
+
+.choice > span:not(.number) { min-width:0; flex:1; }
+.choice strong { overflow-wrap:anywhere; }
+.choices { overflow-x:hidden; }

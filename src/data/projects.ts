@@ -1264,7 +1264,7 @@ export const projects: Project[] = [
     cases: [
       {
         id: 'ae-previs',
-        name: lt('AE 预演', 'After Effects Previs'),
+        name: lt('游戏UI动效(AE预演)', 'Game UI Motion (AE Previs)'),
         meta: lt('动效预演', 'Motion previs'),
         description: lt(
           '主战场在AE：完成主界面入场、奖励弹窗、抽卡演出与按钮反馈的动效预演，输出节奏、缓动与层级参数供引擎复现。',
@@ -1277,6 +1277,20 @@ export const projects: Project[] = [
         responsibility: [lt('节奏设计', 'Pacing design'), lt('动效预演', 'Motion previs')],
         mainType: lt('预演', 'PREVIS'),
         works: [
+          {
+            id: 'sichuan-opera-event',
+            name: lt('川剧主题活动界面动效', 'Sichuan Opera Event UI Motion'),
+            videos: ['/assets/videos/game-ui/sichuan-opera-event.m3u8'],
+            description: lt('川剧主题活动界面动效作品展示。', 'Sichuan Opera Event UI Motion showcase.'),
+            meta: lt('After Effects', 'After Effects'),
+          },
+          {
+            id: 'medieval-magic-character',
+            name: lt('中世纪魔法题材角色属性界面动效', 'Medieval Magic Character Attributes UI Motion'),
+            videos: ['/assets/videos/game-ui/medieval-magic-character.m3u8'],
+            description: lt('中世纪魔法题材角色属性界面动效作品展示。', 'Medieval Magic Character Attributes UI Motion showcase.'),
+            meta: lt('After Effects', 'After Effects'),
+          },
           {
             id: 'ae-sci-fi-win',
             name: lt('科技风胜利结算', 'Sci-fi Victory Settlement'),
@@ -1403,7 +1417,7 @@ export const projects: Project[] = [
           {
             id: 'ae-7day-signin',
             name: lt('二次元-七日签到', 'Anime 7-day Sign-in'),
-            videos: ['/assets/videos/game-ui/erciyuan-7day-signin.m3u8'],
+            videos: ['/assets/videos/game-ui/ae-7day-signin.m3u8'],
             description: lt(
               '二次元题材七日签到的动效预演：奖励弹窗、进度反馈与领取状态的节奏与层级设计。',
               'A motion previs for an anime-style 7-day sign-in — reward popups, progress feedback and claim states, paced and layered.'
@@ -1490,7 +1504,7 @@ export const projects: Project[] = [
       },
       {
         id: 'ue5',
-        name: lt('UE5 UMG系统动效实践', 'UE5 UMG Motion Practice'),
+        name: lt('游戏UI动效(UMG)', 'Game UI Motion (UMG)'),
         meta: lt('Unreal Engine 5', 'Unreal Engine 5'),
         description: lt(
           '围绕 Unreal Engine 5 的游戏 UI 动效与实时特效进行持续学习，目前已完成图标动效类实践，并逐步扩展至界面动画、交互反馈、材质、粒子特效与页面转场等方向，重点建立从视觉设计到实时引擎实现的基础能力。',
@@ -1506,6 +1520,13 @@ export const projects: Project[] = [
         launchStatus: lt('进行中', 'IN PROGRESS'),
         statusLabel: lt('持续学习', 'CONTINUING LEARNING'),
         works: [
+          {
+            id: 'anime-battle-entry',
+            name: lt('二次元战斗入口界面动效', 'Anime Battle Entry UI Motion'),
+            videos: ['/assets/videos/game-ui/anime-battle-entry.m3u8'],
+            description: lt('二次元战斗入口界面动效作品展示。', 'Anime Battle Entry UI Motion showcase.'),
+            meta: lt('Unreal Engine 5 / UMG', 'Unreal Engine 5 / UMG'),
+          },
           {
             id: 'dialogue-wheel-whitebox',
             name: lt(
@@ -1621,7 +1642,7 @@ export const projects: Project[] = [
       },
       {
         id: 'unity',
-        name: lt('Unity UI 动效实践', 'Unity UI Motion Practice'),
+        name: lt('游戏U动效(Unity)', 'Game UI Motion (Unity)'),
         meta: lt('Unity', 'Unity'),
         description: lt(
           '围绕游戏 UI 动效与实时特效完成 Unity 专项实践，将界面动画、Shader 与 Particle System 结合用于动态表现，重点训练视觉预演向实时引擎效果转换时的节奏、层级与特效组织能力。',
@@ -1634,6 +1655,13 @@ export const projects: Project[] = [
         responsibility: [lt('UI 动效', 'UI motion'), lt('Shader', 'Shader'), lt('粒子', 'Particles')],
         mainType: lt('UI / SHADER', 'UI / SHADER'),
         works: [
+          {
+            id: 'anime-wish',
+            name: lt('二次元祈愿界面动效', 'Anime Wish UI Motion'),
+            videos: ['/assets/videos/game-ui/anime-wish.m3u8'],
+            description: lt('二次元祈愿界面动效作品展示。', 'Anime Wish UI Motion showcase.'),
+            meta: lt('Unity', 'Unity'),
+          },
           {
             id: 'unity-chest-open',
             name: lt('UI 动效专项实践', 'UI Motion Practice'),
@@ -3033,6 +3061,17 @@ export const projects: Project[] = [
   },
 ]
 
+// The Unity entry shares the original sign-in introduction and detail.
+const uiCases = projects.find(p => p.id === 'game-ui-motion-studies')!.cases!
+const signInWork = uiCases.find(c => c.id === 'ae-previs')!.works!.find(w => w.id === 'ae-7day-signin')!
+uiCases.find(c => c.id === 'unity')!.works!.unshift({
+  ...signInWork,
+  id: 'unity-7day-signin',
+  videos: ['/assets/videos/game-ui/unity-7day-signin.m3u8'],
+  meta: lt('Unity', 'Unity'),
+  tags: ['UNITY', 'REWARD', 'UI MOTION'],
+})
+
 /** 一级项目视频总数：优先 videos（已由底部 sync 同步为全部作品视频），否则单条 video */
 export function projectVideoCount(p: Project): number {
   return p.videos?.length ?? (p.video ? 1 : 0)
@@ -3086,9 +3125,9 @@ export const projectSubFilters: Partial<Record<ProjectFilterId, ProjectSubFilter
   ],
   'game-ui': [
     { id: 'all', label: lt('全部', 'All') },
-    { id: 'ae-previs', label: lt('AE 预演', 'AE Previs') },
-    { id: 'ue5', label: lt('UE', 'Unreal Engine') },
-    { id: 'unity', label: lt('Unity', 'Unity') },
+    { id: 'ae-previs', label: lt('游戏UI动效(AE预演)', 'Game UI Motion (AE Previs)') },
+    { id: 'ue5', label: lt('游戏UI动效(UMG)', 'Game UI Motion (UMG)') },
+    { id: 'unity', label: lt('游戏U动效(Unity)', 'Game UI Motion (Unity)') },
   ],
   ad: [
     { id: 'all', label: lt('全部', 'All') },
@@ -3194,6 +3233,8 @@ if (leihuoExternal) {
 /* 游戏UI动效练习 / 游戏宣发视频 / 游戏广告视频：同样从子模块作品同步 videos（卡片与详情页预览）。 */
 const gameUi = projects.find((p) => p.id === 'game-ui-motion-studies')
 if (gameUi) {
+  const studyMetric = gameUi.metrics.find(metric => metric.label === 'STUDIES')
+  if (studyMetric) studyMetric.value = String((gameUi.cases ?? []).reduce((count, module) => count + (module.works?.length ?? 0), 0))
   gameUi.videos = (gameUi.cases ?? []).flatMap((c) => caseVideos(c))
 }
 const promoFilms = projects.find((p) => p.id === 'game-promotion-films')
